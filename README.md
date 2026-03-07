@@ -18,7 +18,7 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 
 ## Come usarlo
 
-1. Apri `Darts_Score_1_7.html` in un qualsiasi browser moderno
+1. Apri `Darts_Score_1_8.html` in un qualsiasi browser moderno
 2. Configura squadre e giocatori
 3. Inserisci i punteggi turno per turno
 4. Consulta il riepilogo a fine partita
