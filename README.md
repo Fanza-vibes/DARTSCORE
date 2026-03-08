@@ -21,12 +21,12 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 ### Da telefono (iPhone o Android)
 
 1. Apri questo link nel browser del telefono: [github.com/Fanza-vibes/DARTSCORE](https://github.com/Fanza-vibes/DARTSCORE)
-2. Nella lista dei file, tocca il nome **`Darts_Score_1_9.html`**
+2. Nella lista dei file, tocca il nome **`Darts_Score_2_0.html`**
 3. Si aprirà una pagina con il contenuto del file. In alto a destra tocca l'icona **"⋯"** (tre puntini) oppure il pulsante **"Raw"**
 4. Se hai toccato **"Raw"**: si aprirà una pagina con solo testo. Tocca l'icona di condivisione del browser (su iPhone il quadrato con la freccia verso l'alto ↑, su Android i tre puntini del browser) e scegli **"Scarica"** oppure **"Salva pagina"**
 5. Se hai toccato **"⋯"** (tre puntini): scegli **"Download"** dal menu che appare
 
-> **Alternativa più semplice da telefono:** dalla [pagina principale del progetto](https://github.com/Fanza-vibes/DARTSCORE), scorri in basso e tocca il pulsante verde **"<> Code"**, poi **"Download ZIP"**. Apri lo ZIP scaricato e troverai il file `Darts_Score_1_9.html` all'interno.
+> **Alternativa più semplice da telefono:** dalla [pagina principale del progetto](https://github.com/Fanza-vibes/DARTSCORE), scorri in basso e tocca il pulsante verde **"<> Code"**, poi **"Download ZIP"**. Apri lo ZIP scaricato e troverai il file `Darts_Score_2_0.html` all'interno.
 
 ### Da computer
 
@@ -41,7 +41,7 @@ In alternativa, dalla pagina principale clicca il pulsante verde **"<> Code"** �
 
 ## Come usarlo
 
-1. **Da computer:** apri il file `Darts_Score_1_9.html` con un doppio clic — si aprirà nel browser
+1. **Da computer:** apri il file `Darts_Score_2_0.html` con un doppio clic — si aprirà nel browser
 2. **Da telefono:** apri il gestore file, trova il file scaricato, tieni premuto e scegli **"Apri con"** → il tuo browser (Chrome, Safari, ecc.)
 3. Configura squadre e giocatori
 4. Inserisci i punteggi turno per turno
