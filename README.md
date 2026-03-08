@@ -63,7 +63,7 @@ Testato con fix cross-browser per `dvh`, `inset`, `env()`, `appearance` e `color
 
 ## Privacy e dati
 
-L'applicazione non raccoglie, trasmette o condivide alcun dato personale. Tutti i dati della partita vengono gestiti localmente nel browser e non vengono mai inviati a server esterni. Per maggiori dettagli, consulta l'informativa all'interno dell'app.
+L'applicazione non raccoglie, trasmette o condivide alcun dato personale. Tutti i dati della partita vengono gestiti localmente nel browser tramite localStorage e non vengono mai inviati a server esterni. I dati vengono eliminati automaticamente dopo 48 ore oppure all'avvio di una nuova partita. Per maggiori dettagli, consulta l'informativa all'interno dell'app.
 
 ## Licenza
 
@@ -72,3 +72,4 @@ L'applicazione non raccoglie, trasmette o condivide alcun dato personale. Tutti 
 Vedi il file [LICENSE](LICENSE) per i termini completi.
 
 Per richieste di licenza commerciale, contattare tramite questo repository.
+https://github.com/Fanza-vibes/DARTSCORE
