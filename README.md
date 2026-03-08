@@ -31,7 +31,7 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 ### Da computer
 
 1. Vai alla pagina del progetto: [github.com/Fanza-vibes/DARTSCORE](https://github.com/Fanza-vibes/DARTSCORE)
-2. Clicca sul file **`Darts_Score_1_9.html`** nella lista
+2. Clicca sul file **`Darts_Score_2_0.html`** nella lista
 3. Clicca il pulsante **"⬇ Download raw file"** (icona con freccia verso il basso, in alto a destra)
 4. Il file verrà salvato nella cartella *Download* del tuo computer
 
