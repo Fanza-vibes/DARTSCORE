@@ -128,3 +128,6 @@ Vedi il file [LICENSE](LICENSE) per i termini completi.
 
 Per richieste di licenza commerciale, contattare tramite questo repository.
 https://github.com/Fanza-vibes/DARTSCORE
+
+Email:
+jackal.trail2027@eagereverest.com
