@@ -36,7 +36,6 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 - Bottone "Reset completo" per cancellare tutti i dati salvati
 - Banner stato partita nella schermata iniziale
 - Contrasto stampa migliorato per leggibilità su carta (WCAG AA)
-- Layout adattato per l'uso da PC (contenuto centrato, larghezza limitata)
 - Rispetto preferenza animazioni ridotte per accessibilità
 - Anteprima link migliorata su WhatsApp, Telegram e social
 
