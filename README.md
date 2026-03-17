@@ -35,7 +35,6 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 - Modifica nomi squadre durante la partita dal pannello NOMI
 - Bottone "Reset completo" per cancellare tutti i dati salvati
 - Banner stato partita nella schermata iniziale
-- Contrasto stampa migliorato per leggibilità su carta (WCAG AA)
 - Rispetto preferenza animazioni ridotte per accessibilità
 - Anteprima link migliorata su WhatsApp, Telegram e social
 
