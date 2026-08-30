@@ -79,6 +79,12 @@
   --tw:  #ffffff;
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+   RESET E BASE
+   ──────────────────────────────────────────────────────────────────────
+   overflow:hidden solo su body: metterlo anche su html rompe il routing
+   degli eventi touch su alcune versioni di iOS Safari.
+   ══════════════════════════════════════════════════════════════════════ */
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 html { height:100%; touch-action:manipulation; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
 body { height:100%; overflow:hidden; background:var(--bg); font-family:var(--fu); color:var(--tx); overscroll-behavior:none; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
@@ -87,6 +93,11 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 #app { position:relative; height:100vh; height:100dvh; overflow:hidden; }
 .scr { position:absolute; top:0;right:0;bottom:0;left:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity .2s; }
 .scr.on { opacity:1; pointer-events:auto; }
+/* ══════════════════════════════════════════════════════════════════════
+   ELEMENTI CONDIVISI
+   ──────────────────────────────────────────────────────────────────────
+   Bottone indietro e intestazioni di round, usati in piu' schermate.
+   ══════════════════════════════════════════════════════════════════════ */
 .bk { background:none; color:var(--td); font-size:16px; font-weight:700; padding:4px 0; display:inline-flex; align-items:center; gap:6px; }
 .bk:active { opacity:.5; }
 .round-hdr { padding:8px 12px 4px; display:flex; align-items:center; gap:8px; }
@@ -95,6 +106,11 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .rhb { font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
 .rhb.si { background:var(--gd); color:var(--gn); border:1px solid rgba(22,163,74,.3); }
 .rhb.do { background:var(--azd); color:var(--az); border:1px solid rgba(37,99,235,.25); }
+/* ══════════════════════════════════════════════════════════════════════
+   SCHERMATA 1 — SETUP
+   ──────────────────────────────────────────────────────────────────────
+   Nomi squadre, categoria, rose giocatori e avvio partita.
+   ══════════════════════════════════════════════════════════════════════ */
 #setup {
   background:var(--bg);
   background-image:
@@ -134,6 +150,12 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .cb.on .cbd { color:var(--az); }
 .btn-go { background:var(--az); color:var(--tw); border-radius:12px; padding:15px; font-size:19px; font-weight:900; letter-spacing:2px; text-transform:uppercase; width:100%; display:block; box-shadow:0 4px 20px var(--azg); transition:all .12s; }
 .btn-go:active { background:var(--azh); transform:scale(.97); box-shadow:none; }
+/* ══════════════════════════════════════════════════════════════════════
+   SCHERMATA 2 — REFERTO
+   ──────────────────────────────────────────────────────────────────────
+   Header con i totali, lista scorrevole degli incontri, barra azioni in basso.
+   .lb sono i bottoni leg: 40px per rispettare i touch target su mobile.
+   ══════════════════════════════════════════════════════════════════════ */
 #referto { background:var(--bg); }
 .ref-hdr { background:var(--sf); border-bottom:2px solid var(--br); padding:10px 14px 12px; padding-top:calc(10px + var(--st)); flex-shrink:0; box-shadow:0 2px 10px rgba(37,99,235,.08); }
 .ht { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
@@ -186,6 +208,13 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .slt { color:var(--td); flex:1; }
 .slt strong { color:var(--tx); }
 .slset { font-family:var(--fm); font-size:11px; color:var(--tm); }
+/* ══════════════════════════════════════════════════════════════════════
+   PANNELLI A SCOMPARSA
+   ──────────────────────────────────────────────────────────────────────
+   Salgono dal basso su overlay scuro. visibility:hidden quando chiusi e'
+   necessario su iOS: pointer-events:none da solo non basta a impedire che
+   il layer di compositing intercetti i tocchi.
+   ══════════════════════════════════════════════════════════════════════ */
 .ov { position:fixed; top:0;right:0;bottom:0;left:0; background:rgba(15,23,42,.45); z-index:20; opacity:0; pointer-events:none; transition:opacity .2s; cursor:pointer; }
 .ov.on { opacity:1; pointer-events:auto; }
 .sp { position:fixed; bottom:0; left:0; right:0; background:var(--sf); border-top:2px solid var(--br); border-radius:18px 18px 0 0; padding:18px 16px; padding-bottom:calc(18px + var(--sb)); z-index:21; transform:translateY(100%); transition:transform .26s cubic-bezier(.4,0,.2,1), visibility 0s .26s; max-height:90vh; max-height:90dvh; overflow-y:auto; box-shadow:0 -4px 30px rgba(37,99,235,.12); pointer-events:none; visibility:hidden; }
@@ -229,6 +258,11 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .btn-undo { background:var(--cod); color:var(--co); border:1px solid rgba(240,84,84,.3); border-radius:6px; padding:4px 10px; font-size:10px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; flex-shrink:0; transition:all .12s; }
 .btn-undo:active { background:var(--co); color:#fff; transform:scale(.95); }
 #sub-history { margin-bottom:12px; }
+/* ══════════════════════════════════════════════════════════════════════
+   SCHERMATA 3 — RIEPILOGO
+   ──────────────────────────────────────────────────────────────────────
+   Punteggio gara, totali, classifica individuale, dettaglio incontri, esito.
+   ══════════════════════════════════════════════════════════════════════ */
 #riepilogo { background:var(--bg); overflow-y:auto; overflow-x:hidden; padding-bottom:calc(24px + var(--sb)); }
 .rtop { padding:12px 16px 0; padding-top:calc(12px + var(--st)); flex-shrink:0; }
 .hc { margin:12px 14px 10px; background:var(--sf); border:1.5px solid var(--br); border-radius:14px; padding:18px 16px 14px; background-image:radial-gradient(ellipse 80% 50% at 50% -10%, rgba(37,99,235,.07) 0%, transparent 65%); box-shadow:0 3px 16px rgba(37,99,235,.08); }
@@ -311,6 +345,11 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .rt-btn:active { transform:scale(.96); }
 .rt-btn.ra { border-color:var(--gn); background:var(--gd); color:var(--gn); }
 .rt-btn.rb { border-color:var(--co); background:var(--cod); color:var(--co); }
+/* ══════════════════════════════════════════════════════════════════════
+   ADATTAMENTI PER DIMENSIONE SCHERMO
+   ──────────────────────────────────────────────────────────────────────
+   Schermi stretti, schermi bassi, orientamento orizzontale e desktop.
+   ══════════════════════════════════════════════════════════════════════ */
 @media(max-width:360px){ .lb{width:34px;height:34px;font-size:12px} .hcp{font-size:48px} .sb{grid-template-columns:1fr 48px 1fr} }
 @media(max-height:640px){ .logo-n{font-size:36px} .logo-i{font-size:40px} }
 @media(orientation:landscape) and (max-height:500px){
@@ -323,6 +362,35 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 #riepilogo{overscroll-behavior-y:contain}
 #setup{overscroll-behavior-y:contain}
 .prv-bar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:4px; padding:10px 12px; background:var(--s2); border:1px solid var(--br); border-radius:10px; font-size:11px; color:var(--td); line-height:1.4; }
+/* Pannello Impostazioni */
+.cfg-row { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--br); }
+.cfg-row:last-child { border-bottom:none; }
+.cfg-lbl { flex:1; display:flex; flex-direction:column; gap:1px; min-width:0; }
+.cfg-name { font-size:13px; font-weight:700; color:var(--tx); }
+.cfg-help { font-size:10px; color:var(--tm); line-height:1.3; }
+.cfg-inp {
+  -webkit-appearance:none; appearance:none;
+  width:64px; flex-shrink:0; text-align:center;
+  background:var(--s2); border:1.5px solid var(--br); border-radius:9px;
+  padding:9px 4px; font-size:16px; font-weight:800; color:var(--tx); outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.cfg-inp:focus { border-color:var(--az); box-shadow:0 0 0 3px var(--azd); }
+.cfg-preview {
+  font-size:12px; color:var(--td); line-height:1.5;
+  padding:10px 12px; background:var(--s2); border-radius:8px; margin:12px 0;
+}
+.cfg-preview.w { color:var(--am); background:var(--amd); border:1px solid rgba(217,119,6,.25); }
+.cfg-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.btn-cfg-reset {
+  background:var(--s2); color:var(--td); border:1.5px solid var(--br);
+  border-radius:11px; padding:13px 8px;
+  font-size:13px; font-weight:800; letter-spacing:.5px; text-transform:uppercase;
+  transition:all .12s;
+}
+.btn-cfg-reset:active { background:var(--cod); color:var(--co); border-color:rgba(240,84,84,.3); transform:scale(.96); }
+.btn-cfg { background:none; color:var(--tm); font-size:11px; font-weight:700; padding:6px 14px; border:1.5px solid var(--br); border-radius:8px; transition:all .12s; }
+.btn-cfg:active { background:var(--azd); color:var(--az); border-color:rgba(37,99,235,.3); transform:scale(.95); }
 .btn-reset { background:none; color:var(--tm); font-size:11px; font-weight:700; padding:6px 14px; border:1.5px solid var(--br); border-radius:8px; transition:all .12s; }
 .btn-reset:active { background:var(--cod); color:var(--co); border-color:rgba(240,84,84,.3); transform:scale(.95); }
 .prv-bar span { flex:1; }
@@ -422,6 +490,13 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   #setup, .ref-hdr, .slist, #riepilogo { max-width:520px; margin-left:auto; margin-right:auto; }
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+   STAMPA / ESPORTAZIONE PDF
+   ──────────────────────────────────────────────────────────────────────
+   Nasconde tutto tranne il riepilogo e lo rimette in flusso normale cosi'
+   che possa impaginarsi su piu' fogli A4. Forza il tema chiaro e alza il
+   contrasto dei colori per la leggibilita' su carta.
+   ══════════════════════════════════════════════════════════════════════ */
 @media print {
   /* Reset layout: rimuovi vincoli viewport, abilita flusso naturale */
   *, *::before, *::after { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
@@ -491,7 +566,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   <div class="logo">
     <span class="logo-i">🎯</span>
     <div class="logo-n">DART<span>SCORE</span></div>
-    <div class="logo-s" id="app-version">v2.8 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
+    <div class="logo-s" id="app-version">v2.9.2 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
   </div>
   <div class="card">
     <div class="card-t">Squadre &amp; Categoria</div>
@@ -523,7 +598,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <div class="rg" id="roster-b"></div>
   </div>
   <button class="btn-go" onclick="startMatch()">&#9654;&nbsp; INIZIA PARTITA</button>
-  <div style="display:flex;justify-content:center;margin-top:10px">
+  <div style="display:flex;justify-content:center;gap:8px;margin-top:10px">
+    <button class="btn-cfg" onclick="openCfg()">&#9881; Impostazioni</button>
     <button class="btn-reset" onclick="resetApp()">&#8635; Reset completo</button>
   </div>
   <div class="prv-bar">
@@ -598,6 +674,22 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 </div>
 
 <!-- PANNELLO MODIFICA NOMI -->
+<!-- PANNELLO IMPOSTAZIONI -->
+<div id="cfg-ov" class="ov" onclick="closeCfg()"></div>
+<div id="cfg-panel" class="sp">
+  <div class="sph">
+    <div class="sptitle">&#9881; Impostazioni Gara</div>
+    <button class="spcls" onclick="closeCfg()">&#10005;</button>
+  </div>
+  <div class="spinfo" style="margin-bottom:10px">I valori predefiniti seguono il regolamento FIGeST 2026. Modificarli azzera la partita in corso.</div>
+  <div id="cfg-grid"></div>
+  <div class="cfg-preview" id="cfg-preview"></div>
+  <div class="cfg-actions">
+    <button class="btn-cfg-reset" onclick="resetCfgPanel()">&#8635; Predefiniti</button>
+    <button class="btn-ok" id="btn-cfg-save" style="padding:13px 8px;font-size:14px" onclick="saveCfgPanel()">Salva</button>
+  </div>
+</div>
+
 <div id="edit-ov" class="ov" onclick="closeEdit()"></div>
 <div id="edit-panel" class="sp">
   <div class="sph">
@@ -692,7 +784,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <h3>Dove vengono salvati</h3>
     <p>I dati della partita in corso vengono salvati nella memoria locale del browser (<em>localStorage</em>) per permettere il ripristino in caso di chiusura accidentale. I dati vengono <strong>eliminati automaticamente</strong> dopo 48 ore oppure all'avvio di una nuova partita.</p>
     <p>Un identificatore anonimo temporaneo viene salvato nel <em>localStorage</em> per evitare l'apertura simultanea in più schede. Non contiene alcun dato personale e viene rimosso alla chiusura della scheda.</p>
-    <p>La preferenza del tema (chiaro/scuro) viene salvata nel <em>localStorage</em> per essere ripristinata alla visita successiva. Non contiene alcun dato personale.</p>
+    <p>La preferenza del tema (chiaro/scuro) e le impostazioni di gara (numero incontri, sistema punti) vengono salvate nel <em>localStorage</em> per essere ripristinate alla visita successiva. Non contengono alcun dato personale.</p>
 
     <h3>Font e risorse esterne</h3>
     <p><span class="ok">✓</span> Questa versione dell'app utilizza esclusivamente font di sistema. Nessuna richiesta viene inviata a Google o ad altri servizi di terze parti.</p>
@@ -708,15 +800,68 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <p>Per qualsiasi domanda relativa alla privacy puoi contattare lo sviluppatore tramite la pagina GitHub del progetto.</p>
     <p style="margin-top:8px"><a href="https://github.com/Fanza-vibes/DARTSCORE" target="_blank" rel="noopener" style="color:var(--az);font-weight:700;text-decoration:none">github.com/Fanza-vibes/DARTSCORE</a></p>
   </div>
-  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.8 · Tutti i diritti riservati</div>
+  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.9.2 · Tutti i diritti riservati</div>
 </div>
 
 </div>
 <div id="save-toast">⚠ Salvataggio non disponibile</div>
 <div id="warn-toast"></div>
 <script>
-/* DartScore v2.8 — light/dark theme
+/* DartScore v2.9.2 — light/dark theme
  * ─────────────────────────────────────────────────────────────────────────────
+ * MODIFICHE v2.9.2 rispetto a v2.9.1 (solo documentazione, nessun cambio
+ * funzionale):
+ *   - Aggiunta MAPPA DEL FILE e panoramica architetturale in questa
+ *     intestazione, con il flusso stato → render → salvataggio
+ *   - 14 intestazioni di sezione nel JavaScript e 8 nel CSS, per orientarsi
+ *     tra le circa ottanta funzioni senza doverle leggere tutte
+ *   - Descrizione di una o due righe sulle funzioni centrali che ne erano
+ *     prive (getGara, getClassifica, buildRow, renderHdr, updateRow e altre)
+ *   - Riferimenti agli articoli del regolamento raccolti in un unico punto
+ * ─────────────────────────────────────────────────────────────────────────────
+ * MODIFICHE v2.9.1 rispetto a v2.9 (debug pannello Impostazioni):
+ *   - FIX: impedita la configurazione con zero incontri — causava N_SET=0,
+ *     getGara() restituiva 1-1 su partita vuota e la validazione dichiarava
+ *     "referto completo" senza alcun incontro giocato
+ *   - FIX: setWin non può superare il numero totale di incontri — prima si
+ *     poteva impostare una soglia di vittoria matematicamente irraggiungibile
+ *   - FIX: maxSub limitato a 4 (le riserve realmente disponibili) — prima
+ *     arrivava a 8 pur essendocene solo 4
+ *   - FIX: limiti ridotti a 24 singoli + 8 doppi (max 32 incontri, erano 60)
+ *   - FIX: clamp automatico al blur — un valore fuori range viene corretto
+ *     visivamente invece di essere scartato in silenzio al salvataggio
+ *   - FIX: pulsante Salva disabilitato con configurazione incoerente, con
+ *     messaggio esplicativo al posto dell'alert() bloccante
+ *   - FIX: CFG_LIMITS spostato prima di loadCfg() — era usato prima della
+ *     dichiarazione nel sorgente (funzionava per ordine di esecuzione)
+ *   - loadCfg() ripiega sui predefiniti se la combinazione salvata è incoerente
+ *
+ * MODIFICHE v2.9 rispetto a v2.8.1:
+ *   - Pannello Impostazioni: numero singoli/doppi, leg per set, best of N,
+ *     soglia vittoria, max sostituzioni e sistema punti sono configurabili.
+ *     I valori predefiniti riproducono esattamente il regolamento FIGeST 2026
+ *     (verificato: il calendario generato è identico all'originale hardcoded).
+ *   - Pulsante "Predefiniti" per ripristinare la configurazione ufficiale
+ *   - CAL generato da buildCAL() con schemi di rotazione ROT_SINGOLI/ROT_DOPPI
+ *     invece di array hardcoded — 2 round singoli + 1 round doppi, ciclico
+ *   - legPlayable() e toggleLeg() generalizzati per qualsiasi MAX_LEG/LEG_WIN
+ *     (prima assumevano best-of-3 con indici fissi)
+ *   - getPts() legge il sistema punti da CFG invece di valori hardcoded
+ *   - SOMMA_OK derivata da configurazione; se il sistema punti non produce un
+ *     totale costante per incontro diventa null e la validazione si disattiva
+ *   - Modificare le impostazioni azzera la partita in corso, previa conferma
+ *
+ * MODIFICHE v2.8.1 rispetto a v2.8:
+ *   - Refactoring: estratta setLabel(fromIdx) condivisa da renderSubHistory()
+ *     e renderSubLog() — elimina ~10 righe di logica duplicata
+ *   - FIX populateFrom(): magic number 20 sostituito con ${N_SET} nel valore
+ *     dell'opzione fallback — resta corretto se il calendario cambia
+ *   - Rimosso loop ridondante in saveEdit(): refreshUI() già ricostruisce
+ *     tutte le righe con i nomi aggiornati
+ *   - Meta color-scheme sincronizzato in toggleTheme()/applyDark() — evita
+ *     flash delle scrollbar in chiaro quando il tema è scuro
+ *   - Colonna punti .rp allargata da 34px a 36px per i bottoni leg da 40px
+ *
  * MODIFICHE v2.8 rispetto a v2.7.2:
  *   - FIX toggleLeg: usa updateRow(si) mirato (non refreshUI) per non
  *     distruggere i bottoni durante il ciclo di tap null→A→B
@@ -734,61 +879,144 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  * Per il changelog completo delle versioni precedenti vedi il repository:
  *   https://github.com/Fanza-vibes/DARTSCORE
  *
- * ABBREVIAZIONI CHIAVE:
- *   S        → stato globale della partita
- *   UI       → stato UI pannello sostituzioni
- *   EP       → stato UI pannello edit nomi
- *   g(id)    → document.getElementById(id)
- *   esc(s)   → escape HTML — REGOLA: ogni valore utente in innerHTML DEVE
- *              passare per esc()
- *   CAL      → calendario incontri: 16 singoli (t:'s') + 4 doppi (t:'d')
+ * ─────────────────────────────────────────────────────────────────────────────
+ * MAPPA DEL FILE
+ *   Applicazione monolitica: un solo file HTML con CSS e JS inline, nessuna
+ *   dipendenza esterna, nessun build step. Funziona da file:// e offline.
  *
- * PUNTEGGIO GARA (ART.4.3 Regolamento):
- *   Vittoria 11+ set  → 3-0
- *   Pareggio set, più leg → 2-1
- *   Pareggio set e leg → 1-1
+ *   <head>    meta, CSP, e l'intero foglio di stile diviso in sezioni
+ *   <body>    tre schermate sovrapposte (#setup, #referto, #riepilogo) piu'
+ *             quattro pannelli a scomparsa (impostazioni, cambi, nomi, privacy)
+ *   <script>  in ordine: configurazione → stato e logica di gioco → navigazione
+ *             → setup → assegnazione leg → sostituzioni → costruzione referto
+ *             → rendering → modifica nomi → classifica → stampa → validazione
+ *             → utilita' DOM → persistenza → lock schede → init()
  *
- * SOMMA_OK = 72 (ART.15.1):
- *   16 singoli × 3pt totali/incontro = 48
- *   4 doppi × (3pt × 2 giocatori per parte) = 24 → (a+b)*2 in getSomma()
- *   Totale = 72
+ * ARCHITETTURA IN BREVE
+ *   Stato    Un unico oggetto S contiene tutta la partita (nomi, rose, slot in
+ *            campo, cambi, risultati dei leg). Nient'altro e' fonte di verita'.
+ *   Config   CFG contiene le regole (quanti incontri, punti, leg per set).
+ *            applyCfg() ne deriva CAL, N_SET, LEG_WIN, SOMMA_OK e affini.
+ *   Render   Le funzioni render... e build... leggono S e riscrivono il DOM.
+ *            Non modificano mai lo stato: la direzione e' sempre S → DOM.
+ *   Update   Chi modifica S chiama poi refreshUI() (ricostruzione completa)
+ *            oppure updateRow() (aggiornamento mirato di una riga), e infine
+ *            saveState() per persistere.
+ *
+ * CONVENZIONI
+ *   S        stato della partita        UI   selezione nel pannello cambi
+ *   CFG      regole configurabili       EP   tab attivo nel pannello nomi
+ *   CAL      calendario incontri: 16 singoli (t:'s') + 4 doppi (t:'d')
+ *   g(id)    document.getElementById    esc  escape HTML — obbligatorio su
+ *                                            ogni valore utente in innerHTML
+ *
+ * REGOLAMENTO DI RIFERIMENTO (FIGeST 2026)
+ *   ART.4.3   punteggio gara: 11+ set = 3-0; pari set con piu' leg = 2-1;
+ *             pari set e leg = 1-1
+ *   ART.11.2  punti individuali: 3 se vinci 2-0, 2 se 2-1, 1 se perdi 1-2,
+ *             0 se perdi 0-2. Valgono uguale nei singoli e nei doppi.
+ *   ART.5.4   massimo 4 sostituzioni per squadra; chi esce non rientra
+ *   ART.15.1  la somma dei punti individuali deve fare 72
+ *             16 singoli x 3 = 48, piu' 4 doppi x 3 x 2 giocatori = 24
+ *   Nota      i valori sopra sono i predefiniti; il pannello Impostazioni
+ *             permette di modificarli per formati diversi dal campionato.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-/* Costanti di gioco */
-const LEG_WIN=2,MAX_LEG=3,SET_WIN=11,MAX_SUB=4,SOMMA_OK=72;
+/* ── CONFIGURAZIONE GIOCO ──────────────────────────────────────────────────
+   I valori DEFAULT_CFG riproducono esattamente il regolamento FIGeST 2026.
+   L'utente può modificarli dal pannello Impostazioni; il pulsante "Ripristina
+   predefiniti" riporta tutto a questi valori. ─────────────────────────────── */
+const DEFAULT_CFG={
+  nSingoli:16,   /* incontri di singolo */
+  nDoppi:4,      /* incontri di doppio */
+  legWin:2,      /* leg da vincere per aggiudicarsi il set */
+  maxLeg:3,      /* leg massimi giocabili in un set (best of N) */
+  setWin:11,     /* set da vincere per la vittoria netta 3-0 (ART.4.3) */
+  maxSub:4,      /* sostituzioni massime per squadra (ART.5.4) */
+  ptNetta:3,     /* punti al vincitore 2-0 (ART.11.2) */
+  ptStretta:2,   /* punti al vincitore 2-1 */
+  ptSconfStretta:1, /* punti allo sconfitto 1-2 */
+  ptSconfNetta:0,   /* punti allo sconfitto 0-2 */
+};
+let CFG={...DEFAULT_CFG};
+
+/* Valori derivati da CFG — ricalcolati da applyCfg() */
+let LEG_WIN, MAX_LEG, SET_WIN, MAX_SUB, CAL, N_SET, SOMMA_OK;
+
 const N_PL=8; /* 4 titolari + 4 riserve per squadra (ART.2.2 ammette fino a 12,
                  ma il referto ufficiale prevede 8 slot: 4 in campo + 4 riserve) */
 
 /* Costanti di sistema */
 const TAB_HEARTBEAT_MS=5000,TAB_LOCK_TTL_MS=10000,VIBRATE_MS=15,MAX_AGE_MS=48*60*60*1000;
-const APP_VERSION='2.8';
+const APP_VERSION='2.9.2';
 const THEME_KEY='dartscore_theme'; /* chiave localStorage per preferenza tema */
+const CFG_KEY='dartscore_cfg';     /* chiave localStorage per configurazione */
 
 const CAT={A:{label:'Serie A',gioco:'501 D.O.'},B:{label:'Serie B',gioco:'501 M.O.'},C:{label:'Serie C',gioco:'501 S.O.'}};
-const CAL=[
-  {round:'1\xb0 Round Singoli',t:'s',cS:[0],oS:[0]},
-  {round:'1\xb0 Round Singoli',t:'s',cS:[1],oS:[1]},
-  {round:'1\xb0 Round Singoli',t:'s',cS:[2],oS:[2]},
-  {round:'1\xb0 Round Singoli',t:'s',cS:[3],oS:[3]},
-  {round:'2\xb0 Round Singoli',t:'s',cS:[1],oS:[0]},
-  {round:'2\xb0 Round Singoli',t:'s',cS:[0],oS:[1]},
-  {round:'2\xb0 Round Singoli',t:'s',cS:[3],oS:[2]},
-  {round:'2\xb0 Round Singoli',t:'s',cS:[2],oS:[3]},
-  {round:'1\xb0 Round Doppi \xb7 701',t:'d',cS:[0,1],oS:[0,1]},
-  {round:'1\xb0 Round Doppi \xb7 701',t:'d',cS:[2,3],oS:[2,3]},
-  {round:'3\xb0 Round Singoli',t:'s',cS:[3],oS:[1]},
-  {round:'3\xb0 Round Singoli',t:'s',cS:[0],oS:[2]},
-  {round:'3\xb0 Round Singoli',t:'s',cS:[1],oS:[3]},
-  {round:'3\xb0 Round Singoli',t:'s',cS:[2],oS:[0]},
-  {round:'4\xb0 Round Singoli',t:'s',cS:[0],oS:[3]},
-  {round:'4\xb0 Round Singoli',t:'s',cS:[3],oS:[0]},
-  {round:'4\xb0 Round Singoli',t:'s',cS:[2],oS:[1]},
-  {round:'4\xb0 Round Singoli',t:'s',cS:[1],oS:[2]},
-  {round:'2\xb0 Round Doppi \xb7 701',t:'d',cS:[0,3],oS:[0,3]},
-  {round:'2\xb0 Round Doppi \xb7 701',t:'d',cS:[1,2],oS:[1,2]},
+
+/* Schemi di rotazione ufficiali: ogni round di singoli accoppia lo slot di casa
+   con lo slot ospite indicato. Si ripetono ciclicamente se i round sono >4. */
+const ROT_SINGOLI=[
+  [[0,0],[1,1],[2,2],[3,3]],  /* 1° round: identità */
+  [[1,0],[0,1],[3,2],[2,3]],  /* 2° round: scambio a coppie */
+  [[3,1],[0,2],[1,3],[2,0]],  /* 3° round */
+  [[0,3],[3,0],[2,1],[1,2]],  /* 4° round */
 ];
-const N_SET=CAL.length;
+/* Schemi di rotazione doppi: coppie di slot per ogni round */
+const ROT_DOPPI=[
+  [[0,1],[2,3]],  /* 1° round doppi */
+  [[0,3],[1,2]],  /* 2° round doppi */
+  [[0,2],[1,3]],  /* 3° round doppi (se configurato) */
+];
+
+/* Genera il calendario incontri da CFG.
+   Ordine: 2 round di singoli, poi 1 round di doppi, e così via — riproduce
+   esattamente il calendario ufficiale con i valori predefiniti (16+4). */
+function buildCAL(){
+  const cal=[];
+  const roundsS=Math.ceil(CFG.nSingoli/4);   /* round di singoli (4 incontri l'uno) */
+  const roundsD=Math.ceil(CFG.nDoppi/2);     /* round di doppi (2 incontri l'uno) */
+  let doneS=0, doneD=0, rS=0, rD=0;
+  while(doneS<CFG.nSingoli || doneD<CFG.nDoppi){
+    /* due round di singoli */
+    for(let k=0;k<2 && doneS<CFG.nSingoli;k++,rS++){
+      const rot=ROT_SINGOLI[rS%ROT_SINGOLI.length];
+      const label=(rS+1)+'\xb0 Round Singoli';
+      for(const [c,o] of rot){
+        if(doneS>=CFG.nSingoli) break;
+        cal.push({round:label,t:'s',cS:[c],oS:[o]});
+        doneS++;
+      }
+    }
+    /* un round di doppi */
+    if(doneD<CFG.nDoppi){
+      const rot=ROT_DOPPI[rD%ROT_DOPPI.length];
+      const label=(rD+1)+'\xb0 Round Doppi \xb7 701';
+      for(const pair of rot){
+        if(doneD>=CFG.nDoppi) break;
+        cal.push({round:label,t:'d',cS:[...pair],oS:[...pair]});
+        doneD++;
+      }
+      rD++;
+    }
+    if(rS>=roundsS && rD>=roundsD) break; /* guardia anti-loop */
+  }
+  return cal;
+}
+
+/* Ricalcola tutti i valori derivati da CFG. Da chiamare dopo ogni modifica. */
+function applyCfg(){
+  LEG_WIN=CFG.legWin; MAX_LEG=CFG.maxLeg; SET_WIN=CFG.setWin; MAX_SUB=CFG.maxSub;
+  CAL=buildCAL(); N_SET=CAL.length;
+  /* Somma di controllo: valida solo se i due esiti danno lo stesso totale
+     (3+0 = 2+1 nel regolamento). Altrimenti null → validazione disattivata. */
+  const totNetta=CFG.ptNetta+CFG.ptSconfNetta, totStretta=CFG.ptStretta+CFG.ptSconfStretta;
+  SOMMA_OK = totNetta===totStretta
+    ? CFG.nSingoli*totNetta + CFG.nDoppi*totNetta*2
+    : null;
+}
+
 
 const S={
   nA:'Squadra Casa',nB:'Squadra Ospite',cat:'A',
@@ -797,21 +1025,33 @@ const S={
   slotA:[0,1,2,3],slotB:[0,1,2,3],
   subA:[],subB:[],legs:[],
 };
-function initLegs(){ S.legs=Array.from({length:N_SET},()=>[null,null,null]); }
+/* ════════════════════════════════════════════════════════════════════════
+ * STATO PARTITA E LOGICA DI GIOCO
+ * ────────────────────────────────────────────────────────────────────────
+ * Funzioni pure che leggono/derivano dallo stato S. Nessuna tocca il DOM.
+ */
+function initLegs(){ S.legs=Array.from({length:N_SET},()=>Array(MAX_LEG).fill(null)); }
 
 function getWinner(legs){
   const a=legs.filter(l=>l==='A').length,b=legs.filter(l=>l==='B').length;
   return a>=LEG_WIN?'A':b>=LEG_WIN?'B':null;
 }
+/* Un leg è giocabile se tutti i precedenti sono stati assegnati e il set
+   non è ancora chiuso. Generalizzato per qualsiasi valore di MAX_LEG/LEG_WIN. */
 function legPlayable(legs,i){
-  if(i===0)return true; if(i===1)return legs[0]!==null;
-  return legs[0]!==null&&legs[1]!==null&&legs[0]!==legs[1];
+  if(i===0)return true;
+  for(let k=0;k<i;k++) if(legs[k]===null) return false;
+  return getWinner(legs.slice(0,i))===null;
 }
+/* Punti individuali (ART.11.2), configurabili da CFG.
+   "Netta" = avversario a zero leg, "stretta" = avversario con almeno un leg. */
 function getPts(legs){
   const w=getWinner(legs); if(!w)return{a:null,b:null};
   const wa=legs.filter(l=>l==='A').length,wb=legs.filter(l=>l==='B').length;
-  return w==='A'?{a:wb===0?3:2,b:wb===0?0:1}:{a:wa===0?0:1,b:wa===0?3:2};
+  const {ptNetta:PN,ptStretta:PS,ptSconfStretta:SS,ptSconfNetta:SN}=CFG;
+  return w==='A'?{a:wb===0?PN:PS,b:wb===0?SN:SS}:{a:wa===0?SN:SS,b:wa===0?PN:PS};
 }
+/* Somma set vinti, leg vinti e incontri completati scorrendo S.legs. */
 function getTotals(){
   let sA=0,sB=0,lA=0,lB=0,done=0;
   for(const l of S.legs){
@@ -821,6 +1061,9 @@ function getTotals(){
   }
   return{sA,sB,lA,lB,done};
 }
+/* Punteggio gara finale (ART.4.3): 3-0 se una squadra raggiunge SET_WIN,
+   altrimenti a incontri finiti 2-1 a chi ha piu' leg, 1-1 se pari.
+   Restituisce null se la partita non e' ancora decidibile. */
 function getGara(sA,sB,lA,lB){
   if(sA>=SET_WIN)return{a:3,b:0,lbl:'3 \u2014 0'};
   if(sB>=SET_WIN)return{a:0,b:3,lbl:'0 \u2014 3'};
@@ -836,6 +1079,8 @@ function norm(s){
   return s.split(/\s+/).map(w=>w?w[0].toUpperCase()+w.slice(1).toLowerCase():'').filter(Boolean).join(' ');
 }
 
+/* Chi occupa realmente uno slot all'incontro si', tenendo conto dei cambi
+   gia' avvenuti a quel punto della partita. */
 function getPlayerAt(team,slot,si){
   const subs=team==='A'?S.subA:S.subB; let p=slot;
   for(const sub of subs) if(sub.slot===slot&&sub.from<=si) p=sub.newP;
@@ -848,17 +1093,24 @@ function getPlayersAt(si){
 function pCode(team,idx){ return(team==='A'?'C':'O')+(idx+1); }
 function curSlots(team){ return[...(team==='A'?S.slotA:S.slotB)]; }
 function outPlayers(team){ return(team==='A'?S.subA:S.subB).map(s=>s.oldP); }
+/* Riserve schierabili: esclude chi e' in campo e chi e' gia' uscito
+   (ART.5.4: un giocatore sostituito non puo' rientrare). */
 function availRes(team){
   const slots=curSlots(team),out=outPlayers(team);
   return Array.from({length:N_PL},(_,i)=>i).filter(p=>!slots.includes(p)&&!out.includes(p));
 }
 function subCount(team){ return(team==='A'?S.subA:S.subB).length; }
+/* Indice del primo incontro non ancora completato, o N_SET se finiti tutti. */
 function firstUnplayed(){ for(let i=0;i<N_SET;i++) if(!getWinner(S.legs[i]))return i; return N_SET; }
+/* Registra un cambio e aggiorna lo slot. Da 'from' in poi giochera' newP. */
 function doSub(team,slot,newP,from){
   const slots=team==='A'?S.slotA:S.slotB,log=team==='A'?S.subA:S.subB;
   log.push({slot,oldP:slots[slot],newP,from}); slots[slot]=newP;
 }
 
+/* Classifica individuale: accumula per ogni giocatore punti, set giocati e
+   set vinti. Nei doppi il punteggio dell'incontro va a entrambi i compagni.
+   Ordinamento: punti, poi media, poi set giocati. */
 function getClassifica(){
   const map=new Map();
   const ensure=(team,pi)=>{
@@ -880,12 +1132,20 @@ function getClassifica(){
   return Array.from(map.values()).map(r=>({...r,avg:r.set>0?r.pts/r.set:0}))
     .sort((a,b)=>b.pts!==a.pts?b.pts-a.pts:b.avg!==a.avg?b.avg-a.avg:b.set-a.set);
 }
+/* Somma di controllo dei punti individuali. I doppi contano doppio perche'
+   il punteggio e' assegnato a due giocatori per parte. */
 function getSomma(){
   let s=0;
   S.legs.forEach((legs,i)=>{const{a,b}=getPts(legs);if(a===null)return;s+=CAL[i].t==='d'?(a+b)*2:(a+b);});
   return s;
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * NAVIGAZIONE TRA SCHERMATE
+ * ────────────────────────────────────────────────────────────────────────
+ * Le tre schermate (#setup, #referto, #riepilogo) sono sovrapposte;
+ * showScr() attiva la classe .on su una sola alla volta.
+ */
 function openPrivacy(){ document.getElementById('prv-ov').classList.add('on'); document.getElementById('prv-panel').classList.add('on'); }
 function closePrivacy(){ document.getElementById('prv-ov').classList.remove('on'); document.getElementById('prv-panel').classList.remove('on'); }
 
@@ -896,6 +1156,7 @@ function goSetup(){
   clearState(); renderStatusBanner(); showScr('setup');
 }
 function goReferto(){ showScr('referto'); }
+/* Apre il riepilogo, avvisando se la partita non e' ancora completa. */
 function showRiep(){
   const{sA,sB,lA,lB,done}=getTotals();
   const ga=getGara(sA,sB,lA,lB);
@@ -906,6 +1167,11 @@ function showRiep(){
   showScr('riepilogo'); renderRiep();
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * SCHERMATA SETUP — ROSE E AVVIO PARTITA
+ * ────────────────────────────────────────────────────────────────────────
+ * Costruzione dei campi giocatori, lettura input e avvio/reset partita.
+ */
 function buildRosters(){ buildRosterSide('roster-a','ra','C',S.gA,'ca'); buildRosterSide('roster-b','rb','O',S.gB,'os'); }
 function buildRosterSide(cid,pfx,letter,nomi,cls){
   let h='';
@@ -915,6 +1181,7 @@ function buildRosterSide(cid,pfx,letter,nomi,cls){
   g(cid).innerHTML=h;
 }
 function selCat(c){ S.cat=c; ['A','B','C'].forEach(x=>g('cat-'+x).classList.toggle('on',x===c)); }
+/* Legge i nomi dai campi del setup; i campi vuoti tornano al codice (C1, O2...). */
 function readRoster(){
   for(let i=0;i<N_PL;i++){
     S.gA[i]=norm(g('ra-'+i)?.value||'')||'C'+(i+1);
@@ -961,14 +1228,20 @@ function resetApp(){
   selCat('A'); buildRosters(); renderStatusBanner(); showScr('setup');
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * ASSEGNAZIONE LEG
+ * ────────────────────────────────────────────────────────────────────────
+ * Cuore dell'interazione: un tap cicla il leg tra non assegnato, Casa e Ospite.
+ */
 function toggleLeg(si,li){
   const legs=S.legs[si]; if(!legPlayable(legs,li))return;
   const currentWinner=getWinner(legs);
   if(currentWinner && legs[li]===null) return;
   if(navigator.vibrate)navigator.vibrate(VIBRATE_MS);
   const cur=legs[li]; legs[li]=cur===null?'A':cur==='A'?'B':null;
-  const wa=legs.filter(l=>l==='A').length,wb=legs.filter(l=>l==='B').length;
-  if((wa===2&&wb===0)||(wb===2&&wa===0))legs[2]=null;
+  /* Azzera i leg che non sono più giocabili (set chiuso in anticipo,
+     oppure leg precedente annullato). Generalizzato per qualsiasi MAX_LEG. */
+  for(let k=0;k<MAX_LEG;k++) if(!legPlayable(legs,k)) legs[k]=null;
   const newWinner=getWinner(legs);
   if(newWinner && !currentWinner && navigator.vibrate) navigator.vibrate([15,50,15]);
   /* Aggiornamento mirato: solo la riga toccata + header + log.
@@ -989,6 +1262,12 @@ function scrollToNext(afterIdx){
   }
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * PANNELLO SOSTITUZIONI
+ * ────────────────────────────────────────────────────────────────────────
+ * UI mantiene la selezione corrente del pannello (squadra, chi esce, chi entra).
+ * Lo stato persistente dei cambi vive invece in S.subA / S.subB.
+ */
 const UI={team:'A',outSlot:null,inP:null,from:0};
 function openSub(){ UI.team='A'; UI.outSlot=null; UI.inP=null; UI.from=firstUnplayed(); subSetTeam('A'); populateFrom(); g('sub-ov').classList.add('on'); g('sub-panel').classList.add('on'); }
 function closeSub(){ g('sub-ov').classList.remove('on'); g('sub-panel').classList.remove('on'); }
@@ -1024,7 +1303,7 @@ function populateFrom(){
     const lbl=CAL[i].t==='s'?'S'+sc:'D'+dc;
     h+=`<option value="${i}" ${i===first?'selected':''} ${i<first?'disabled':''}>${lbl} \u2014 ${esc(CAL[i].round)}</option>`;
   }
-  if(first>=N_SET) h='<option value="20">Tutti gli incontri completati</option>';
+  if(first>=N_SET) h=`<option value="${N_SET}">Tutti gli incontri completati</option>`;
   // BUG FIX v2.2: era parseInt(...)||first — se parseInt restituisce 0 (indice valido)
   // l'operatore || lo sostituirebbe con first. Usare isNaN() per il controllo.
   sel.innerHTML=h; sel.onchange=()=>{ const v=parseInt(sel.value,10); UI.from=isNaN(v)?first:v; }; UI.from=first;
@@ -1045,6 +1324,14 @@ function updateSubBtn(){
   const t=UI.team;
   g('btn-sub-ok').disabled=!(subCount(t)<MAX_SUB&&availRes(t).length>0&&UI.outSlot!==null&&UI.inP!==null);
 }
+/* Etichetta incontro (S1..S16 / D1..D4) a partire dall'indice del calendario.
+   Condivisa da renderSubHistory() e renderSubLog(). */
+function setLabel(fromIdx){
+  let sc=0,dc=0;
+  for(let i=0;i<Math.min(fromIdx,N_SET);i++) CAL[i].t==='s'?sc++:dc++;
+  const ci=CAL[Math.min(fromIdx,N_SET-1)];
+  return ci.t==='s'?'S'+(sc+1):'D'+(dc+1);
+}
 function renderSubHistory(){
   const cont=g('sub-history'); if(!cont)return;
   const t=UI.team, subs=t==='A'?S.subA:S.subB, nomi=t==='A'?S.gA:S.gB;
@@ -1053,10 +1340,7 @@ function renderSubHistory(){
   subs.forEach((sub,idx)=>{
     const oc=pCode(t,sub.oldP), ic=pCode(t,sub.newP);
     const on2=nomi[sub.oldP]||oc, inn=nomi[sub.newP]||ic;
-    let sc2=0,dc2=0;
-    for(let i=0;i<Math.min(sub.from,N_SET);i++) CAL[i].t==='s'?sc2++:dc2++;
-    const ci=CAL[Math.min(sub.from,N_SET-1)];
-    const lbl=ci.t==='s'?'S'+(sc2+1):'D'+(dc2+1);
+    const lbl=setLabel(sub.from);
     const isLast=idx===subs.length-1;
     h+=`<div class="sub-hist-row"><span class="sh-icon">\u21c4</span><span class="sh-text"><strong>${esc(oc)}</strong> ${esc(on2)} \u2192 <strong>${esc(ic)}</strong> ${esc(inn)}</span><span class="sh-when">${lbl}</span>${isLast?'<button class="btn-undo" onclick="undoLastSub(\''+t+'\')">Annulla</button>':''}</div>`;
   });
@@ -1091,15 +1375,19 @@ function renderSubLog(){
     const nomi=sub.team==='A'?S.gA:S.gB;
     const oc=pCode(sub.team,sub.oldP),ic=pCode(sub.team,sub.newP);
     const on2=nomi[sub.oldP]||oc,inn=nomi[sub.newP]||ic,squad=sub.team==='A'?S.nA:S.nB;
-    let sc2=0,dc=0;
-    for(let i=0;i<Math.min(sub.from,N_SET);i++) CAL[i].t==='s'?sc2++:dc++;
-    const ci=CAL[Math.min(sub.from,N_SET-1)],lbl=ci.t==='s'?'S'+(sc2+1):'D'+(dc+1);
+    const lbl=setLabel(sub.from);
     h+=`<div class="slr"><span style="color:var(--az);font-size:14px">\u21c4</span><span class="slt"><strong>${esc(squad)}</strong>: ${esc(oc)} ${esc(on2)} \u2192 ${esc(ic)} ${esc(inn)}</span><span class="slset">dal ${lbl}</span></div>`;
   });
   if(!sec){ sec=document.createElement('div'); sec.id='sub-log-sec'; sec.className='sublog'; g('slist').insertBefore(sec,g('slist').firstChild); }
   sec.innerHTML=h;
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * COSTRUZIONE DEL REFERTO (DOM)
+ * ────────────────────────────────────────────────────────────────────────
+ * buildSetsDOM() ricostruisce l'intera lista; updateRow() aggiorna una sola
+ * riga ed e' quello che usa toggleLeg per non distruggere i bottoni.
+ */
 function buildSetsDOM(){
   let h='',lastRound='',sc=0,dc=0;
   CAL.forEach((inc,i)=>{
@@ -1109,6 +1397,7 @@ function buildSetsDOM(){
   });
   g('slist').innerHTML=h; renderSubLog();
 }
+/* Genera l'HTML di una riga incontro: etichetta, nomi, bottoni leg, punti. */
 function buildRow(idx,lbl){
   const inc=CAL[idx],legs=S.legs[idx],w=getWinner(legs);
   const cls='sr'+(w==='A'?' wa':w==='B'?' wb':'');
@@ -1119,19 +1408,25 @@ function buildRow(idx,lbl){
   const ph=a!==null?`<span class="rpa">${a}</span><br><span class="rpb">${b}</span>`:'&#183;<br>&#183;';
   return `<div class="${cls}" id="row-${idx}"><div class="slb">${lbl}</div><div class="${snCls}" id="nm-${idx}">${nm}</div><div class="lc" id="lc-${idx}">${legsHTML(idx,legs)}</div><div class="rp" id="pt-${idx}">${ph}</div></div>`;
 }
+/* Badge codice giocatore (C1, O3...). Aggiunge il marcatore R se lo slot
+   e' occupato da una riserva subentrata. */
 function pb(team,pi,origSlot){
   const code=pCode(team,pi),cls=team==='A'?'ca':'os',isR=pi!==origSlot;
   return`<span class="pc ${cls}">${esc(code)}</span>${isR?`<span class="pcr ${cls}">R</span>`:''}`;
 }
+/* Nomi di un incontro di singolo, su due righe per non troncare i nomi lunghi. */
 function singlesNm(cP0,oP0,inc){
   return `<div class="snl">${pb('A',cP0,inc.cS[0])}<span class="snn">${esc(S.gA[cP0]||pCode('A',cP0))}</span></div>`
     +`<div class="snl"><span class="ssep">vs</span>${pb('B',oP0,inc.oS[0])}<span class="snn">${esc(S.gB[oP0]||pCode('B',oP0))}</span></div>`;
 }
+/* Nomi di un incontro di doppio: una riga per giocatore. */
 function doublesNm(cP,oP,inc){
   const linesA=cP.map((p,j)=>`<div class="snl">${pb('A',p,inc.cS[j])}<span class="snn">${esc(S.gA[p]||pCode('A',p))}</span></div>`).join('');
   const linesB=oP.map((p,j)=>`<div class="snl">${pb('B',p,inc.oS[j])}<span class="snn">${esc(S.gB[p]||pCode('B',p))}</span></div>`).join('');
   return linesA+'<div class="snl"><span class="ssep" style="font-size:9px">vs</span></div>'+linesB;
 }
+/* I MAX_LEG bottoni di un incontro. Un leg non ancora giocabile e' opaco
+   e inerte (classe .lk). */
 function legsHTML(si,legs){
   let h='';
   for(let l=0;l<MAX_LEG;l++){
@@ -1144,6 +1439,8 @@ function legsHTML(si,legs){
   }
   return h;
 }
+/* Aggiorna in place solo i bottoni, i punti e il bordo di una riga.
+   Piu' leggero di buildSetsDOM e non ricrea i nodi che l'utente sta toccando. */
 function updateRow(idx){
   const legs=S.legs[idx],w=getWinner(legs);
   const lc=g('lc-'+idx); if(lc)lc.innerHTML=legsHTML(idx,legs);
@@ -1152,6 +1449,11 @@ function updateRow(idx){
   const row=g('row-'+idx); if(row)row.className='sr'+(w==='A'?' wa':w==='B'?' wb':'');
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * RENDERING HEADER E RIEPILOGO
+ * ────────────────────────────────────────────────────────────────────────
+ * Aggiornano i contatori in cima al referto e la schermata di riepilogo.
+ */
 function renderHdr(){
   const{sA,sB,lA,lB,done}=getTotals(),ga=getGara(sA,sB,lA,lB),cat=CAT[S.cat];
   setText('hdr-cat',cat.label+' \xb7 '+cat.gioco);
@@ -1163,6 +1465,7 @@ function renderHdr(){
   g('prog-a').style.flexGrow=sA; g('prog-b').style.flexGrow=sB;
 }
 
+/* Schermata riepilogo: punteggio gara, totali, classifica, dettaglio, esito. */
 function renderRiep(){
   const{sA,sB,lA,lB,done}=getTotals(),ga=getGara(sA,sB,lA,lB);
   setText('res-na',S.nA.toUpperCase()); setText('res-nb',S.nB.toUpperCase());
@@ -1183,6 +1486,12 @@ function renderRiep(){
   renderClassifica(); renderDettaglio(); renderValidazione(done);
 }
 const EP={team:'A'};
+/* ════════════════════════════════════════════════════════════════════════
+ * PANNELLO MODIFICA NOMI
+ * ────────────────────────────────────────────────────────────────────────
+ * Permette di correggere nomi squadra e giocatori a partita gia' iniziata.
+ * EP.team ricorda il tab attivo per salvare i dati prima di cambiarlo.
+ */
 function openEdit(){
   EP.team='A'; setText('ep-na',S.nA); setText('ep-nb',S.nB); editTeam('A');
   g('edit-ov').classList.add('on'); g('edit-panel').classList.add('on');
@@ -1229,6 +1538,11 @@ function saveEdit(){
 
 let rankTeam='A';
 function setRankTeam(t){ rankTeam=t; g('rt-a').className='rt-btn'+(t==='A'?' ra':''); g('rt-b').className='rt-btn'+(t==='B'?' rb':''); renderClassifica(); }
+/* ════════════════════════════════════════════════════════════════════════
+ * CLASSIFICA INDIVIDUALE
+ * ────────────────────────────────────────────────────────────────────────
+ * A schermo si vede una squadra per volta (toggle); in stampa entrambe.
+ */
 function renderClassifica(){
   const rta=g('rt-na'),rtb=g('rt-nb');
   if(rta)rta.textContent=S.nA; if(rtb)rtb.textContent=S.nB;
@@ -1268,6 +1582,12 @@ function renderPrintClassifica(){
   cont.innerHTML=h;
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * STAMPA / ESPORTAZIONE PDF
+ * ────────────────────────────────────────────────────────────────────────
+ * Nessuna libreria esterna: popola gli elementi .print-only e chiama
+ * window.print(). Il blocco @media print nel CSS fa il resto.
+ */
 function printRiepilogo(){
   /* popola header stampa con data, categoria e versione */
   const cat=CAT[S.cat];
@@ -1284,6 +1604,12 @@ function printRiepilogo(){
   window.print();
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * DETTAGLIO INCONTRI E VALIDAZIONE
+ * ────────────────────────────────────────────────────────────────────────
+ * La validazione confronta la somma dei punti individuali col valore atteso
+ * (SOMMA_OK), quando la configurazione lo rende verificabile.
+ */
 function renderDettaglio(){
   const cont=g('detail-wrap'); if(!cont)return;
   let h='<div class="dr" style="background:var(--s2);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--td);font-weight:700;border-bottom:1.5px solid var(--br)"><div class="drid">#</div><div class="drvs">Incontro</div><div class="drri">Leg</div><div class="drpa">C</div><div class="drpb">O</div></div>';
@@ -1310,9 +1636,14 @@ function renderValidazione(done){
   const{sA,sB,lA,lB}=getTotals(), ga=getGara(sA,sB,lA,lB), somma=getSomma(), errors=[];
   if(done<N_SET && !ga){ wrap.innerHTML=`<div class="vb pe"><span class="vi">\u23f3</span><div class="vt"><span>Partita in corso</span><span class="vs">${done}/${N_SET} set completati</span></div></div>`; return; }
   if(ga && done<N_SET){ const vincente=ga.a>ga.b?S.nA:S.nB; wrap.innerHTML=`<div class="vb ok"><span class="vi">\u2705</span><div class="vt"><span>Partita decisa \u2014 ${esc(vincente)} vince ${ga.lbl}</span><span class="vs">${done}/${N_SET} set giocati \u2014 vittoria matematica</span></div></div>`; return; }
-  if(done===N_SET && somma!==SOMMA_OK) errors.push(`Somma punti singoli: ${somma} (atteso: ${SOMMA_OK})`);
+  /* SOMMA_OK è null se il sistema punti non produce un totale costante
+     per incontro: in quel caso la somma non è verificabile. */
+  if(done===N_SET && SOMMA_OK!==null && somma!==SOMMA_OK) errors.push(`Somma punti singoli: ${somma} (atteso: ${SOMMA_OK})`);
   if(errors.length){ wrap.innerHTML=errors.map(e=>`<div class="vb ko"><span class="vi">\u26a0\ufe0f</span><div class="vt"><span>Anomalia</span><span class="vs">${esc(e)}</span></div></div>`).join(''); }
-  else if(done===N_SET){ wrap.innerHTML=`<div class="vb ok"><span class="vi">\u2705</span><div class="vt"><span>Referto completo e validato</span><span class="vs">Tutti i ${N_SET} set completati \u2014 Somma punti: ${somma}/${SOMMA_OK}</span></div></div>`; }
+  else if(done===N_SET){
+    const dett=SOMMA_OK!==null?`Somma punti: ${somma}/${SOMMA_OK}`:`Somma punti: ${somma}`;
+    wrap.innerHTML=`<div class="vb ok"><span class="vi">\u2705</span><div class="vt"><span>Referto completo e validato</span><span class="vs">Tutti i ${N_SET} set completati \u2014 ${dett}</span></div></div>`;
+  }
 }
 
 /* ── refreshUI — aggiornamento centralizzato del DOM dopo mutazioni di stato ──
@@ -1320,6 +1651,135 @@ function renderValidazione(done){
    un render e riduce la duplicazione nelle funzioni che mutano lo stato. */
 function refreshUI(){
   buildSetsDOM(); renderHdr(); renderSubLog();
+}
+
+/* ── Configurazione: persistenza e pannello Impostazioni ── */
+
+/* Range ammessi per ogni parametro: [min, max].
+   maxSub è limitato alle riserve realmente disponibili (N_PL - 4 titolari). */
+const CFG_LIMITS={
+  nSingoli:[0,24], nDoppi:[0,8], legWin:[1,5], maxLeg:[1,9],
+  setWin:[1,32], maxSub:[0,4],
+  ptNetta:[0,10], ptStretta:[0,10], ptSconfStretta:[0,10], ptSconfNetta:[0,10],
+};
+/* Campi del pannello: [chiave, etichetta, testo di aiuto] */
+const CFG_FIELDS=[
+  ['nSingoli','Incontri singoli','Partite 1 vs 1'],
+  ['nDoppi','Incontri doppi','Partite 2 vs 2'],
+  ['legWin','Leg per vincere il set','Leg necessari per aggiudicarsi un set'],
+  ['maxLeg','Leg massimi per set','Best of N (3 = al meglio dei 3)'],
+  ['setWin','Set per vittoria netta','Set da vincere per il risultato 3-0'],
+  ['maxSub','Sostituzioni max','Cambi per squadra (max 4 riserve)'],
+  ['ptNetta','Punti vittoria netta','A chi vince senza subire leg'],
+  ['ptStretta','Punti vittoria stretta','A chi vince subendo leg'],
+  ['ptSconfStretta','Punti sconfitta stretta','A chi perde avendo vinto leg'],
+  ['ptSconfNetta','Punti sconfitta netta','A chi perde senza vincere leg'],
+];
+
+function saveCfg(){
+  try{ localStorage.setItem(CFG_KEY,JSON.stringify(CFG)); }catch(e){}
+}
+function loadCfg(){
+  try{
+    const raw=localStorage.getItem(CFG_KEY); if(!raw) return;
+    const d=JSON.parse(raw);
+    /* Accetta solo chiavi note con valori interi nel range consentito */
+    for(const k in DEFAULT_CFG){
+      const v=d[k];
+      if(Number.isInteger(v) && v>=CFG_LIMITS[k][0] && v<=CFG_LIMITS[k][1]) CFG[k]=v;
+    }
+    /* Se la combinazione salvata è incoerente, torna ai predefiniti */
+    if(cfgErrors(CFG).length) CFG={...DEFAULT_CFG};
+  }catch(e){}
+}
+
+/* Controlli logici sulla combinazione di valori (oltre ai range singoli).
+   Restituisce un array di messaggi; vuoto = configurazione valida. */
+function cfgErrors(c){
+  const err=[], tot=c.nSingoli+c.nDoppi;
+  if(tot<1) err.push('Serve almeno un incontro.');
+  if(c.legWin>c.maxLeg) err.push('I leg per vincere non possono superare i leg massimi.');
+  if(c.setWin>tot) err.push(`Set per vittoria netta (${c.setWin}) superiore agli incontri totali (${tot}).`);
+  return err;
+}
+
+function openCfg(){
+  renderCfgPanel();
+  g('cfg-ov').classList.add('on'); g('cfg-panel').classList.add('on');
+}
+function closeCfg(){
+  g('cfg-ov').classList.remove('on'); g('cfg-panel').classList.remove('on');
+}
+function renderCfgPanel(){
+  let h='';
+  for(const [key,label,help] of CFG_FIELDS){
+    const [min,max]=CFG_LIMITS[key];
+    h+=`<div class="cfg-row"><div class="cfg-lbl"><span class="cfg-name">${label}</span><span class="cfg-help">${help}</span></div><input class="cfg-inp" id="cfg-${key}" type="number" inputmode="numeric" min="${min}" max="${max}" value="${CFG[key]}"></div>`;
+  }
+  g('cfg-grid').innerHTML=h;
+  /* Clamp al blur: il campo mostra sempre un valore realmente applicabile,
+     così l'utente non salva credendo di aver impostato un numero fuori range. */
+  for(const [key] of CFG_FIELDS){
+    const el=g('cfg-'+key); if(!el)continue;
+    el.oninput=updateCfgPreview;
+    el.onblur=()=>{
+      const [min,max]=CFG_LIMITS[key], v=parseInt(el.value,10);
+      el.value=isNaN(v)?CFG[key]:Math.min(max,Math.max(min,v));
+      updateCfgPreview();
+    };
+  }
+  updateCfgPreview();
+}
+/* Legge i valori dal pannello senza applicarli, per anteprima e validazione */
+function readCfgInputs(){
+  const out={};
+  for(const key in DEFAULT_CFG){
+    const el=g('cfg-'+key), [min,max]=CFG_LIMITS[key];
+    const v=el?parseInt(el.value,10):NaN;
+    out[key]=isNaN(v)?CFG[key]:Math.min(max,Math.max(min,v));
+  }
+  return out;
+}
+function updateCfgPreview(){
+  const c=readCfgInputs(), errs=cfgErrors(c), el=g('cfg-preview'), btn=g('btn-cfg-save');
+  if(!el)return;
+  if(errs.length){
+    el.textContent='\u26a0 '+errs.join(' ');
+    el.className='cfg-preview w';
+    if(btn) btn.disabled=true;
+    return;
+  }
+  const tot=c.nSingoli+c.nDoppi;
+  const tN=c.ptNetta+c.ptSconfNetta, tS=c.ptStretta+c.ptSconfStretta;
+  const somma = tN===tS ? c.nSingoli*tN + c.nDoppi*tN*2 : null;
+  let txt=`${tot} incontri (${c.nSingoli} singoli + ${c.nDoppi} doppi) \u00b7 best of ${c.maxLeg}`;
+  txt+= somma!==null ? ` \u00b7 somma punti attesa: ${somma}` : ' \u00b7 somma punti non verificabile';
+  el.textContent=txt;
+  el.className='cfg-preview'+(somma===null?' w':'');
+  if(btn) btn.disabled=false;
+}
+function saveCfgPanel(){
+  const nuovo=readCfgInputs();
+  if(cfgErrors(nuovo).length){ updateCfgPreview(); return; }
+  const cambiato=Object.keys(DEFAULT_CFG).some(k=>nuovo[k]!==CFG[k]);
+  if(!cambiato){ closeCfg(); return; }
+  const{done}=getTotals();
+  if(done>0 && !confirm('Modificare le impostazioni azzera la partita in corso.\nContinuare?')) return;
+  CFG={...nuovo}; applyCfg(); saveCfg();
+  resetMatchState(); clearState();
+  buildRosters(); renderStatusBanner(); closeCfg();
+}
+function resetCfgPanel(){
+  if(!confirm('Ripristinare le impostazioni predefinite del regolamento?')) return;
+  CFG={...DEFAULT_CFG}; applyCfg(); saveCfg();
+  const{done}=getTotals();
+  if(done>0){ resetMatchState(); clearState(); buildRosters(); renderStatusBanner(); }
+  renderCfgPanel();
+}
+/* Azzera solo lo stato partita, lasciando intatti nomi squadre e categoria */
+function resetMatchState(){
+  S.subA=[]; S.subB=[]; S.slotA=[0,1,2,3]; S.slotB=[0,1,2,3];
+  initLegs();
 }
 
 /* ── Tema chiaro/scuro ── */
@@ -1360,12 +1820,24 @@ function renderStatusBanner(){
   } else { banner.innerHTML=''; }
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * SCORCIATOIE DOM E ESCAPE HTML
+ * ────────────────────────────────────────────────────────────────────────
+ * REGOLA: ogni valore proveniente dall'utente inserito via innerHTML
+ * DEVE passare per esc(). Nessuna eccezione.
+ */
 const g=id=>document.getElementById(id);
 const setText=(id,v)=>{const e=g(id);if(e)e.textContent=v;};
 const setCls=(id,c)=>{const e=g(id);if(e)e.className=c;};
 const togCls=(id,c,f)=>{const e=g(id);if(e)e.classList.toggle(c,f);};
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+/* ════════════════════════════════════════════════════════════════════════
+ * PERSISTENZA STATO PARTITA (localStorage)
+ * ────────────────────────────────────────────────────────────────────────
+ * Lo stato viene salvato ad ogni modifica e ripristinato all'avvio, con
+ * scadenza 48h e validazione completa della struttura al ripristino.
+ */
 const SS_KEY='dartscore_state';
 let _storageAvailable=true;
 try { localStorage.setItem('__test__','1'); localStorage.removeItem('__test__'); } catch(e){ _storageAvailable=false; }
@@ -1434,6 +1906,12 @@ function restoreState(){
 
 function clearState(){ try { localStorage.removeItem(SS_KEY); } catch(e){} }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * LOCK MULTI-SCHEDA
+ * ────────────────────────────────────────────────────────────────────────
+ * Lock consultivo (non un vero mutex): avvisa se l'app risulta aperta in
+ * un'altra scheda, per evitare salvataggi divergenti sulla stessa chiave.
+ */
 const TAB_LOCK_KEY='dartscore_tab';
 const TAB_ID=Date.now()+'-'+Math.random().toString(36).slice(2,8);
 let tabWarned=false, tabHeartbeat=null;
@@ -1464,6 +1942,10 @@ function releaseTabLock(){
 }
 
 (function init(){
+  /* Configurazione: carica preferenze salvate e ricalcola i valori derivati.
+     DEVE precedere qualsiasi uso di CAL, N_SET, MAX_LEG e affini. */
+  loadCfg(); applyCfg();
+
   /* Tema: ripristina preferenza salvata */
   restoreTheme();
 
