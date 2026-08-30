@@ -22,21 +22,48 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 - **Classifica individuale** con punti, media e set vinti (ART.11.2)
 - Riepilogo dettagliato con **validazione somma punti** (ART.15.1)
 - **Esportazione PDF** del referto gara tramite stampa nativa (zero dipendenze)
+- **Impostazioni gara configurabili**: numero di incontri singoli e doppi, leg per set,
+  best of N, soglia di vittoria, sostituzioni massime e sistema punti
 - **Tema chiaro e scuro** con switch rapido e rispetto della preferenza di sistema
 - Interfaccia mobile-first, ottimizzata per l'uso a bordo campo
 - Funziona senza connessione dopo il primo caricamento
 - Nessun account, nessuna registrazione, nessun dato inviato a server
 
-### Novità v2.8
+### Novità v2.9.2
 
-- Tema scuro con toggle visibile in ogni schermata
-- Bottoni leg ingranditi per tocco più preciso su smartphone
-- Scroll automatico al prossimo incontro dopo completamento set
-- Modifica nomi squadre durante la partita dal pannello NOMI
-- Bottone "Reset completo" per cancellare tutti i dati salvati
-- Banner stato partita nella schermata iniziale
-- Rispetto preferenza animazioni ridotte per accessibilità
-- Anteprima link migliorata su WhatsApp, Telegram e social
+- **Pannello Impostazioni Gara**: incontri singoli e doppi, leg per vincere il set,
+  leg massimi (best of N), set per la vittoria netta, sostituzioni massime e
+  sistema punti sono ora tutti configurabili
+- I valori predefiniti riproducono esattamente il **regolamento FIGeST 2026**;
+  il pulsante **"Predefiniti"** ripristina la configurazione ufficiale
+- Calendario incontri **generato dinamicamente** dalla configurazione, con schemi
+  di rotazione per singoli e doppi al posto degli elenchi fissi
+- Calcolo di leg, set e punti generalizzato: funziona con qualsiasi formato,
+  non solo il best-of-3 del regolamento
+- Validazione della configurazione: combinazioni incoerenti (zero incontri,
+  soglia di vittoria irraggiungibile) vengono bloccate con messaggio esplicativo
+  e i valori fuori range corretti automaticamente
+- La modifica delle impostazioni azzera la partita in corso, previa conferma
+- Le impostazioni vengono salvate nel browser e ripristinate alla visita successiva
+- Sorgente documentato: mappa del file, intestazioni di sezione e descrizione
+  delle funzioni principali
+
+<details>
+<summary>Versioni precedenti</summary>
+
+**v2.9.1** — correzioni al pannello Impostazioni: limiti coerenti sui campi,
+clamp automatico dei valori fuori range, salvataggio disabilitato con
+configurazione incoerente.
+
+**v2.8.1** — refactoring interno, sincronizzazione del meta `color-scheme`
+al cambio tema, colonna punti allargata per i bottoni leg.
+
+**v2.8** — tema scuro con toggle in ogni schermata, bottoni leg ingranditi,
+scroll automatico al prossimo incontro, modifica nomi squadre durante la partita,
+reset completo dei dati salvati, banner stato partita, supporto animazioni
+ridotte, anteprima link su WhatsApp/Telegram.
+
+</details>
 
 ---
 
@@ -66,7 +93,7 @@ Se preferisci avere il file in locale senza dipendere da internet:
 #### Da telefono (iPhone o Android)
 
 1. Apri questo link nel browser del telefono: [github.com/Fanza-vibes/DARTSCORE](https://github.com/Fanza-vibes/DARTSCORE)
-2. Nella lista dei file, tocca il nome **`Darts_Score_2_8.html`**
+2. Nella lista dei file, tocca il nome **`Darts_Score_2_9_2.html`**
 3. Si aprirà una pagina con il contenuto del file. In alto a destra tocca l'icona **"⋯"** (tre puntini) oppure il pulsante **"Raw"**
 4. Se hai toccato **"Raw"**: si aprirà una pagina con solo testo. Tocca l'icona di condivisione del browser (su iPhone il quadrato con la freccia verso l'alto ↑, su Android i tre puntini del browser) e scegli **"Scarica"** oppure **"Salva pagina"**
 5. Se hai toccato **"⋯"** (tre puntini): scegli **"Download"** dal menu che appare
@@ -76,7 +103,7 @@ Se preferisci avere il file in locale senza dipendere da internet:
 #### Da computer
 
 1. Vai alla pagina del progetto: [github.com/Fanza-vibes/DARTSCORE](https://github.com/Fanza-vibes/DARTSCORE)
-2. Clicca sul file **`Darts_Score_2_8.html`** nella lista
+2. Clicca sul file **`Darts_Score_2_9_2.html`** nella lista
 3. Clicca il pulsante **"⬇ Download raw file"** (icona con freccia verso il basso, in alto a destra)
 4. Il file verrà salvato nella cartella *Download* del tuo computer
 
@@ -104,7 +131,7 @@ Ottimizzazioni specifiche per iOS Safari: gestione touch event, `pagehide` per s
 
 ## Privacy e dati
 
-I dati inseriti nell'app (nomi squadre, nomi giocatori, risultati) vengono gestiti **esclusivamente in locale** nel browser tramite `localStorage` e non vengono mai trasmessi allo sviluppatore. I dati vengono eliminati automaticamente dopo 48 ore oppure all'avvio di una nuova partita. La preferenza del tema (chiaro/scuro) viene salvata separatamente e non contiene dati personali.
+I dati inseriti nell'app (nomi squadre, nomi giocatori, risultati) vengono gestiti **esclusivamente in locale** nel browser tramite `localStorage` e non vengono mai trasmessi allo sviluppatore. I dati vengono eliminati automaticamente dopo 48 ore oppure all'avvio di una nuova partita. La preferenza del tema (chiaro/scuro) e le impostazioni di gara (numero incontri, sistema punti) vengono salvate separatamente e non contengono dati personali.
 
 La versione web è ospitata tramite **GitHub Pages** (Microsoft/GitHub). Ogni accesso alla pagina genera automaticamente sui server di GitHub un log tecnico standard (indirizzo IP, browser, timestamp). Questi dati sono trattati da GitHub come responsabile del trattamento ai sensi del GDPR — lo sviluppatore non vi ha accesso. Per dettagli, consulta la [GitHub Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 
