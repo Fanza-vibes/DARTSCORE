@@ -26,7 +26,8 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
   best of N, soglia di vittoria, sostituzioni massime e sistema punti
 - **Tema chiaro e scuro** con switch rapido e rispetto della preferenza di sistema
 - Interfaccia mobile-first, ottimizzata per l'uso a bordo campo
-- Funziona senza connessione dopo il primo caricamento
+- **Funziona offline** con il file scaricato in locale; sulla versione web dipende
+  dalla cache del browser e non è garantito
 - Nessun account, nessuna registrazione, nessun dato inviato a server
 
 ### Novità v2.9.2
@@ -63,6 +64,8 @@ scroll automatico al prossimo incontro, modifica nomi squadre durante la partita
 reset completo dei dati salvati, banner stato partita, supporto animazioni
 ridotte, anteprima link su WhatsApp/Telegram.
 
+Storico completo e dettagliato in [CHANGELOG.md](CHANGELOG.md).
+
 </details>
 
 ---
@@ -76,6 +79,12 @@ Il modo più semplice è aprire direttamente il link:
 👉 **[https://fanza-vibes.github.io/DARTSCORE/](https://fanza-vibes.github.io/DARTSCORE/)**
 
 Funziona su qualsiasi browser moderno, da telefono o da computer.
+
+> **Uso offline:** la versione web richiede la connessione per l'apertura. Il browser
+> può conservare la pagina in cache e riaprirla senza rete, ma è un comportamento
+> non garantito e la cache può essere svuotata in qualsiasi momento. Se ti serve la
+> certezza di poter aprire l'app a bordo campo senza connessione, scarica il file
+> (vedi [Versione scaricabile](#versione-scaricabile-uso-offline-completo)).
 
 **Per aggiungerla alla schermata home del telefono (opzionale):**
 
