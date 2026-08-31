@@ -12,7 +12,7 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="description" content="App referto gara per il Campionato Soft Dart 2026. Gestisci set, leg, sostituzioni e classifica direttamente dal browser, senza installazione.">
 <meta property="og:title" content="DartScore 2026">
-<meta property="og:description" content="Referto gara digitale per il Campionato Soft Dart 2026. Funziona offline, zero installazioni.">
+<meta property="og:description" content="Referto gara digitale per il Campionato Soft Dart 2026. Scaricabile per l'uso offline, zero installazioni.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://fanza-vibes.github.io/DARTSCORE/">
 <!-- FIX v2.2: Content Security Policy — blocca risorse esterne e script inline non autorizzati.
@@ -653,7 +653,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="sub-panel" class="sp">
   <div class="sph">
     <div class="sptitle">Cambio Giocatore</div>
-    <button class="spcls" onclick="closeSub()">&#10005;</button>
+    <button class="spcls" onclick="closeSub()" aria-label="Chiudi il pannello sostituzioni">&#10005;</button>
   </div>
   <div class="spsl">Squadra</div>
   <div class="stt">
@@ -679,7 +679,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="cfg-panel" class="sp">
   <div class="sph">
     <div class="sptitle">&#9881; Impostazioni Gara</div>
-    <button class="spcls" onclick="closeCfg()">&#10005;</button>
+    <button class="spcls" onclick="closeCfg()" aria-label="Chiudi le impostazioni gara">&#10005;</button>
   </div>
   <div class="spinfo" style="margin-bottom:10px">I valori predefiniti seguono il regolamento FIGeST 2026. Modificarli azzera la partita in corso.</div>
   <div id="cfg-grid"></div>
@@ -694,7 +694,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="edit-panel" class="sp">
   <div class="sph">
     <div class="sptitle">Modifica Nomi</div>
-    <button class="spcls" onclick="closeEdit()">&#10005;</button>
+    <button class="spcls" onclick="closeEdit()" aria-label="Chiudi la modifica nomi">&#10005;</button>
   </div>
   <div class="spsl">Squadra da modificare</div>
   <div class="ep-tabs">
@@ -764,7 +764,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="prv-panel">
   <div class="prv-hdr">
     <div class="prv-title">🔒 Informativa Privacy</div>
-    <button class="spcls" onclick="closePrivacy()">&#10005;</button>
+    <button class="spcls" onclick="closePrivacy()" aria-label="Chiudi l'informativa privacy">&#10005;</button>
   </div>
   <div class="prv-body">
     <!-- FIX v2.1: rimossa frase contraddittoria con sezione Hosting -->
@@ -819,65 +819,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  *     prive (getGara, getClassifica, buildRow, renderHdr, updateRow e altre)
  *   - Riferimenti agli articoli del regolamento raccolti in un unico punto
  * ─────────────────────────────────────────────────────────────────────────────
- * MODIFICHE v2.9.1 rispetto a v2.9 (debug pannello Impostazioni):
- *   - FIX: impedita la configurazione con zero incontri — causava N_SET=0,
- *     getGara() restituiva 1-1 su partita vuota e la validazione dichiarava
- *     "referto completo" senza alcun incontro giocato
- *   - FIX: setWin non può superare il numero totale di incontri — prima si
- *     poteva impostare una soglia di vittoria matematicamente irraggiungibile
- *   - FIX: maxSub limitato a 4 (le riserve realmente disponibili) — prima
- *     arrivava a 8 pur essendocene solo 4
- *   - FIX: limiti ridotti a 24 singoli + 8 doppi (max 32 incontri, erano 60)
- *   - FIX: clamp automatico al blur — un valore fuori range viene corretto
- *     visivamente invece di essere scartato in silenzio al salvataggio
- *   - FIX: pulsante Salva disabilitato con configurazione incoerente, con
- *     messaggio esplicativo al posto dell'alert() bloccante
- *   - FIX: CFG_LIMITS spostato prima di loadCfg() — era usato prima della
- *     dichiarazione nel sorgente (funzionava per ordine di esecuzione)
- *   - loadCfg() ripiega sui predefiniti se la combinazione salvata è incoerente
- *
- * MODIFICHE v2.9 rispetto a v2.8.1:
- *   - Pannello Impostazioni: numero singoli/doppi, leg per set, best of N,
- *     soglia vittoria, max sostituzioni e sistema punti sono configurabili.
- *     I valori predefiniti riproducono esattamente il regolamento FIGeST 2026
- *     (verificato: il calendario generato è identico all'originale hardcoded).
- *   - Pulsante "Predefiniti" per ripristinare la configurazione ufficiale
- *   - CAL generato da buildCAL() con schemi di rotazione ROT_SINGOLI/ROT_DOPPI
- *     invece di array hardcoded — 2 round singoli + 1 round doppi, ciclico
- *   - legPlayable() e toggleLeg() generalizzati per qualsiasi MAX_LEG/LEG_WIN
- *     (prima assumevano best-of-3 con indici fissi)
- *   - getPts() legge il sistema punti da CFG invece di valori hardcoded
- *   - SOMMA_OK derivata da configurazione; se il sistema punti non produce un
- *     totale costante per incontro diventa null e la validazione si disattiva
- *   - Modificare le impostazioni azzera la partita in corso, previa conferma
- *
- * MODIFICHE v2.8.1 rispetto a v2.8:
- *   - Refactoring: estratta setLabel(fromIdx) condivisa da renderSubHistory()
- *     e renderSubLog() — elimina ~10 righe di logica duplicata
- *   - FIX populateFrom(): magic number 20 sostituito con ${N_SET} nel valore
- *     dell'opzione fallback — resta corretto se il calendario cambia
- *   - Rimosso loop ridondante in saveEdit(): refreshUI() già ricostruisce
- *     tutte le righe con i nomi aggiornati
- *   - Meta color-scheme sincronizzato in toggleTheme()/applyDark() — evita
- *     flash delle scrollbar in chiaro quando il tema è scuro
- *   - Colonna punti .rp allargata da 34px a 36px per i bottoni leg da 40px
- *
- * MODIFICHE v2.8 rispetto a v2.7.2:
- *   - FIX toggleLeg: usa updateRow(si) mirato (non refreshUI) per non
- *     distruggere i bottoni durante il ciclo di tap null→A→B
- *   - UX: scroll automatico al prossimo incontro dopo completamento set
- *   - UX: bottoni leg aumentati da 33×33 a 40×40px (34px su schermi <360px)
- *     per touch target conformi alle linee guida Apple/Google (44pt minimo)
- *   - UX: meta description + Open Graph tags per anteprima su WhatsApp/Telegram
- *   - UX: prefers-color-scheme come default tema — se nessuna preferenza è
- *     salvata, rispetta la modalità scura/chiara del sistema operativo
- *   - Accessibilità: @media prefers-reduced-motion disabilita transizioni
- *   - PC: max-width 520px su contenuti principali per leggibilità su desktop
- *   - Privacy: aggiunta menzione preferenza tema e Reset completo
- *   - Rimosso toast "Salvato" (feedback non necessario per l'utente)
- *
- * Per il changelog completo delle versioni precedenti vedi il repository:
- *   https://github.com/Fanza-vibes/DARTSCORE
+ * Lo storico delle versioni precedenti è in CHANGELOG.md:
+ *   https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md
  *
  * ─────────────────────────────────────────────────────────────────────────────
  * MAPPA DEL FILE
