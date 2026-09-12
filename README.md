@@ -36,7 +36,17 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
   dalla cache del browser e non è garantito
 - Nessun account, nessuna registrazione, nessun dato inviato a server
 
-### Novità v2.9.2
+### Novità
+
+#### v2.9.3
+
+- **Zoom della pagina abilitato**: prima era bloccato, ora si può ingrandire il testo
+- Etichette per screen reader sui bottoni di chiusura dei pannelli
+- **Nome file stabile**: l'app è `Darts_Score.html` e non cambia più a ogni versione,
+  quindi i link già condivisi non scadono
+- Anteprima di condivisione corretta su WhatsApp e Telegram, immagine inclusa
+
+#### v2.9.2
 
 - **Pannello Impostazioni Gara**: incontri singoli e doppi, leg per vincere il set,
   leg massimi (best of N), set per la vittoria netta, sostituzioni massime e
@@ -103,28 +113,15 @@ In questo modo si comporta come un'app vera, senza barra del browser.
 
 ### Versione scaricabile (uso offline completo)
 
-Se preferisci avere il file in locale senza dipendere da internet:
+Se preferisci avere il file in locale, senza dipendere da internet:
 
-#### Da telefono (iPhone o Android)
+👉 **[Scarica Darts_Score.html](https://github.com/Fanza-vibes/DARTSCORE/releases/latest/download/Darts_Score.html)**
 
-1. Apri questo link nel browser del telefono: [github.com/Fanza-vibes/DARTSCORE](https://github.com/Fanza-vibes/DARTSCORE)
-2. Nella lista dei file, tocca il nome **`Darts_Score.html`**
-3. Si aprirà una pagina con il contenuto del file. In alto a destra tocca l'icona **"⋯"** (tre puntini) oppure il pulsante **"Raw"**
-4. Se hai toccato **"Raw"**: si aprirà una pagina con solo testo. Tocca l'icona di condivisione del browser (su iPhone il quadrato con la freccia verso l'alto ↑, su Android i tre puntini del browser) e scegli **"Scarica"** oppure **"Salva pagina"**
-5. Se hai toccato **"⋯"** (tre puntini): scegli **"Download"** dal menu che appare
+Questo link scarica sempre l'ultima versione pubblicata. Salva il file dove vuoi e aprilo con un doppio clic: si apre nel browser e funziona offline, senza installare nulla.
 
-> **Alternativa più semplice da telefono:** dalla [pagina principale del progetto](https://github.com/Fanza-vibes/DARTSCORE), scorri in basso e tocca il pulsante verde **"<> Code"**, poi **"Download ZIP"**. Apri lo ZIP scaricato e troverai il file `.html` all'interno.
+> **Su iPhone e Android** il file finisce nell'app *File* (o nella cartella *Download*). Da lì si apre con un tocco, come qualsiasi altro documento.
 
-#### Da computer
-
-1. Vai alla pagina del progetto: [github.com/Fanza-vibes/DARTSCORE](https://github.com/Fanza-vibes/DARTSCORE)
-2. Clicca sul file **`Darts_Score.html`** nella lista
-3. Clicca il pulsante **"⬇ Download raw file"** (icona con freccia verso il basso, in alto a destra)
-4. Il file verrà salvato nella cartella *Download* del tuo computer
-
-In alternativa, dalla pagina principale clicca il pulsante verde **"<> Code"** → **"Download ZIP"** per scaricare l'intero progetto.
-
-> **Nota:** non serve installare nulla. Il file `.html` si apre direttamente con qualsiasi browser con un doppio clic.
+Tutte le versioni, comprese le precedenti, sono nella [pagina delle Release](https://github.com/Fanza-vibes/DARTSCORE/releases).
 
 ---
 
@@ -166,8 +163,4 @@ L'app implementa una Content Security Policy (CSP) che blocca il caricamento di 
 
 Vedi il file [LICENSE](LICENSE) per i termini completi.
 
-Per richieste di licenza commerciale, contattare tramite questo repository.
-https://github.com/Fanza-vibes/DARTSCORE
-
-Email:
-jackal.trail2027@eagereverest.com
+Per richieste di licenza commerciale, apri una [issue](https://github.com/Fanza-vibes/DARTSCORE/issues) sul repository.

@@ -811,17 +811,17 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="save-toast">⚠ Salvataggio non disponibile</div>
 <div id="warn-toast"></div>
 <script>
-/* DartScore v2.9.2 — light/dark theme
+/* DartScore v2.9.3 — light/dark theme
  * ─────────────────────────────────────────────────────────────────────────────
- * MODIFICHE v2.9.2 rispetto a v2.9.1 (solo documentazione, nessun cambio
- * funzionale):
- *   - Aggiunta MAPPA DEL FILE e panoramica architetturale in questa
- *     intestazione, con il flusso stato → render → salvataggio
- *   - 14 intestazioni di sezione nel JavaScript e 8 nel CSS, per orientarsi
- *     tra le circa ottanta funzioni senza doverle leggere tutte
- *   - Descrizione di una o due righe sulle funzioni centrali che ne erano
- *     prive (getGara, getClassifica, buildRow, renderHdr, updateRow e altre)
- *   - Riferimenti agli articoli del regolamento raccolti in un unico punto
+ * MODIFICHE v2.9.3 rispetto a v2.9.2:
+ *   - Accessibilita': rimossi maximum-scale e user-scalable=no dal viewport.
+ *     Bloccavano lo zoom (criterio WCAG 1.4.4) e iOS li ignora comunque
+ *   - Accessibilita': aria-label sui quattro bottoni di chiusura pannello,
+ *     gli unici privi di testo visibile
+ *   - Nome file stabile (Darts_Score.html): non cambia piu' a ogni versione,
+ *     cosi' i link gia' condivisi restano validi
+ *   - og:image per l'anteprima di condivisione, e og:description allineata a
+ *     cio' che la versione web puo' garantire
  * ─────────────────────────────────────────────────────────────────────────────
  * Lo storico delle versioni precedenti è in CHANGELOG.md:
  *   https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md
@@ -896,7 +896,7 @@ const N_PL=8; /* 4 titolari + 4 riserve per squadra (ART.2.2 ammette fino a 12,
 
 /* Costanti di sistema */
 const TAB_HEARTBEAT_MS=5000,TAB_LOCK_TTL_MS=10000,VIBRATE_MS=15,MAX_AGE_MS=48*60*60*1000;
-const APP_VERSION='2.9.2';
+const APP_VERSION='2.9.3';
 const THEME_KEY='dartscore_theme'; /* chiave localStorage per preferenza tema */
 const CFG_KEY='dartscore_cfg';     /* chiave localStorage per configurazione */
 
