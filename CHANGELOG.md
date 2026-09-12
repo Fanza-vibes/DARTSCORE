@@ -6,6 +6,18 @@ Il file dell'app è [`Darts_Score.html`](Darts_Score.html): il nome resta stabil
 
 ---
 
+## v2.9.3
+
+Accessibilità e distribuzione. Nessuna modifica alla logica di punteggio.
+
+- **Zoom della pagina abilitato**: rimossi `maximum-scale=1.0` e `user-scalable=no` dal viewport. Bloccavano l'ingrandimento (criterio WCAG 1.4.4) e da diverse versioni iOS li ignora comunque, quindi il costo di accessibilità si pagava senza ottenere il comportamento promesso
+- `aria-label` sui quattro bottoni di chiusura pannello, gli unici privi di testo visibile. I toggle del tema erano già etichettati
+- **Nome file stabile**: l'app è `Darts_Score.html` e non cambia più a ogni versione, così i link condivisi non scadono. I nomi già circolati restano come reindirizzamenti
+- **Anteprima di condivisione corretta**: i tag Open Graph stavano solo nel file dell'app, ma il link che si condivide è la radice del sito, che serve `index.html` — dove non c'erano. I crawler non eseguono JavaScript né seguono il meta refresh, quindi l'anteprima ricca introdotta nella 2.8 non poteva funzionare sul link più diffuso. Ora `index.html` porta i tag, immagine inclusa
+- `og:description` allineata a ciò che la versione web può davvero garantire: "scaricabile per l'uso offline" invece di "funziona offline"
+
+---
+
 ## v2.9.2
 
 Solo documentazione, nessun cambio funzionale.
