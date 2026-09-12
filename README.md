@@ -163,4 +163,10 @@ L'app implementa una Content Security Policy (CSP) che blocca il caricamento di 
 
 Vedi il file [LICENSE](LICENSE) per i termini completi.
 
-Per richieste di licenza commerciale, apri una [issue](https://github.com/Fanza-vibes/DARTSCORE/issues) sul repository.
+### Contatti
+
+Per richieste di licenza commerciale, o per qualsiasi altra domanda sul progetto:
+
+📧 **[jackal.trail2027@eagereverest.com](mailto:jackal.trail2027@eagereverest.com)**
+
+In alternativa puoi aprire una [issue](https://github.com/Fanza-vibes/DARTSCORE/issues) sul repository.
