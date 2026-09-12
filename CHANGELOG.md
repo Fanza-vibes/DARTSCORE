@@ -6,6 +6,17 @@ Il file dell'app è [`Darts_Score.html`](Darts_Score.html): il nome resta stabil
 
 ---
 
+## v2.9.4
+
+Correzione di un errore di calcolo nelle configurazioni personalizzate. **La configurazione FIGeST predefinita non era interessata e non è stata alterata.**
+
+- **FIX: soglia di vittoria raggiungibile da entrambe le squadre.** Il pannello Impostazioni accettava combinazioni in cui il numero di set per la vittoria netta era inferiore o pari a metà degli incontri — per esempio 4 incontri con soglia 2. In quei casi un pareggio perfetto veniva registrato come vittoria netta della squadra di casa, perché `getGara()` valuta `sA` prima di `sB`. Ora `cfgErrors()` richiede una soglia di almeno `⌊totale/2⌋ + 1`, quindi irraggiungibile da entrambe nella stessa partita. Una configurazione incoerente già salvata nel browser viene scartata da `loadCfg()`, che ripiega sui predefiniti
+- `norm()`: `\r`, `\n` e `\t` non vengono più cancellati ma trattati da separatori, così `"Mario\nRossi"` diventa `"Mario Rossi"` e non `"Mariorossi"`. Non era raggiungibile dai campi di input, che il browser sanifica da sé: è una correzione di robustezza
+
+Verificato con 112 asserzioni eseguite in un browser sul file reale, e confrontando l'impronta completa del comportamento con i predefiniti FIGeST prima e dopo la modifica: **identica**.
+
+---
+
 ## v2.9.3
 
 Accessibilità e distribuzione. Nessuna modifica alla logica di punteggio.
