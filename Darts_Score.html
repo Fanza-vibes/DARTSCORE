@@ -811,17 +811,17 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="save-toast">⚠ Salvataggio non disponibile</div>
 <div id="warn-toast"></div>
 <script>
-/* DartScore v2.9.3 — light/dark theme
+/* DartScore v2.9.4 — light/dark theme
  * ─────────────────────────────────────────────────────────────────────────────
- * MODIFICHE v2.9.3 rispetto a v2.9.2:
- *   - Accessibilita': rimossi maximum-scale e user-scalable=no dal viewport.
- *     Bloccavano lo zoom (criterio WCAG 1.4.4) e iOS li ignora comunque
- *   - Accessibilita': aria-label sui quattro bottoni di chiusura pannello,
- *     gli unici privi di testo visibile
- *   - Nome file stabile (Darts_Score.html): non cambia piu' a ogni versione,
- *     cosi' i link gia' condivisi restano validi
- *   - og:image per l'anteprima di condivisione, e og:description allineata a
- *     cio' che la versione web puo' garantire
+ * MODIFICHE v2.9.4 rispetto a v2.9.3:
+ *   - FIX: cfgErrors() rifiuta una soglia di vittoria raggiungibile da
+ *     entrambe le squadre. Con, ad esempio, 4 incontri e soglia 2, un
+ *     pareggio 2-2 veniva registrato come 3-0 per la casa, perche' getGara()
+ *     valuta sA prima di sB. La configurazione FIGeST (20 incontri, soglia
+ *     11) non era interessata: 11+11 supera i 20 incontri
+ *   - norm(): \r \n \t non vengono piu' cancellati ma trattati da separatori,
+ *     cosi' "Mario\nRossi" non diventa "Mariorossi". Non raggiungibile dai
+ *     campi di input, che il browser sanifica da se'; correzione di robustezza
  * ─────────────────────────────────────────────────────────────────────────────
  * Lo storico delle versioni precedenti è in CHANGELOG.md:
  *   https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md
@@ -896,7 +896,7 @@ const N_PL=8; /* 4 titolari + 4 riserve per squadra (ART.2.2 ammette fino a 12,
 
 /* Costanti di sistema */
 const TAB_HEARTBEAT_MS=5000,TAB_LOCK_TTL_MS=10000,VIBRATE_MS=15,MAX_AGE_MS=48*60*60*1000;
-const APP_VERSION='2.9.3';
+const APP_VERSION='2.9.4';
 const THEME_KEY='dartscore_theme'; /* chiave localStorage per preferenza tema */
 const CFG_KEY='dartscore_cfg';     /* chiave localStorage per configurazione */
 
@@ -1021,7 +1021,10 @@ function getGara(sA,sB,lA,lB){
 /* Normalizza nome: trim, title-case, rimuove caratteri problematici
    (zero-width spaces, RTL/LTR markers, newline, tab) */
 function norm(s){
-  s=s.replace(/[\u200B-\u200F\u202A-\u202E\uFEFF\r\n\t]/g,'').trim();
+  /* Si cancellano solo i caratteri invisibili (zero-width, marcatori
+     bidirezionali). \r \n \t restano: li tratta da separatori lo split(/\s+/)
+     qui sotto, che altrimenti incollerebbe le parole ("Mario\nRossi"). */
+  s=s.replace(/[\u200B-\u200F\u202A-\u202E\uFEFF]/g,'').trim();
   if(!s)return '';
   return s.split(/\s+/).map(w=>w?w[0].toUpperCase()+w.slice(1).toLowerCase():'').filter(Boolean).join(' ');
 }
@@ -1647,6 +1650,11 @@ function cfgErrors(c){
   if(tot<1) err.push('Serve almeno un incontro.');
   if(c.legWin>c.maxLeg) err.push('I leg per vincere non possono superare i leg massimi.');
   if(c.setWin>tot) err.push(`Set per vittoria netta (${c.setWin}) superiore agli incontri totali (${tot}).`);
+  /* La soglia deve essere irraggiungibile da entrambe le squadre nella stessa
+     partita. Se non lo e', un pareggio perfetto verrebbe letto come vittoria
+     netta: getGara() controlla sA prima di sB e restituirebbe 3-0 alla casa.
+     Minimo ammesso: meta' degli incontri piu' uno. */
+  else if(c.setWin*2<=tot) err.push(`Set per vittoria netta (${c.setWin}) troppo basso: con ${tot} incontri potrebbero raggiungerlo entrambe le squadre. Minimo ${Math.floor(tot/2)+1}.`);
   return err;
 }
 
