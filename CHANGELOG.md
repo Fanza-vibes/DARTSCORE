@@ -2,7 +2,7 @@
 
 Storico delle versioni di DartScore, estratto dall'intestazione del sorgente dell'app.
 
-Il file corrente è [`Darts_Score_2_9_2.html`](Darts_Score_2_9_2.html).
+Il file dell'app è [`Darts_Score.html`](Darts_Score.html): il nome resta stabile a ogni versione, quella corrente è indicata qui sotto e dentro l'app.
 
 ---
 
