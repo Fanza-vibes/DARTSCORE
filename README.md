@@ -8,6 +8,12 @@ App web per il calcolo dei punteggi nelle partite di freccette.
 
 Nessuna installazione necessaria. Si apre direttamente nel browser.
 
+## Schermate
+
+| Setup squadre | Referto in corso | Riepilogo (tema scuro) |
+|:---:|:---:|:---:|
+| <img src="docs/screenshot-setup.png" width="230" alt="Schermata di inserimento squadre, categoria e giocatori"> | <img src="docs/screenshot-referto.png" width="230" alt="Referto con assegnazione dei leg incontro per incontro"> | <img src="docs/screenshot-riepilogo.png" width="230" alt="Riepilogo con punteggio gara, classifica individuale e dettaglio incontri"> |
+
 ---
 
 ## Descrizione
@@ -102,7 +108,7 @@ Se preferisci avere il file in locale senza dipendere da internet:
 #### Da telefono (iPhone o Android)
 
 1. Apri questo link nel browser del telefono: [github.com/Fanza-vibes/DARTSCORE](https://github.com/Fanza-vibes/DARTSCORE)
-2. Nella lista dei file, tocca il nome **`Darts_Score_2_9_2.html`**
+2. Nella lista dei file, tocca il nome **`Darts_Score.html`**
 3. Si aprirà una pagina con il contenuto del file. In alto a destra tocca l'icona **"⋯"** (tre puntini) oppure il pulsante **"Raw"**
 4. Se hai toccato **"Raw"**: si aprirà una pagina con solo testo. Tocca l'icona di condivisione del browser (su iPhone il quadrato con la freccia verso l'alto ↑, su Android i tre puntini del browser) e scegli **"Scarica"** oppure **"Salva pagina"**
 5. Se hai toccato **"⋯"** (tre puntini): scegli **"Download"** dal menu che appare
@@ -112,7 +118,7 @@ Se preferisci avere il file in locale senza dipendere da internet:
 #### Da computer
 
 1. Vai alla pagina del progetto: [github.com/Fanza-vibes/DARTSCORE](https://github.com/Fanza-vibes/DARTSCORE)
-2. Clicca sul file **`Darts_Score_2_9_2.html`** nella lista
+2. Clicca sul file **`Darts_Score.html`** nella lista
 3. Clicca il pulsante **"⬇ Download raw file"** (icona con freccia verso il basso, in alto a destra)
 4. Il file verrà salvato nella cartella *Download* del tuo computer
 
