@@ -804,24 +804,44 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <p>Per qualsiasi domanda relativa alla privacy puoi contattare lo sviluppatore tramite la pagina GitHub del progetto.</p>
     <p style="margin-top:8px"><a href="https://github.com/Fanza-vibes/DARTSCORE" target="_blank" rel="noopener" style="color:var(--az);font-weight:700;text-decoration:none">github.com/Fanza-vibes/DARTSCORE</a></p>
   </div>
-  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.9.2 · Tutti i diritti riservati</div>
+  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.9.5 · © Fanza-vibes · Licenza MIT</div>
 </div>
 
 </div>
 <div id="save-toast">⚠ Salvataggio non disponibile</div>
 <div id="warn-toast"></div>
 <script>
-/* DartScore v2.9.4 — light/dark theme
+/* DartScore v2.9.5 — light/dark theme
+ *
+ * Copyright (c) 2025-2026 Fanza-vibes
+ * https://github.com/Fanza-vibes/DARTSCORE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  * ─────────────────────────────────────────────────────────────────────────────
- * MODIFICHE v2.9.4 rispetto a v2.9.3:
- *   - FIX: cfgErrors() rifiuta una soglia di vittoria raggiungibile da
- *     entrambe le squadre. Con, ad esempio, 4 incontri e soglia 2, un
- *     pareggio 2-2 veniva registrato come 3-0 per la casa, perche' getGara()
- *     valuta sA prima di sB. La configurazione FIGeST (20 incontri, soglia
- *     11) non era interessata: 11+11 supera i 20 incontri
- *   - norm(): \r \n \t non vengono piu' cancellati ma trattati da separatori,
- *     cosi' "Mario\nRossi" non diventa "Mariorossi". Non raggiungibile dai
- *     campi di input, che il browser sanifica da se'; correzione di robustezza
+ * MODIFICHE v2.9.5 rispetto a v2.9.4 (solo licenza, nessun cambio funzionale):
+ *   - Il progetto passa dalla licenza personalizzata "solo uso personale e non
+ *     commerciale" alla licenza MIT: uso, modifica, ridistribuzione e vendita
+ *     sono liberi, a condizione di conservare questo avviso di copyright
+ *   - L'avviso MIT e' incluso qui per intero, perche' l'app viene distribuita
+ *     anche come file singolo, senza il file LICENSE a fianco
+ *   - Il pie' di pagina dell'informativa non dice piu' "Tutti i diritti
+ *     riservati", che contraddiceva la nuova licenza
  * ─────────────────────────────────────────────────────────────────────────────
  * Lo storico delle versioni precedenti è in CHANGELOG.md:
  *   https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md
@@ -896,7 +916,7 @@ const N_PL=8; /* 4 titolari + 4 riserve per squadra (ART.2.2 ammette fino a 12,
 
 /* Costanti di sistema */
 const TAB_HEARTBEAT_MS=5000,TAB_LOCK_TTL_MS=10000,VIBRATE_MS=15,MAX_AGE_MS=48*60*60*1000;
-const APP_VERSION='2.9.4';
+const APP_VERSION='2.9.5';
 const THEME_KEY='dartscore_theme'; /* chiave localStorage per preferenza tema */
 const CFG_KEY='dartscore_cfg';     /* chiave localStorage per configurazione */
 
@@ -1906,7 +1926,7 @@ function releaseTabLock(){
 
   /* Sincronizza versione da costante JS → HTML */
   setText('app-version','v'+APP_VERSION+' \xb7 Campionato Soft Dart 2026');
-  setText('prv-ver','DartScore 2026 \xb7 Versione '+APP_VERSION+' \xb7 Tutti i diritti riservati');
+  setText('prv-ver','DartScore 2026 \xb7 Versione '+APP_VERSION+' \xb7 \xa9 Fanza-vibes \xb7 Licenza MIT');
 
   acquireTabLock();
   const restored=restoreState();

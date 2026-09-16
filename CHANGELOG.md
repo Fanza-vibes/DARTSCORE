@@ -6,6 +6,17 @@ Il file dell'app è [`Darts_Score.html`](Darts_Score.html): il nome resta stabil
 
 ---
 
+## v2.9.5
+
+Cambio di licenza. **Nessuna modifica funzionale: il calcolo del referto è invariato.**
+
+- **Il progetto passa alla [licenza MIT](LICENSE).** Prima era una licenza personalizzata che consentiva solo l'uso "personale, individuale e non commerciale": un circolo o una lega che volesse usarla per il proprio campionato tecnicamente non era autorizzato. Ora uso, modifica, ridistribuzione e vendita sono liberi, a condizione di conservare l'avviso di copyright
+- **L'avviso MIT è incluso per intero in testa a `Darts_Score.html`.** L'app viene distribuita anche come file singolo, senza il file `LICENSE` a fianco: senza l'avviso nel file, una copia scaricata non sarebbe conforme alla licenza che la accompagna
+- Il piè di pagina dell'informativa privacy non dice più "Tutti i diritti riservati", che contraddiceva la nuova licenza: ora riporta autore e licenza
+- README: sezione Licenza riscritta e aggiunta una sezione **Come citare il progetto**, con la riga di credito pronta da copiare. Il credito visibile non è un obbligo MIT, quindi è una richiesta e non una condizione
+
+---
+
 ## v2.9.4
 
 Correzione di un errore di calcolo nelle configurazioni personalizzate. **La configurazione FIGeST predefinita non era interessata e non è stata alterata.**
