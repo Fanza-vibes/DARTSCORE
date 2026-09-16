@@ -159,13 +159,21 @@ L'app implementa una Content Security Policy (CSP) che blocca il caricamento di 
 
 ## Licenza
 
-**Solo uso personale e non commerciale.**
+**[Licenza MIT](LICENSE).** Puoi usare, modificare, ridistribuire e anche vendere DartScore, senza chiedere alcun permesso.
 
-Vedi il file [LICENSE](LICENSE) per i termini completi.
+L'unica condizione è conservare l'avviso di copyright e il testo della licenza nelle copie. L'avviso è incluso anche in testa al file `Darts_Score.html`, così viaggia con l'app anche quando viene scaricata da sola.
+
+Il software è fornito "così com'è", senza garanzie.
+
+### Come citare il progetto
+
+Il credito visibile non è un obbligo di licenza, ma è molto apprezzato. Se pubblichi una versione basata su DartScore, questa riga è pronta da copiare:
+
+> Basato su [DartScore](https://github.com/Fanza-vibes/DARTSCORE) di Fanza-vibes, distribuito con licenza MIT.
 
 ### Contatti
 
-Per richieste di licenza commerciale, o per qualsiasi altra domanda sul progetto:
+Per qualsiasi domanda sul progetto:
 
 📧 **[jackal.trail2027@eagereverest.com](mailto:jackal.trail2027@eagereverest.com)**
 
