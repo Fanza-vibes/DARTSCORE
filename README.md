@@ -38,51 +38,15 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 
 ### Novità
 
-#### v2.9.3
+**v2.9.5** — Il progetto passa alla **licenza MIT**: uso, modifica, ridistribuzione e vendita liberi, a condizione di conservare l'avviso di copyright. Vedi [Licenza](#licenza).
 
-- **Zoom della pagina abilitato**: prima era bloccato, ora si può ingrandire il testo
-- Etichette per screen reader sui bottoni di chiusura dei pannelli
-- **Nome file stabile**: l'app è `Darts_Score.html` e non cambia più a ogni versione,
-  quindi i link già condivisi non scadono
-- Anteprima di condivisione corretta su WhatsApp e Telegram, immagine inclusa
+**v2.9.4** — Corretta una configurazione personalizzata che poteva registrare un pareggio come vittoria netta. I valori predefiniti FIGeST non erano interessati.
 
-#### v2.9.2
+**v2.9.3** — Zoom della pagina abilitato, etichette per screen reader, nome file stabile che non fa scadere i link condivisi, anteprima di condivisione corretta.
 
-- **Pannello Impostazioni Gara**: incontri singoli e doppi, leg per vincere il set,
-  leg massimi (best of N), set per la vittoria netta, sostituzioni massime e
-  sistema punti sono ora tutti configurabili
-- I valori predefiniti riproducono esattamente il **regolamento FIGeST 2026**;
-  il pulsante **"Predefiniti"** ripristina la configurazione ufficiale
-- Calendario incontri **generato dinamicamente** dalla configurazione, con schemi
-  di rotazione per singoli e doppi al posto degli elenchi fissi
-- Calcolo di leg, set e punti generalizzato: funziona con qualsiasi formato,
-  non solo il best-of-3 del regolamento
-- Validazione della configurazione: combinazioni incoerenti (zero incontri,
-  soglia di vittoria irraggiungibile) vengono bloccate con messaggio esplicativo
-  e i valori fuori range corretti automaticamente
-- La modifica delle impostazioni azzera la partita in corso, previa conferma
-- Le impostazioni vengono salvate nel browser e ripristinate alla visita successiva
-- Sorgente documentato: mappa del file, intestazioni di sezione e descrizione
-  delle funzioni principali
+**v2.9** — **Pannello Impostazioni Gara**: numero di incontri, leg per set, best of N, soglia di vittoria, sostituzioni e sistema punti diventano configurabili, con i predefiniti che riproducono il regolamento FIGeST 2026.
 
-<details>
-<summary>Versioni precedenti</summary>
-
-**v2.9.1** — correzioni al pannello Impostazioni: limiti coerenti sui campi,
-clamp automatico dei valori fuori range, salvataggio disabilitato con
-configurazione incoerente.
-
-**v2.8.1** — refactoring interno, sincronizzazione del meta `color-scheme`
-al cambio tema, colonna punti allargata per i bottoni leg.
-
-**v2.8** — tema scuro con toggle in ogni schermata, bottoni leg ingranditi,
-scroll automatico al prossimo incontro, modifica nomi squadre durante la partita,
-reset completo dei dati salvati, banner stato partita, supporto animazioni
-ridotte, anteprima link su WhatsApp/Telegram.
-
-Storico completo e dettagliato in [CHANGELOG.md](CHANGELOG.md).
-
-</details>
+📖 Storico completo e dettagliato di tutte le versioni: **[CHANGELOG.md](CHANGELOG.md)**
 
 ---
 
