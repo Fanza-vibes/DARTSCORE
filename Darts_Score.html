@@ -414,6 +414,14 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .prv-body .ok { color:var(--gn); font-weight:700; }
 .prv-footer { margin-top:18px; font-size:11px; color:var(--tm); text-align:center; }
 
+/* Modale di conferma: sostituisce il confirm() nativo, che blocca il thread
+   dell'interfaccia, non e' stilizzabile e su iOS appare estraneo all'app.
+   Riusa .ov e .sp dei pannelli, con z-index piu' alto per potersi aprire
+   sopra un pannello gia' aperto (es. Impostazioni). */
+#ask-ov { z-index:30; }
+#ask-panel { z-index:31; }
+.ask-msg { font-size:15px; color:var(--tx); line-height:1.5; white-space:pre-line; margin-bottom:16px; padding:12px 14px; background:var(--s2); border-radius:10px; }
+
 /* Toast salvataggio non disponibile — FIX v2.1 */
 #save-toast {
   position:fixed; bottom:calc(80px + var(--sb)); left:50%; transform:translateX(-50%) translateY(12px);
@@ -570,7 +578,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   <div class="logo">
     <span class="logo-i">🎯</span>
     <div class="logo-n">DART<span>SCORE</span></div>
-    <div class="logo-s" id="app-version">v2.10.0 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
+    <div class="logo-s" id="app-version">v2.11.0 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
   </div>
   <div class="card">
     <div class="card-t">Squadre &amp; Categoria</div>
@@ -654,7 +662,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 
 <!-- PANNELLO SOSTITUZIONI -->
 <div id="sub-ov" class="ov" onclick="closeSub()"></div>
-<div id="sub-panel" class="sp">
+<div id="sub-panel" class="sp" tabindex="-1">
   <div class="sph">
     <div class="sptitle">Cambio Giocatore</div>
     <button class="spcls" onclick="closeSub()" aria-label="Chiudi il pannello sostituzioni">&#10005;</button>
@@ -680,7 +688,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <!-- PANNELLO MODIFICA NOMI -->
 <!-- PANNELLO IMPOSTAZIONI -->
 <div id="cfg-ov" class="ov" onclick="closeCfg()"></div>
-<div id="cfg-panel" class="sp">
+<div id="cfg-panel" class="sp" tabindex="-1">
   <div class="sph">
     <div class="sptitle">&#9881; Impostazioni Gara</div>
     <button class="spcls" onclick="closeCfg()" aria-label="Chiudi le impostazioni gara">&#10005;</button>
@@ -695,7 +703,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 </div>
 
 <div id="edit-ov" class="ov" onclick="closeEdit()"></div>
-<div id="edit-panel" class="sp">
+<div id="edit-panel" class="sp" tabindex="-1">
   <div class="sph">
     <div class="sptitle">Modifica Nomi</div>
     <button class="spcls" onclick="closeEdit()" aria-label="Chiudi la modifica nomi">&#10005;</button>
@@ -765,7 +773,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 
 <!-- MODALE INFORMATIVA PRIVACY -->
 <div id="prv-ov" onclick="closePrivacy()"></div>
-<div id="prv-panel">
+<div id="prv-panel" tabindex="-1">
   <div class="prv-hdr">
     <div class="prv-title">🔒 Informativa Privacy</div>
     <button class="spcls" onclick="closePrivacy()" aria-label="Chiudi l'informativa privacy">&#10005;</button>
@@ -804,14 +812,25 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <p>Per qualsiasi domanda relativa alla privacy puoi contattare lo sviluppatore tramite la pagina GitHub del progetto.</p>
     <p style="margin-top:8px"><a href="https://github.com/Fanza-vibes/DARTSCORE" target="_blank" rel="noopener" style="color:var(--az);font-weight:700;text-decoration:none">github.com/Fanza-vibes/DARTSCORE</a></p>
   </div>
-  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.10.0 · © Fanza-vibes · Licenza MIT</div>
+  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.11.0 · © Fanza-vibes · Licenza MIT</div>
 </div>
 
 </div>
+<!-- MODALE DI CONFERMA — sostituisce il confirm() nativo del browser -->
+<div id="ask-ov" class="ov" onclick="askRispondi(false)"></div>
+<div id="ask-panel" class="sp" tabindex="-1">
+  <div class="sph"><div class="sptitle" id="ask-title">Conferma</div></div>
+  <div class="ask-msg" id="ask-msg"></div>
+  <div class="cfg-actions">
+    <button class="btn-cfg-reset" id="ask-no" onclick="askRispondi(false)">Annulla</button>
+    <button class="btn-ok" id="ask-si" style="padding:13px 8px;font-size:15px" onclick="askRispondi(true)">Continua</button>
+  </div>
+</div>
+
 <div id="save-toast">⚠ Salvataggio non disponibile</div>
 <div id="warn-toast"></div>
 <script>
-/* DartScore v2.10.0 — light/dark theme
+/* DartScore v2.11.0 — light/dark theme
  *
  * Copyright (c) 2025-2026 Fanza-vibes
  * https://github.com/Fanza-vibes/DARTSCORE
@@ -834,19 +853,24 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * ─────────────────────────────────────────────────────────────────────────────
- * MODIFICHE v2.10.0 rispetto a v2.9.5:
- *   - CALENDARIO INCONTRI allineato al Referto Gara FIGeST in vigore.
- *     Il 2°, 3° e 4° round di singoli erano gli schemi giusti ma in ordine
- *     sbagliato, e nei doppi le coppie si affrontavano con la stessa
- *     numerazione (C1&C2 contro O1&O2) invece di incrociarsi come prevede il
- *     referto (C1&C2 contro O3&O4).
- *     Non era un dettaglio grafico: ART.5.3 impone di seguire l'ordine del
- *     referto, doppi compresi, e stabilisce che altrimenti il leg/set va
- *     RIGIOCATO. Tutti e 20 gli incontri ora corrispondono al documento.
- *   - ROT_DOPPI cambia forma: casa e ospite hanno slot diversi, quindi ogni
- *     incontro di doppio indica separatamente c (casa) e o (ospite)
- *   - Nessun'altra modifica: punteggi, sostituzioni, classifica e validazione
- *     restano identici, verificati invariati funzione per funzione
+ * MODIFICHE v2.11.0 rispetto a v2.10.0 (interfaccia e verificabilita':
+ * il calcolo del referto non cambia):
+ *   - Accessibilita': i quattro pannelli a scomparsa sono ora veri dialoghi.
+ *     role/aria-modal/aria-label, focus spostato dentro e restituito a chi ha
+ *     aperto, Tab confinato dentro, chiusura con Esc. I modali sono impilati,
+ *     cosi' una conferma aperta sopra le Impostazioni, chiudendosi, restituisce
+ *     il focus al pannello e non alla pagina.
+ *   - Niente piu' confirm() nativo: le dieci conferme usano un modale interno,
+ *     coerente col tema, non bloccante e con etichette specifiche al posto del
+ *     generico OK/Annulla. Le funzioni interessate sono diventate async.
+ *   - Aggiunto tests.html: verifica il calendario contro il Referto Gara e le
+ *     regole di punteggio contro il regolamento, senza dipendenze. Va aperto
+ *     da un indirizzo web, non con doppio clic.
+ *   - window.DS espone in sola lettura i valori derivati (CAL, N_SET,
+ *     SOMMA_OK...), che essendo dichiarati con let non sarebbero leggibili da
+ *     una pagina di test. Non usato dall'app.
+ *   - Non si usa il tag <dialog> nativo: richiede Safari 15.4, mentre la
+ *     compatibilita' dichiarata parte da Safari 14.
  * ─────────────────────────────────────────────────────────────────────────────
  * Lo storico delle versioni precedenti è in CHANGELOG.md:
  *   https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md
@@ -921,7 +945,7 @@ const N_PL=8; /* 4 titolari + 4 riserve per squadra (ART.2.2 ammette fino a 12,
 
 /* Costanti di sistema */
 const TAB_HEARTBEAT_MS=5000,TAB_LOCK_TTL_MS=10000,VIBRATE_MS=15,MAX_AGE_MS=48*60*60*1000;
-const APP_VERSION='2.10.0';
+const APP_VERSION='2.11.0';
 const THEME_KEY='dartscore_theme'; /* chiave localStorage per preferenza tema */
 const CFG_KEY='dartscore_cfg';     /* chiave localStorage per configurazione */
 
@@ -1127,23 +1151,98 @@ function getSomma(){
  * Le tre schermate (#setup, #referto, #riepilogo) sono sovrapposte;
  * showScr() attiva la classe .on su una sola alla volta.
  */
-function openPrivacy(){ document.getElementById('prv-ov').classList.add('on'); document.getElementById('prv-panel').classList.add('on'); }
-function closePrivacy(){ document.getElementById('prv-ov').classList.remove('on'); document.getElementById('prv-panel').classList.remove('on'); }
+function openPrivacy(){ modalOpen('prv-ov','prv-panel','Informativa privacy',closePrivacy); }
+function closePrivacy(){ modalClose(); }
+
+/* ═════════════════════════════════════════════════════════════════════════
+ * PANNELLI MODALI — focus, tastiera, annuncio agli screen reader
+ * ─────────────────────────────────────────────────────────────────────────
+ * Punto unico per aprire e chiudere i pannelli a scomparsa e il modale di
+ * conferma. Si occupa di:
+ *   - marcare il pannello come dialogo (role, aria-modal, aria-label)
+ *   - spostare il focus dentro e restituirlo a chi lo aveva prima
+ *   - confinare il Tab dentro al pannello finche' resta aperto
+ *   - chiudere con Esc
+ * I modali sono impilati: il pannello Impostazioni puo' aprire una conferma
+ * sopra di se', e chiudendola il focus torna al pannello, non alla pagina.
+ * Non si usa il tag <dialog> nativo: richiede Safari 15.4, mentre la
+ * compatibilita' dichiarata dal progetto parte da Safari 14.
+ * ═════════════════════════════════════════════════════════════════════════ */
+const _modali=[];
+const FOCUSABILI='button:not(:disabled), [href], input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])';
+
+function elementiFocusabili(root){
+  return Array.from(root.querySelectorAll(FOCUSABILI)).filter(function(e){ return e.offsetParent!==null; });
+}
+function modalOpen(ov,pan,nome,chiudi){
+  const p=g(pan); if(!p) return;
+  p.setAttribute('role','dialog');
+  p.setAttribute('aria-modal','true');
+  p.setAttribute('aria-label',nome);
+  _modali.push({ov:ov,pan:pan,chiudi:chiudi,tornaA:document.activeElement});
+  g(ov).classList.add('on'); p.classList.add('on');
+  /* Il focus si sposta a transizione avviata: prima il pannello e'
+     visibility:hidden e nessun elemento al suo interno puo' riceverlo. */
+  setTimeout(function(){
+    if(!_modali.length) return;
+    const f=elementiFocusabili(p);
+    (f[0]||p).focus();
+  },60);
+}
+function modalClose(){
+  const m=_modali.pop(); if(!m) return;
+  const p=g(m.pan);
+  g(m.ov).classList.remove('on');
+  p.classList.remove('on');
+  p.removeAttribute('aria-modal');
+  if(m.tornaA && typeof m.tornaA.focus==='function') m.tornaA.focus();
+}
+document.addEventListener('keydown',function(e){
+  const m=_modali[_modali.length-1]; if(!m) return;
+  if(e.key==='Escape'){ e.preventDefault(); m.chiudi(); return; }
+  if(e.key!=='Tab') return;
+  const f=elementiFocusabili(g(m.pan)); if(!f.length) return;
+  const primo=f[0], ultimo=f[f.length-1];
+  if(e.shiftKey && document.activeElement===primo){ e.preventDefault(); ultimo.focus(); }
+  else if(!e.shiftKey && document.activeElement===ultimo){ e.preventDefault(); primo.focus(); }
+});
+
+/* ── Conferma: sostituisce il confirm() nativo ────────────────────────
+   Restituisce una Promise che si risolve a true o false. I chiamanti sono
+   funzioni async e la usano cosi': if(!(await askConfirm(msg))) return;
+   Il messaggio passa da textContent, quindi non serve escape e i ritorni a
+   capo sono resi dal white-space:pre-line del CSS. */
+let _askRisolvi=null;
+function askConfirm(msg,titolo,etichettaSi){
+  return new Promise(function(risolvi){
+    _askRisolvi=risolvi;
+    setText('ask-title',titolo||'Conferma');
+    setText('ask-msg',msg);
+    setText('ask-si',etichettaSi||'Continua');
+    modalOpen('ask-ov','ask-panel',titolo||'Conferma',function(){ askRispondi(false); });
+  });
+}
+function askRispondi(v){
+  if(!_askRisolvi) return;
+  const r=_askRisolvi; _askRisolvi=null;
+  modalClose();
+  r(v);
+}
 
 function showScr(id){ document.querySelectorAll('.scr').forEach(el=>el.classList.remove('on')); g(id).classList.add('on'); }
-function goSetup(){
+async function goSetup(){
   const{done}=getTotals();
-  if(done>0 && !confirm('Tornare al setup farà perdere i dati della partita.\nContinuare?'))return;
+  if(done>0 && !(await askConfirm('Tornare al setup farà perdere i dati della partita.\nContinuare?','Tornare al setup?')))return;
   clearState(); renderStatusBanner(); showScr('setup');
 }
 function goReferto(){ showScr('referto'); }
 /* Apre il riepilogo, avvisando se la partita non e' ancora completa. */
-function showRiep(){
+async function showRiep(){
   const{sA,sB,lA,lB,done}=getTotals();
   const ga=getGara(sA,sB,lA,lB);
   if(done<N_SET && !ga){
-    if(done===0){ if(!confirm('Non hai ancora completato nessun incontro.\nIl riepilogo sarà vuoto.\n\nVuoi continuare?'))return; }
-    else { if(!confirm('Attenzione: hai completato solo '+done+' incontri su '+N_SET+'.\nIl riepilogo sarà parziale.\n\nVuoi continuare?'))return; }
+    if(done===0){ if(!(await askConfirm('Non hai ancora completato nessun incontro.\nIl riepilogo sarà vuoto.\n\nVuoi continuare?','Riepilogo vuoto')))return; }
+    else { if(!(await askConfirm('Hai completato solo '+done+' incontri su '+N_SET+'.\nIl riepilogo sarà parziale.\n\nVuoi continuare?','Riepilogo parziale')))return; }
   }
   showScr('riepilogo'); renderRiep();
 }
@@ -1169,7 +1268,7 @@ function readRoster(){
     S.gB[i]=norm(g('rb-'+i)?.value||'')||'O'+(i+1);
   }
 }
-function startMatch(){
+async function startMatch(){
   readRoster();
   S.nA=norm(g('inp-a').value)||'Squadra Casa';
   S.nB=norm(g('inp-b').value)||'Squadra Ospite';
@@ -1177,17 +1276,17 @@ function startMatch(){
   const allDefaultB=S.gB.every((n,i)=>!n||n==='O'+(i+1));
   if(allDefaultA||allDefaultB){
     const chi=allDefaultA&&allDefaultB?'entrambe le squadre':(allDefaultA?'"'+S.nA+'"':'"'+S.nB+'"');
-    if(!confirm('I nomi dei giocatori di '+chi+' non sono stati inseriti.\nI giocatori appariranno come C1\u2013C8 / O1\u2013O8.\nContinuare comunque?'))return;
+    if(!(await askConfirm('I nomi dei giocatori di '+chi+' non sono stati inseriti.\nI giocatori appariranno come C1\u2013C8 / O1\u2013O8.\nContinuare comunque?','Nomi non inseriti')))return;
   }
   if(S.nA.toLowerCase()===S.nB.toLowerCase()){
-    if(!confirm('Le due squadre hanno lo stesso nome ("'+S.nA+'").\nPotrebbe creare confusione. Continuare comunque?'))return;
+    if(!(await askConfirm('Le due squadre hanno lo stesso nome ("'+S.nA+'").\nPotrebbe creare confusione. Continuare comunque?','Stesso nome')))return;
   }
   S.slotA=[0,1,2,3]; S.slotB=[0,1,2,3]; S.subA=[]; S.subB=[];
   initLegs(); refreshUI(); showScr('referto'); saveState();
 }
-function newMatch(){
+async function newMatch(){
   const{done}=getTotals();
-  if(done>0 && !confirm('Tutti i dati della partita corrente saranno persi.\nSei sicuro di voler iniziare una nuova partita?'))return;
+  if(done>0 && !(await askConfirm('Tutti i dati della partita corrente saranno persi.\nVuoi davvero iniziare una nuova partita?','Nuova partita','Inizia')))return;
   clearState();
   g('inp-a').value=''; g('inp-b').value='';
   S.gA=Array.from({length:8},(_,i)=>'C'+(i+1)); S.gB=Array.from({length:8},(_,i)=>'O'+(i+1));
@@ -1196,8 +1295,8 @@ function newMatch(){
   initLegs(); selCat('A'); buildRosters(); renderStatusBanner(); showScr('setup');
 }
 
-function resetApp(){
-  if(!confirm('Sei sicuro di voler cancellare tutti i dati?\nQuesta azione eliminerà la partita in corso e tutti i dati salvati.'))return;
+async function resetApp(){
+  if(!(await askConfirm('Questa azione eliminerà la partita in corso e tutti i dati salvati sul dispositivo.\nNon si può annullare.','Reset completo','Cancella tutto')))return;
   /* Pulisci stato e lock — THEME_KEY non viene rimosso: la preferenza tema
      è personale del dispositivo, non legata alla partita */
   try{ localStorage.removeItem(SS_KEY); localStorage.removeItem(TAB_LOCK_KEY); }catch(e){}
@@ -1250,8 +1349,8 @@ function scrollToNext(afterIdx){
  * Lo stato persistente dei cambi vive invece in S.subA / S.subB.
  */
 const UI={team:'A',outSlot:null,inP:null,from:0};
-function openSub(){ UI.team='A'; UI.outSlot=null; UI.inP=null; UI.from=firstUnplayed(); subSetTeam('A'); populateFrom(); g('sub-ov').classList.add('on'); g('sub-panel').classList.add('on'); }
-function closeSub(){ g('sub-ov').classList.remove('on'); g('sub-panel').classList.remove('on'); }
+function openSub(){ UI.team='A'; UI.outSlot=null; UI.inP=null; UI.from=firstUnplayed(); subSetTeam('A'); populateFrom(); modalOpen('sub-ov','sub-panel','Sostituzioni',closeSub); }
+function closeSub(){ modalClose(); }
 function subSetTeam(t){
   UI.team=t; UI.outSlot=null; UI.inP=null;
   g('sub-ba').className='stb'+(t==='A'?' sa':'');
@@ -1327,11 +1426,11 @@ function renderSubHistory(){
   });
   cont.innerHTML=h;
 }
-function undoLastSub(team){
+async function undoLastSub(team){
   const subs=team==='A'?S.subA:S.subB;
   const slots=team==='A'?S.slotA:S.slotB;
   if(!subs.length)return;
-  if(!confirm('Annullare l\u2019ultimo cambio di '+(team==='A'?S.nA:S.nB)+'?'))return;
+  if(!(await askConfirm('Annullare l\u2019ultimo cambio di '+(team==='A'?S.nA:S.nB)+'?','Annulla cambio','Annulla il cambio')))return;
   const last=subs.pop();
   slots[last.slot]=last.oldP;
   renderSubOut(); renderSubIn(); updateSubInfo(); updateSubBtn(); renderSubHistory();
@@ -1475,9 +1574,9 @@ const EP={team:'A'};
  */
 function openEdit(){
   EP.team='A'; setText('ep-na',S.nA); setText('ep-nb',S.nB); editTeam('A');
-  g('edit-ov').classList.add('on'); g('edit-panel').classList.add('on');
+  modalOpen('edit-ov','edit-panel','Modifica nomi',closeEdit);
 }
-function closeEdit(){ g('edit-ov').classList.remove('on'); g('edit-panel').classList.remove('on'); }
+function closeEdit(){ modalClose(); }
 function editTeam(t){
   if(EP.team!==t){
     /* auto-save del tab corrente prima di switchare */
@@ -1691,10 +1790,10 @@ function cfgErrors(c){
 
 function openCfg(){
   renderCfgPanel();
-  g('cfg-ov').classList.add('on'); g('cfg-panel').classList.add('on');
+  modalOpen('cfg-ov','cfg-panel','Impostazioni gara',closeCfg);
 }
 function closeCfg(){
-  g('cfg-ov').classList.remove('on'); g('cfg-panel').classList.remove('on');
+  modalClose();
 }
 function renderCfgPanel(){
   let h='';
@@ -1744,19 +1843,19 @@ function updateCfgPreview(){
   el.className='cfg-preview'+(somma===null?' w':'');
   if(btn) btn.disabled=false;
 }
-function saveCfgPanel(){
+async function saveCfgPanel(){
   const nuovo=readCfgInputs();
   if(cfgErrors(nuovo).length){ updateCfgPreview(); return; }
   const cambiato=Object.keys(DEFAULT_CFG).some(k=>nuovo[k]!==CFG[k]);
   if(!cambiato){ closeCfg(); return; }
   const{done}=getTotals();
-  if(done>0 && !confirm('Modificare le impostazioni azzera la partita in corso.\nContinuare?')) return;
+  if(done>0 && !(await askConfirm('Modificare le impostazioni azzera la partita in corso.\nContinuare?','Impostazioni gara'))) return;
   CFG={...nuovo}; applyCfg(); saveCfg();
   resetMatchState(); clearState();
   buildRosters(); renderStatusBanner(); closeCfg();
 }
-function resetCfgPanel(){
-  if(!confirm('Ripristinare le impostazioni predefinite del regolamento?')) return;
+async function resetCfgPanel(){
+  if(!(await askConfirm('Ripristinare le impostazioni predefinite del regolamento FIGeST?','Predefiniti','Ripristina'))) return;
   CFG={...DEFAULT_CFG}; applyCfg(); saveCfg();
   const{done}=getTotals();
   if(done>0){ resetMatchState(); clearState(); buildRosters(); renderStatusBanner(); }
@@ -1926,6 +2025,14 @@ function releaseTabLock(){
     }
   } catch(e){}
 }
+
+/* Aggancio per tests.html. I valori derivati sono dichiarati con let, quindi
+   non diventano proprieta' di window e una pagina di test non potrebbe
+   leggerli dall'esterno. Sola lettura, non usato dall'app. */
+window.DS={
+  get CAL(){return CAL;}, get N_SET(){return N_SET;}, get SOMMA_OK(){return SOMMA_OK;},
+  get CFG(){return CFG;}, get DEFAULT_CFG(){return DEFAULT_CFG;}, get S(){return S;},
+};
 
 (function init(){
   /* Configurazione: carica preferenze salvate e ricalcola i valori derivati.

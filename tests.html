@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DartScore — Verifiche</title>
+<meta name="robots" content="noindex">
+<style>
+:root { color-scheme:light dark; }
+body { font-family:'Arial Narrow','Helvetica Neue',Arial,sans-serif; max-width:820px; margin:0 auto;
+       padding:20px 16px 60px; background:#f0f4ff; color:#0f172a; }
+@media (prefers-color-scheme:dark){ body{ background:#0f172a; color:#e2e8f0; } .sez{ background:#1e293b!important; } }
+h1 { font-size:26px; margin-bottom:4px; }
+.sub { color:#64748b; font-size:14px; margin-bottom:18px; line-height:1.5; }
+#esito { font-size:19px; font-weight:800; padding:14px 16px; border-radius:10px; margin-bottom:20px; }
+.verde { background:rgba(22,163,74,.14); color:#16a34a; border:1px solid rgba(22,163,74,.35); }
+.rosso { background:rgba(240,84,84,.14); color:#dc2626; border:1px solid rgba(240,84,84,.35); }
+.attesa{ background:rgba(37,99,235,.10); color:#2563eb; border:1px solid rgba(37,99,235,.25); }
+.sez { background:#fff; border-radius:10px; padding:12px 14px; margin-bottom:12px; }
+.sez h2 { font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#64748b; margin-bottom:8px; }
+.r { display:flex; gap:10px; padding:4px 0; font-size:14px; line-height:1.4; border-top:1px solid rgba(148,163,184,.18); }
+.r:first-of-type { border-top:0; }
+.ok  { color:#16a34a; font-weight:800; flex-shrink:0; width:42px; }
+.ko  { color:#dc2626; font-weight:800; flex-shrink:0; width:42px; }
+.dett { color:#dc2626; font-size:12px; font-family:'SF Mono',Menlo,Consolas,monospace; margin-top:3px; }
+iframe { position:absolute; width:400px; height:800px; left:-9999px; }
+</style>
+</head>
+<body>
+<h1>DartScore — Verifiche</h1>
+<p class="sub">
+Questa pagina carica l'app reale e ne verifica il calendario contro il <strong>Referto Gara FIGeST</strong>
+e le regole di punteggio contro il regolamento. Non ha dipendenze e non modifica nulla.<br>
+Va aperta da un indirizzo web (non con doppio clic sul file): il browser impedisce a una pagina locale
+di leggere il contenuto di un'altra pagina locale.<br>
+<em>L'app viene avviata in una cornice nascosta: se hai una partita aperta in un'altra scheda
+comparirà l'avviso di apertura multipla. È innocuo.</em>
+</p>
+<div id="esito" class="attesa">Esecuzione in corso…</div>
+<div id="out"></div>
+<iframe id="app" src="Darts_Score.html"></iframe>
+
+<script>
+/* Referto Gara FIGeST — trascritto dal documento ufficiale.
+   [casa, ospite] per ogni incontro, nell'ordine in cui vanno giocati.
+   ART.5.3: l'ordine va seguito in ordine numerico, doppi compresi, e se non
+   avviene il leg/set va rigiocato. Se il referto cambia, si aggiorna QUI e
+   si confronta con quello che l'app genera. */
+var REFERTO = [
+  ['C1','O1'],['C2','O2'],['C3','O3'],['C4','O4'],
+  ['C1','O3'],['C2','O4'],['C3','O1'],['C4','O2'],
+  ['C1&C2','O3&O4'],['C3&C4','O1&O2'],
+  ['C1','O4'],['C2','O3'],['C3','O2'],['C4','O1'],
+  ['C1','O2'],['C2','O1'],['C3','O4'],['C4','O3'],
+  ['C1&C4','O2&O3'],['C2&C3','O1&O4']
+];
+
+var passati=0, falliti=0, sezione=null;
+function S(titolo){ sezione=document.createElement('div'); sezione.className='sez';
+  sezione.innerHTML='<h2>'+titolo+'</h2>'; document.getElementById('out').appendChild(sezione); }
+function T(nome, atteso, ottenuto){
+  var ok = JSON.stringify(atteso)===JSON.stringify(ottenuto);
+  ok ? passati++ : falliti++;
+  var d=document.createElement('div'); d.className='r';
+  d.innerHTML='<span class="'+(ok?'ok':'ko')+'">'+(ok?'OK':'NO')+'</span><span>'+nome+
+    (ok?'':'<div class="dett">atteso '+JSON.stringify(atteso)+' — ottenuto '+JSON.stringify(ottenuto)+'</div>')+'</span>';
+  sezione.appendChild(d);
+}
+
+document.getElementById('app').onload = function(){
+  var w = document.getElementById('app').contentWindow;
+  try {
+    var DS = w.DS;                       /* valori derivati (CAL, N_SET, SOMMA_OK…) */
+    DS.CFG !== DS.DEFAULT_CFG && Object.assign(DS.CFG, DS.DEFAULT_CFG);
+    w.applyCfg();
+
+    /* ── Calendario ── */
+    S('Calendario incontri — Referto Gara FIGeST');
+    var cal = DS.CAL.map(function(c){
+      return c.cS.map(function(s){return 'C'+(s+1);}).join('&') + '|' +
+             c.oS.map(function(s){return 'O'+(s+1);}).join('&'); });
+    T('il calendario ha '+REFERTO.length+' incontri', REFERTO.length, cal.length);
+    REFERTO.forEach(function(u,i){
+      T('incontro '+(i+1)+': '+u[0]+' contro '+u[1], u[0]+'|'+u[1], cal[i]);
+    });
+
+    /* ── ART.4.3 ── */
+    S('Punteggio gara — ART.4.3');
+    T('11 set alla casa dà 3-0',        {a:3,b:0,lbl:'3 — 0'}, w.getGara(11,0,22,5));
+    T('11 set all’ospite dà 0-3',  {a:0,b:3,lbl:'0 — 3'}, w.getGara(0,11,5,22));
+    T('partita non finita: nessun esito', null,                w.getGara(5,5,12,12));
+    T('pari set, più leg alla casa: 2-1',   {a:2,b:1,lbl:'2 — 1'}, w.getGara(10,10,25,20));
+    T('pari set, più leg all’ospite: 1-2',{a:1,b:2,lbl:'1 — 2'}, w.getGara(10,10,20,25));
+    T('pari set e pari leg: 1-1',           {a:1,b:1,lbl:'1 — 1'}, w.getGara(10,10,22,22));
+
+    /* ── ART.11.2 ── */
+    S('Punti individuali — ART.11.2');
+    T('vittoria 2-0 vale 3 punti',   {a:3,b:0}, w.getPts(['A','A',null]));
+    T('vittoria 2-1 vale 2 punti',   {a:2,b:1}, w.getPts(['A','B','A']));
+    T('sconfitta 1-2 vale 1 punto',  {a:1,b:2}, w.getPts(['B','A','B']));
+    T('sconfitta 0-2 vale 0 punti',  {a:0,b:3}, w.getPts(['B','B',null]));
+    T('incontro incompleto: nessun punto', {a:null,b:null}, w.getPts(['A',null,null]));
+
+    /* ── Leg e set ── */
+    S('Leg e set — ART.4.2 e ART.5.3');
+    T('set vuoto: nessun vincitore',      null,  w.getWinner([null,null,null]));
+    T('2 leg su 3: set vinto',            'A',   w.getWinner(['A','A',null]));
+    T('il 1° leg è sempre assegnabile',   true,  w.legPlayable([null,null,null],0));
+    T('il 2° leg non prima del 1°',       false, w.legPlayable([null,null,null],1));
+    T('il 3° leg non si gioca se il set è deciso', false, w.legPlayable(['A','A',null],2));
+    T('il 3° leg si gioca sull’1-1',  true, w.legPlayable(['A','B',null],2));
+
+    /* ── ART.15.1 ── */
+    S('Somma di controllo — ART.15.1');
+    T('somma attesa a referto completo', 72, DS.SOMMA_OK);
+    T('16 incontri di singolo', 16, DS.CAL.filter(function(c){return c.t==='s';}).length);
+    T('4 incontri di doppio',    4, DS.CAL.filter(function(c){return c.t==='d';}).length);
+    [['tutti vinti dalla casa',function(){return 'A';}],
+     ['tutti vinti dall’ospite',function(){return 'B';}],
+     ['risultati alternati',function(i){return i%2?'A':'B';}],
+     ['risultati misti',function(i){return i%3?'A':'B';}]].forEach(function(c){
+      w.initLegs();
+      for(var i=0;i<DS.N_SET;i++){ var v=c[1](i);
+        DS.S.legs[i] = (i%2===0) ? [v,v,null] : [v, v==='A'?'B':'A', v]; }
+      T('la somma fa 72 — '+c[0], 72, w.getSomma());
+    });
+
+    /* ── Configurazione ── */
+    S('Validazione della configurazione');
+    var base=Object.assign({},DS.DEFAULT_CFG);
+    function cfg(mod){ return w.cfgErrors(Object.assign({},base,mod)).length; }
+    T('i predefiniti FIGeST sono validi', 0, cfg({}));
+    T('zero incontri viene rifiutato', true, cfg({nSingoli:0,nDoppi:0})>0);
+    T('leg per vincere oltre i leg massimi: rifiutato', true, cfg({legWin:4,maxLeg:3})>0);
+    T('soglia oltre il totale degli incontri: rifiutata', true, cfg({setWin:25})>0);
+    T('soglia raggiungibile da entrambe le squadre: rifiutata', true, cfg({nSingoli:4,nDoppi:0,setWin:2})>0);
+    T('20 incontri con soglia 10: rifiutata', true, cfg({setWin:10})>0);
+
+    /* ── Nomi ── */
+    S('Normalizzazione dei nomi');
+    T('iniziali maiuscole',        'Mario Rossi', w.norm('mARIO rossi'));
+    T('spazi in eccesso rimossi',  'Anna Verdi',  w.norm('  anna   verdi '));
+    T('ritorno a capo trattato da separatore', 'Mario Rossi', w.norm('Mario\nRossi'));
+    T('solo spazi dà stringa vuota', '', w.norm('   '));
+
+    /* pulizia: l'app resta come l'abbiamo trovata */
+    w.initLegs();
+  } catch(err) {
+    S('Errore durante l’esecuzione');
+    T(String(err && err.message || err), 'nessun errore', 'eccezione');
+  }
+
+  var e=document.getElementById('esito');
+  e.className = falliti ? 'rosso' : 'verde';
+  e.textContent = falliti
+    ? falliti+' verifiche fallite su '+(passati+falliti)+' — il progetto NON è conforme'
+    : 'Tutte le '+passati+' verifiche superate';
+};
+</script>
+</body>
+</html>
