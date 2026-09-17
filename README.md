@@ -50,7 +50,9 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 
 **v2.9** — **Pannello Impostazioni Gara**: numero di incontri, leg per set, best of N, soglia di vittoria, sostituzioni e sistema punti diventano configurabili, con i predefiniti che riproducono il regolamento FIGeST 2026.
 
-📖 Storico completo e dettagliato di tutte le versioni: **[CHANGELOG.md](CHANGELOG.md)**
+📖 Storico completo di tutte le versioni: **[CHANGELOG.md](CHANGELOG.md)**
+
+🔧 Procedura di rilascio e verifiche automatiche: **[RELEASING.md](RELEASING.md)** · **[tests.html](https://fanza-vibes.github.io/DARTSCORE/tests.html)**
 
 ---
 

@@ -1,21 +1,31 @@
 # Pubblica una release di DartScore.
 #
-# Le note NON si scrivono a mano: vengono estratte dalla sezione di
-# CHANGELOG.md relativa alla versione, cosi' la descrizione pubblicata non
-# puo' divergere dallo storico del progetto.
+# COSA GARANTISCE
+#   1. Il file allegato e' quello del repository a quel tag, non un download
+#      fatto a mano: l'allegato coincide col codice per costruzione.
+#   2. La versione dichiarata nel file corrisponde al tag, altrimenti si
+#      ferma. Un artefatto che mente sulla propria versione non esce.
+#   3. Le verifiche di tests.html passano (calendario contro il Referto Gara
+#      FIGeST e regole di punteggio contro il regolamento).
+#   4. La descrizione e' la sezione di CHANGELOG.md di quella versione, non un
+#      testo riscritto a mano che puo' divergere dallo storico.
 #
-# Si attiva in due modi:
+# COME SI ATTIVA
 #   - da solo, quando viene pubblicato un tag "v*"
 #   - a mano (Actions -> Pubblica release -> Run workflow) indicando un tag
 #     esistente, per riallineare le note di una release gia' pubblicata
 #
-# Prima di pubblicare verifica che il file dichiari davvero la versione del
-# tag: un artefatto che mente sulla propria versione non deve uscire.
-#
-# Nota sul perche' lo script delle note e' scritto qui dentro e non in un file
-# a parte: il passo di checkout preleva l'albero del TAG, e ai tag piu' vecchi
-# la cartella .github non esiste. Il workflow invece viene letto dal ramo da
-# cui parte, quindi tutto cio' che serve deve stare in questo file.
+# DUE SCELTE DA SPIEGARE
+#   - Lo script delle note e quello dei test stanno dentro questo file e non
+#     in file separati: il checkout preleva l'albero del TAG, e ai tag
+#     precedenti la cartella .github non esiste. Il workflow invece viene
+#     letto dal ramo da cui parte.
+#   - Il controllo completo sui sei punti in cui compare la versione vale solo
+#     per i nuovi rilasci. Sui tag fino a v2.9.4 l'header statico e il footer
+#     dell'informativa riportavano ancora "2.9.2": erano valori sovrascritti a
+#     runtime da init(), quindi l'utente vedeva il numero giusto, ma il testo
+#     nel file era vecchio. Un controllo severo bloccherebbe il riallineamento
+#     di quelle release, che e' proprio uno degli usi previsti.
 
 name: Pubblica release
 
@@ -51,17 +61,74 @@ jobs:
         with:
           ref: ${{ steps.t.outputs.tag }}
 
-      - name: Verifica che il file dichiari la versione del tag
+      - name: Verifica la versione dichiarata nel file
         env:
           TAG: ${{ steps.t.outputs.tag }}
         run: |
-          ATTESA="${TAG#v}"
-          TROVATA=$(grep -o "APP_VERSION='[^']*'" Darts_Score.html | head -1 | sed "s/.*'\(.*\)'/\1/")
-          echo "tag: $ATTESA  —  dichiarata nel file: $TROVATA"
-          if [ "$ATTESA" != "$TROVATA" ]; then
-            echo "::error::Il file dichiara $TROVATA ma il tag e' $ATTESA. Pubblicazione annullata."
+          V="${TAG#v}"
+          errori=0
+          controlla() {
+            if [ "$2" = "$V" ]; then
+              echo "  ok      $1: $2"
+            else
+              echo "::error::$1 riporta '$2' ma il tag e' '$V'"
+              errori=$((errori+1))
+            fi
+          }
+          echo "Controlli sempre attivi:"
+          controlla "APP_VERSION" \
+            "$(grep -o "APP_VERSION='[^']*'" Darts_Score.html | head -1 | sed "s/.*'\(.*\)'/\1/")"
+          controlla "intestazione del sorgente" \
+            "$(grep -o '/\* DartScore v[0-9.]*' Darts_Score.html | head -1 | sed 's/.*v//')"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "Controlli aggiuntivi (solo nuovi rilasci):"
+            controlla "header della schermata iniziale" \
+              "$(grep -o 'id="app-version">v[0-9.]*' Darts_Score.html | head -1 | sed 's/.*v//')"
+            controlla "footer dell'informativa" \
+              "$(grep -o 'Versione [0-9.]*' Darts_Score.html | head -1 | sed 's/Versione //')"
+            controlla "sezione del CHANGELOG" \
+              "$(grep -m1 -o '^## v[0-9.]*' CHANGELOG.md | sed 's/.*v//')"
+            controlla "voce del README" \
+              "$(grep -m1 -o '^\*\*v[0-9.]*\*\*' README.md | sed 's/\*//g; s/^v//')"
+          fi
+          if [ "$errori" -gt 0 ]; then
+            echo "Pubblicazione annullata: $errori disallineamenti."
             exit 1
           fi
+
+      - name: Esegui le verifiche di tests.html
+        if: hashFiles('tests.html') != ''
+        run: |
+          npm install --silent --no-audit --no-fund playwright-core
+          python3 -m http.server 8099 --bind 127.0.0.1 >/dev/null 2>&1 &
+          for i in $(seq 1 20); do curl -sf http://127.0.0.1:8099/tests.html >/dev/null && break; sleep 1; done
+          node - <<'JS'
+          const fs = require('fs');
+          const { chromium } = require('playwright-core');
+          const candidati = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable',
+                             '/usr/bin/chromium-browser', '/usr/bin/chromium'];
+          const exe = candidati.find(p => fs.existsSync(p));
+          if (!exe) { console.error('Nessun browser trovato fra: ' + candidati.join(', ')); process.exit(1); }
+          (async () => {
+            const b = await chromium.launch({ executablePath: exe });
+            const p = await (await b.newContext()).newPage();
+            const errori = [];
+            p.on('pageerror', e => errori.push(e.message));
+            await p.goto('http://127.0.0.1:8099/tests.html');
+            await p.waitForFunction(
+              () => { const e = document.getElementById('esito'); return e && !e.classList.contains('attesa'); },
+              null, { timeout: 60000 });
+            console.log(await p.evaluate(() => document.getElementById('esito').textContent));
+            const falliti = await p.evaluate(() =>
+              Array.from(document.querySelectorAll('.r'))
+                   .filter(r => r.querySelector('.ko'))
+                   .map(r => r.textContent.trim()));
+            falliti.forEach(f => console.log('::error::verifica fallita — ' + f));
+            errori.forEach(e => console.log('::error::errore JavaScript — ' + e));
+            await b.close();
+            process.exit(falliti.length || errori.length ? 1 : 0);
+          })();
+          JS
 
       - name: Componi le note dal CHANGELOG
         env:
@@ -113,7 +180,7 @@ jobs:
           {
             echo "### Release \`$TAG\`"
             echo ""
-            echo "Allegato \`Darts_Score.html\`, $(wc -c < Darts_Score.html) byte."
-            echo ""
-            echo "Note estratte dalla sezione di CHANGELOG.md."
+            echo "- Allegato \`Darts_Score.html\`, $(wc -c < Darts_Score.html) byte"
+            echo "- Versione dichiarata nel file verificata contro il tag"
+            echo "- Note estratte dalla sezione di CHANGELOG.md"
           } >> "$GITHUB_STEP_SUMMARY"
