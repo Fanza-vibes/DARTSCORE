@@ -38,6 +38,8 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 
 ### Novità
 
+**v2.10.0** — **Calendario incontri allineato al Referto Gara FIGeST in vigore**: i round di singoli erano in ordine diverso da quello ufficiale e nei doppi le coppie si affrontavano con la stessa numerazione invece di incrociarsi. Il regolamento (ART.5.3) impone di seguire l'ordine del referto, pena la ripetizione del set.
+
 **v2.9.5** — Il progetto passa alla **licenza MIT**: uso, modifica, ridistribuzione e vendita liberi, a condizione di conservare l'avviso di copyright. Vedi [Licenza](#licenza).
 
 **v2.9.4** — Corretta una configurazione personalizzata che poteva registrare un pareggio come vittoria netta. I valori predefiniti FIGeST non erano interessati.
