@@ -1,0 +1,119 @@
+# Pubblica una release di DartScore.
+#
+# Le note NON si scrivono a mano: vengono estratte dalla sezione di
+# CHANGELOG.md relativa alla versione, cosi' la descrizione pubblicata non
+# puo' divergere dallo storico del progetto.
+#
+# Si attiva in due modi:
+#   - da solo, quando viene pubblicato un tag "v*"
+#   - a mano (Actions -> Pubblica release -> Run workflow) indicando un tag
+#     esistente, per riallineare le note di una release gia' pubblicata
+#
+# Prima di pubblicare verifica che il file dichiari davvero la versione del
+# tag: un artefatto che mente sulla propria versione non deve uscire.
+#
+# Nota sul perche' lo script delle note e' scritto qui dentro e non in un file
+# a parte: il passo di checkout preleva l'albero del TAG, e ai tag piu' vecchi
+# la cartella .github non esiste. Il workflow invece viene letto dal ramo da
+# cui parte, quindi tutto cio' che serve deve stare in questo file.
+
+name: Pubblica release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag da pubblicare o riallineare (es. v2.11.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  pubblica:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determina il tag
+        id: t
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Preleva il codice a quel tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.t.outputs.tag }}
+
+      - name: Verifica che il file dichiari la versione del tag
+        env:
+          TAG: ${{ steps.t.outputs.tag }}
+        run: |
+          ATTESA="${TAG#v}"
+          TROVATA=$(grep -o "APP_VERSION='[^']*'" Darts_Score.html | head -1 | sed "s/.*'\(.*\)'/\1/")
+          echo "tag: $ATTESA  —  dichiarata nel file: $TROVATA"
+          if [ "$ATTESA" != "$TROVATA" ]; then
+            echo "::error::Il file dichiara $TROVATA ma il tag e' $ATTESA. Pubblicazione annullata."
+            exit 1
+          fi
+
+      - name: Componi le note dal CHANGELOG
+        env:
+          TAG: ${{ steps.t.outputs.tag }}
+        run: |
+          python3 - <<'PY'
+          import io, os, re, sys
+          tag = os.environ['TAG']
+          ver = tag[1:] if tag.startswith('v') else tag
+          testo = io.open('CHANGELOG.md', encoding='utf-8').read()
+          m = re.search(r'^## v' + re.escape(ver) + r'[^\n]*\n(.*?)(?=\n---\n|\Z)', testo, re.S | re.M)
+          if not m:
+              sys.stderr.write('Nessuna sezione "## v%s" in CHANGELOG.md\n' % ver)
+              sys.exit(1)
+          coda = '\n'.join([
+              '', '', '---', '', '## Come si usa', '',
+              'Scarica `Darts_Score.html` qui sotto e aprilo con un doppio clic: '
+              'si apre nel browser e funziona offline, senza installare nulla.', '',
+              'In alternativa, versione web: https://fanza-vibes.github.io/DARTSCORE/', '',
+              'Verifiche automatiche del calendario e delle regole: '
+              'https://fanza-vibes.github.io/DARTSCORE/tests.html', '',
+              'Storico completo delle versioni: '
+              'https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md',
+          ])
+          io.open('NOTE_RELEASE.md', 'w', encoding='utf-8').write(m.group(1).strip() + coda)
+          print('Note composte per %s: %d caratteri dal CHANGELOG' % (tag, len(m.group(1).strip())))
+          PY
+
+      - name: Crea o riallinea la release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.t.outputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release gia' esistente: aggiorno note e allegato"
+            gh release edit "$TAG" --notes-file NOTE_RELEASE.md
+            gh release upload "$TAG" Darts_Score.html --clobber
+          else
+            echo "Release non esistente: la creo"
+            gh release create "$TAG" Darts_Score.html \
+              --title "DartScore ${TAG#v}" \
+              --notes-file NOTE_RELEASE.md
+          fi
+
+      - name: Riepilogo
+        env:
+          TAG: ${{ steps.t.outputs.tag }}
+        run: |
+          {
+            echo "### Release \`$TAG\`"
+            echo ""
+            echo "Allegato \`Darts_Score.html\`, $(wc -c < Darts_Score.html) byte."
+            echo ""
+            echo "Note estratte dalla sezione di CHANGELOG.md."
+          } >> "$GITHUB_STEP_SUMMARY"
