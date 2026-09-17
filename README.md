@@ -38,6 +38,8 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 
 ### Novità
 
+**v2.11.0** — I pannelli si chiudono con **Esc** e sono navigabili da tastiera e screen reader; le conferme non usano più le finestre del browser. Aggiunta una [pagina di verifica](tests.html) che controlla il calendario contro il Referto Gara ufficiale.
+
 **v2.10.0** — **Calendario incontri allineato al Referto Gara FIGeST in vigore**: i round di singoli erano in ordine diverso da quello ufficiale e nei doppi le coppie si affrontavano con la stessa numerazione invece di incrociarsi. Il regolamento (ART.5.3) impone di seguire l'ordine del referto, pena la ripetizione del set.
 
 **v2.9.5** — Il progetto passa alla **licenza MIT**: uso, modifica, ridistribuzione e vendita liberi, a condizione di conservare l'avviso di copyright. Vedi [Licenza](#licenza).
@@ -48,7 +50,9 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 
 **v2.9** — **Pannello Impostazioni Gara**: numero di incontri, leg per set, best of N, soglia di vittoria, sostituzioni e sistema punti diventano configurabili, con i predefiniti che riproducono il regolamento FIGeST 2026.
 
-📖 Storico completo e dettagliato di tutte le versioni: **[CHANGELOG.md](CHANGELOG.md)**
+📖 Storico completo di tutte le versioni: **[CHANGELOG.md](CHANGELOG.md)**
+
+🔧 Procedura di rilascio e verifiche automatiche: **[RELEASING.md](RELEASING.md)** · **[tests.html](https://fanza-vibes.github.io/DARTSCORE/tests.html)**
 
 ---
 
