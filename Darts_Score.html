@@ -570,7 +570,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   <div class="logo">
     <span class="logo-i">🎯</span>
     <div class="logo-n">DART<span>SCORE</span></div>
-    <div class="logo-s" id="app-version">v2.9.2 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
+    <div class="logo-s" id="app-version">v2.10.0 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
   </div>
   <div class="card">
     <div class="card-t">Squadre &amp; Categoria</div>
@@ -804,14 +804,14 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <p>Per qualsiasi domanda relativa alla privacy puoi contattare lo sviluppatore tramite la pagina GitHub del progetto.</p>
     <p style="margin-top:8px"><a href="https://github.com/Fanza-vibes/DARTSCORE" target="_blank" rel="noopener" style="color:var(--az);font-weight:700;text-decoration:none">github.com/Fanza-vibes/DARTSCORE</a></p>
   </div>
-  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.9.5 · © Fanza-vibes · Licenza MIT</div>
+  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.10.0 · © Fanza-vibes · Licenza MIT</div>
 </div>
 
 </div>
 <div id="save-toast">⚠ Salvataggio non disponibile</div>
 <div id="warn-toast"></div>
 <script>
-/* DartScore v2.9.5 — light/dark theme
+/* DartScore v2.10.0 — light/dark theme
  *
  * Copyright (c) 2025-2026 Fanza-vibes
  * https://github.com/Fanza-vibes/DARTSCORE
@@ -834,14 +834,19 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * ─────────────────────────────────────────────────────────────────────────────
- * MODIFICHE v2.9.5 rispetto a v2.9.4 (solo licenza, nessun cambio funzionale):
- *   - Il progetto passa dalla licenza personalizzata "solo uso personale e non
- *     commerciale" alla licenza MIT: uso, modifica, ridistribuzione e vendita
- *     sono liberi, a condizione di conservare questo avviso di copyright
- *   - L'avviso MIT e' incluso qui per intero, perche' l'app viene distribuita
- *     anche come file singolo, senza il file LICENSE a fianco
- *   - Il pie' di pagina dell'informativa non dice piu' "Tutti i diritti
- *     riservati", che contraddiceva la nuova licenza
+ * MODIFICHE v2.10.0 rispetto a v2.9.5:
+ *   - CALENDARIO INCONTRI allineato al Referto Gara FIGeST in vigore.
+ *     Il 2°, 3° e 4° round di singoli erano gli schemi giusti ma in ordine
+ *     sbagliato, e nei doppi le coppie si affrontavano con la stessa
+ *     numerazione (C1&C2 contro O1&O2) invece di incrociarsi come prevede il
+ *     referto (C1&C2 contro O3&O4).
+ *     Non era un dettaglio grafico: ART.5.3 impone di seguire l'ordine del
+ *     referto, doppi compresi, e stabilisce che altrimenti il leg/set va
+ *     RIGIOCATO. Tutti e 20 gli incontri ora corrispondono al documento.
+ *   - ROT_DOPPI cambia forma: casa e ospite hanno slot diversi, quindi ogni
+ *     incontro di doppio indica separatamente c (casa) e o (ospite)
+ *   - Nessun'altra modifica: punteggi, sostituzioni, classifica e validazione
+ *     restano identici, verificati invariati funzione per funzione
  * ─────────────────────────────────────────────────────────────────────────────
  * Lo storico delle versioni precedenti è in CHANGELOG.md:
  *   https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md
@@ -916,25 +921,31 @@ const N_PL=8; /* 4 titolari + 4 riserve per squadra (ART.2.2 ammette fino a 12,
 
 /* Costanti di sistema */
 const TAB_HEARTBEAT_MS=5000,TAB_LOCK_TTL_MS=10000,VIBRATE_MS=15,MAX_AGE_MS=48*60*60*1000;
-const APP_VERSION='2.9.5';
+const APP_VERSION='2.10.0';
 const THEME_KEY='dartscore_theme'; /* chiave localStorage per preferenza tema */
 const CFG_KEY='dartscore_cfg';     /* chiave localStorage per configurazione */
 
 const CAT={A:{label:'Serie A',gioco:'501 D.O.'},B:{label:'Serie B',gioco:'501 M.O.'},C:{label:'Serie C',gioco:'501 S.O.'}};
 
-/* Schemi di rotazione ufficiali: ogni round di singoli accoppia lo slot di casa
-   con lo slot ospite indicato. Si ripetono ciclicamente se i round sono >4. */
+/* Schemi di rotazione ufficiali, trascritti dal Referto Gara FIGeST.
+   ATTENZIONE: l'ordine non e' una convenzione grafica. ART.5.3 stabilisce che
+   l'ordine di gioco indicato sul referto va seguito in ordine numerico, doppi
+   compresi, e che in caso contrario il leg/set va RIGIOCATO. Modificare queste
+   tabelle senza il referto alla mano fa giocare incontri da ripetere.
+   Ogni coppia e' [slot di casa, slot ospite]. Si ripetono ciclicamente se i
+   round configurati sono piu' di quelli previsti dal referto. */
 const ROT_SINGOLI=[
-  [[0,0],[1,1],[2,2],[3,3]],  /* 1° round: identità */
-  [[1,0],[0,1],[3,2],[2,3]],  /* 2° round: scambio a coppie */
-  [[3,1],[0,2],[1,3],[2,0]],  /* 3° round */
-  [[0,3],[3,0],[2,1],[1,2]],  /* 4° round */
+  [[0,0],[1,1],[2,2],[3,3]],  /* 1° round: C1-O1, C2-O2, C3-O3, C4-O4 */
+  [[0,2],[1,3],[2,0],[3,1]],  /* 2° round: C1-O3, C2-O4, C3-O1, C4-O2 */
+  [[0,3],[1,2],[2,1],[3,0]],  /* 3° round: C1-O4, C2-O3, C3-O2, C4-O1 */
+  [[0,1],[1,0],[2,3],[3,2]],  /* 4° round: C1-O2, C2-O1, C3-O4, C4-O3 */
 ];
-/* Schemi di rotazione doppi: coppie di slot per ogni round */
+/* Doppi (701): a differenza dei singoli, la coppia di casa e quella ospite NON
+   hanno gli stessi slot — il referto le incrocia. Per questo ogni incontro
+   indica separatamente c (casa) e o (ospite). */
 const ROT_DOPPI=[
-  [[0,1],[2,3]],  /* 1° round doppi */
-  [[0,3],[1,2]],  /* 2° round doppi */
-  [[0,2],[1,3]],  /* 3° round doppi (se configurato) */
+  [{c:[0,1],o:[2,3]}, {c:[2,3],o:[0,1]}],  /* 1° round: C1&C2-O3&O4, C3&C4-O1&O2 */
+  [{c:[0,3],o:[1,2]}, {c:[1,2],o:[0,3]}],  /* 2° round: C1&C4-O2&O3, C2&C3-O1&O4 */
 ];
 
 /* Genera il calendario incontri da CFG.
@@ -960,9 +971,9 @@ function buildCAL(){
     if(doneD<CFG.nDoppi){
       const rot=ROT_DOPPI[rD%ROT_DOPPI.length];
       const label=(rD+1)+'\xb0 Round Doppi \xb7 701';
-      for(const pair of rot){
+      for(const m of rot){
         if(doneD>=CFG.nDoppi) break;
-        cal.push({round:label,t:'d',cS:[...pair],oS:[...pair]});
+        cal.push({round:label,t:'d',cS:[...m.c],oS:[...m.o]});
         doneD++;
       }
       rD++;

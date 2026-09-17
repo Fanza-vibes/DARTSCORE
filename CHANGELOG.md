@@ -6,6 +6,21 @@ Il file dell'app è [`Darts_Score.html`](Darts_Score.html): il nome resta stabil
 
 ---
 
+## v2.10.0
+
+**Calendario incontri allineato al Referto Gara FIGeST in vigore.** Nessuna modifica al calcolo dei punteggi.
+
+- **I round di singoli erano in ordine sbagliato.** Gli schemi di accoppiamento erano tutti corretti, ma il 2°, 3° e 4° round comparivano in sequenza diversa da quella del referto ufficiale
+- **I doppi affrontavano le coppie sbagliate.** L'app faceva incontrare le coppie con la stessa numerazione (C1&C2 contro O1&O2); il referto le incrocia (C1&C2 contro O3&O4, C3&C4 contro O1&O2, e nel secondo round C1&C4 contro O2&O3, C2&C3 contro O1&O4)
+- Non era un dettaglio estetico: **ART.5.3** impone di seguire l'ordine indicato sul referto, doppi compresi, e stabilisce che in caso contrario **il leg/set va rigiocato**. Chi seguiva l'app giocava incontri da ripetere
+- Tutti e 20 gli incontri generati corrispondono ora al documento ufficiale, verificati uno per uno
+
+Verificato che **nulla al di fuori del calendario sia cambiato**: `getPts`, `getGara`, `getWinner`, `legPlayable`, `norm`, i valori derivati e la somma di controllo (72) risultano identici confrontandoli funzione per funzione prima e dopo la modifica.
+
+Confermato anche dal regolamento 2026, che il resto dell'implementazione già rispettava: 20 set di cui 16 singoli e 4 doppi (ART.2.6), punteggio gara (ART.4.3), massimo 4 sostituzioni con il sostituito che non rientra (ART.5.4), punti individuali validi in singolo e in doppio con lo stesso valore e classifica ordinata per punti, media, set giocati (ART.11.2).
+
+---
+
 ## v2.9.5
 
 Cambio di licenza. **Nessuna modifica funzionale: il calcolo del referto è invariato.**
