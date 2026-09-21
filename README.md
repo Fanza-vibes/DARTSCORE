@@ -38,7 +38,7 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 
 ### Novità
 
-**v2.11.0** — I pannelli si chiudono con **Esc** e sono navigabili da tastiera e screen reader; le conferme non usano più le finestre del browser. Aggiunta una [pagina di verifica](tests.html) che controlla il calendario contro il Referto Gara ufficiale.
+**v2.11.0** — I pannelli si chiudono con **Esc** e sono navigabili da tastiera e screen reader; le conferme non usano più le finestre del browser. Aggiunta una [pagina di verifica](https://fanza-vibes.github.io/DARTSCORE/tests.html) che controlla il calendario contro il Referto Gara ufficiale.
 
 **v2.10.0** — **Calendario incontri allineato al Referto Gara FIGeST in vigore**: i round di singoli erano in ordine diverso da quello ufficiale e nei doppi le coppie si affrontavano con la stessa numerazione invece di incrociarsi. Il regolamento (ART.5.3) impone di seguire l'ordine del referto, pena la ripetizione del set.
 
