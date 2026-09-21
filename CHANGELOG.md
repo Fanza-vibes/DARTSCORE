@@ -12,7 +12,7 @@ Accessibilità, conferme interne e una pagina di verifica. **Il calcolo del refe
 
 - **I pannelli sono ora veri dialoghi.** I quattro pannelli a scomparsa hanno `role="dialog"`, `aria-modal` e un'etichetta; il focus si sposta dentro all'apertura e torna a chi l'ha aperto alla chiusura; il Tab resta confinato; si chiudono con **Esc**. I modali sono impilati, quindi una conferma aperta sopra le Impostazioni, chiudendosi, restituisce il focus al pannello e non alla pagina
 - **Niente più `confirm()` del browser.** Le dieci conferme usano un modale interno, coerente col tema e non bloccante, con etichette specifiche ("Cancella tutto", "Ripristina", "Inizia") al posto del generico OK/Annulla
-- **Nuovo [`tests.html`](tests.html)**: apre l'app e verifica i 20 incontri contro il Referto Gara FIGeST e le regole di punteggio contro il regolamento. Nessuna dipendenza, nessun passaggio di compilazione. Va aperto da un indirizzo web, non con doppio clic: il browser impedisce a una pagina locale di leggerne un'altra
+- **Nuovo [`tests.html`](https://fanza-vibes.github.io/DARTSCORE/tests.html)**: apre l'app e verifica i 20 incontri contro il Referto Gara FIGeST e le regole di punteggio contro il regolamento. Nessuna dipendenza, nessun passaggio di compilazione. Va aperto da un indirizzo web, non con doppio clic: il browser impedisce a una pagina locale di leggerne un'altra
 - `window.DS` espone in sola lettura i valori derivati, che essendo dichiarati con `let` non sarebbero leggibili da una pagina di test. Non è usato dall'app
 
 Non si usa il tag `<dialog>` nativo, che richiederebbe Safari 15.4 mentre la compatibilità dichiarata dal progetto parte da Safari 14.
