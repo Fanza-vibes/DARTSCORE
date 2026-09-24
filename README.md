@@ -30,6 +30,7 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 - **Esportazione PDF** del referto gara tramite stampa nativa (zero dipendenze)
 - **Impostazioni gara configurabili**: numero di incontri singoli e doppi, leg per set,
   best of N, soglia di vittoria, sostituzioni massime e sistema punti
+- **Guida all'uso integrata**, con le regole predefinite FIGeST spiegate passo per passo
 - **Tema chiaro e scuro** con switch rapido e rispetto della preferenza di sistema
 - Interfaccia mobile-first, ottimizzata per l'uso a bordo campo
 - **Funziona offline** con il file scaricato in locale; sulla versione web dipende
@@ -37,6 +38,8 @@ Darts Score è un'applicazione single-page pensata per calcolare in modo rapido 
 - Nessun account, nessuna registrazione, nessun dato inviato a server
 
 ### Novità
+
+**v2.12.0** — Nuovo tasto **ⓘ Guida** nella schermata iniziale: spiega in otto punti come si usa l'app, dai leg ai punti, dai cambi al riepilogo.
 
 **v2.11.0** — I pannelli si chiudono con **Esc** e sono navigabili da tastiera e screen reader; le conferme non usano più le finestre del browser. Aggiunta una [pagina di verifica](https://fanza-vibes.github.io/DARTSCORE/tests.html) che controlla il calendario contro il Referto Gara ufficiale.
 
