@@ -10,10 +10,11 @@ Il file dell'app è [`Darts_Score.html`](Darts_Score.html): il nome resta stabil
 
 Una guida all'uso dentro l'app. **Il calcolo del referto non cambia**: calendario, punteggi, classifica e somma di controllo sono identici, verificati byte per byte con i predefiniti FIGeST.
 
-- **Nuovo tasto ⓘ Guida** nella schermata iniziale. Apre un pannello che spiega in otto punti come si usa l'app: squadre e giocatori, come si segnano i leg, come si calcolano i punti individuali e il risultato della gara, cambi, correzione dei nomi, riepilogo e stampa, salvataggio automatico, impostazioni
+- **Nuovo tasto ⓘ Guida** nella schermata iniziale, sia in alto accanto al selettore del tema sia in basso accanto a Impostazioni. Apre un pannello che spiega in otto punti come si usa l'app: squadre e giocatori, come si segnano i leg, come si calcolano i punti individuali e il risultato della gara, cambi, correzione dei nomi, riepilogo e stampa, salvataggio automatico, impostazioni
 - La guida descrive le **regole predefinite** del regolamento FIGeST 2026 e lo dichiara in apertura: con impostazioni personalizzate alcuni numeri possono essere diversi
 - Il pannello è un dialogo accessibile come gli altri: si chiude con **Esc**, con la ✕ o toccando fuori, il Tab resta confinato e il focus torna al tasto
 - [`tests.html`](https://fanza-vibes.github.io/DARTSCORE/tests.html) confronta ogni numero citato nella guida con la configurazione predefinita: se un giorno cambiano i predefiniti e la guida resta indietro, la verifica fallisce e la release si blocca
+- **Titolo e descrizione delle pagine pensati per la ricerca**: prima il titolo era solo "DartScore 2026", senza nessuna delle parole che si cercano davvero. Ora nomina referto gara, segnapunti, freccette, Soft Dart e FIGeST. Durante la stampa torna il nome breve, perché il browser usa il titolo come nome del PDF salvato
 
 ---
 

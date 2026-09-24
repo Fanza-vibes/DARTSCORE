@@ -1,6 +1,6 @@
-# DARTS SCORE
+# DartScore
 
-App web per il calcolo dei punteggi nelle partite di freccette.
+Referto gara digitale e segnapunti per freccette **Soft Dart**, conforme al regolamento **FIGeST 2026**. Gratis, senza installazione: si usa dal browser o si scarica per giocare offline.
 
 ## ▶ Apri l'app online
 
@@ -18,7 +18,7 @@ Nessuna installazione necessaria. Si apre direttamente nel browser.
 
 ## Descrizione
 
-Darts Score è un'applicazione single-page pensata per calcolare in modo rapido e preciso i punteggi di una partita di freccette, gestendo automaticamente set, leg, squadre e giocatori secondo il regolamento ufficiale FIGeST 2026.
+DartScore è un'applicazione single-page pensata per calcolare in modo rapido e preciso i punteggi di una partita di freccette, gestendo automaticamente set, leg, squadre e giocatori secondo il regolamento ufficiale FIGeST 2026.
 
 ### Funzionalità principali
 

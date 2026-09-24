@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="DartScore">
 <meta name="format-detection" content="telephone=no">
-<meta name="description" content="App referto gara per il Campionato Soft Dart 2026. Gestisci set, leg, sostituzioni e classifica direttamente dal browser, senza installazione.">
+<meta name="description" content="Segnapunti e referto gara digitale per il campionato di freccette Soft Dart FIGeST 2026: set, leg, sostituzioni e classifica. Gratis, dal browser, senza installazione.">
 <meta property="og:title" content="DartScore 2026">
 <meta property="og:description" content="Referto gara digitale per il Campionato Soft Dart 2026. Scaricabile per l'uso offline, zero installazioni.">
 <meta property="og:type" content="website">
@@ -24,7 +24,7 @@
      l'esecuzione di script da origini esterne (CDN, injected ads, ecc.). -->
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
-<title>DartScore 2026</title>
+<title>DartScore — Referto gara e segnapunti per freccette Soft Dart FIGeST 2026</title>
 <style>
 :root {
   color-scheme: light;
@@ -461,6 +461,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .dark .theme-toggle { background:var(--az); }
 .dark .theme-toggle::after { transform:translateX(20px); background:#fff; }
 .theme-wrap { display:flex; align-items:center; gap:6px; }
+.btn-info { width:34px; height:34px; padding:0; border-radius:50%; background:none; border:1.5px solid var(--br); color:var(--tm); font-size:18px; line-height:1; display:flex; align-items:center; justify-content:center; transition:all .12s; }
+.btn-info:active { background:var(--azd); color:var(--az); border-color:rgba(37,99,235,.3); transform:scale(.95); }
 .theme-icon { font-size:14px; line-height:1; }
 
 /* Banner stato partita nel setup */
@@ -569,7 +571,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 
 <!-- SETUP -->
 <div id="setup" class="scr on">
-  <div style="display:flex;justify-content:flex-end;padding:0 0 4px">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:0 0 4px">
+    <button class="btn-info" onclick="openGuida()" aria-label="Guida all'uso">&#9432;</button>
     <div class="theme-wrap">
       <span class="theme-icon">☀️</span>
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambia tema"></button>
@@ -901,13 +904,17 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  * ─────────────────────────────────────────────────────────────────────────────
  * MODIFICHE v2.12.0 rispetto a v2.11.0 (solo interfaccia: il calcolo del
  * referto non cambia):
- *   - Guida all'uso: nuovo tasto "Guida" nella schermata iniziale, apre un
+ *   - Guida all'uso: nuovo tasto "Guida" nella schermata iniziale (in alto
+ *     accanto al tema e in basso accanto a Impostazioni), apre un
  *     pannello con il funzionamento dell'app (squadre, leg, punti, cambi,
  *     nomi, riepilogo, salvataggio, impostazioni). Riusa la macchina dei
  *     modali: dialogo accessibile, Esc, focus restituito.
  *   - La guida descrive le regole PREDEFINITE (FIGeST 2026) e lo dichiara in
  *     apertura. I numeri citati sono marcati data-def e tests.html li
  *     confronta con DEFAULT_CFG, cosi' non possono divergere in silenzio.
+ *   - <title> e meta description riscritti per i motori di ricerca. In stampa
+ *     printRiepilogo() rimette il titolo breve, che il browser usa come nome
+ *     del PDF, e lo ripristina all'evento afterprint.
  * ─────────────────────────────────────────────────────────────────────────────
  * Lo storico delle versioni precedenti è in CHANGELOG.md:
  *   https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md
@@ -1719,6 +1726,14 @@ function printRiepilogo(){
   if(ftr) ftr.textContent='DartScore 2026 \xb7 v'+APP_VERSION+' \u2014 Generato il '+oggi+' alle '+ora;
   /* renderizza classifica completa (entrambe le squadre) per la stampa */
   renderPrintClassifica();
+  /* Il <title> e' lungo per i motori di ricerca, ma il browser lo usa come
+     nome del PDF salvato e nell'intestazione di stampa: durante la stampa
+     torna il nome breve di sempre, e si ripristina a stampa chiusa. */
+  const titolo=document.title;
+  document.title='DartScore 2026';
+  window.addEventListener('afterprint',function ripristina(){
+    document.title=titolo; window.removeEventListener('afterprint',ripristina);
+  });
   /* apri dialogo stampa nativo */
   window.print();
 }
