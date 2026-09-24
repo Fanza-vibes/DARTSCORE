@@ -143,6 +143,25 @@ document.getElementById('app').onload = function(){
     T('ritorno a capo trattato da separatore', 'Mario Rossi', w.norm('Mario\nRossi'));
     T('solo spazi dà stringa vuota', '', w.norm('   '));
 
+    /* ── Guida ── */
+    S('Guida all’uso — numeri delle regole predefinite');
+    /* La guida descrive la configurazione PREDEFINITA. Ogni numero marcato
+       data-def deve coincidere con DEFAULT_CFG (o con il valore che ne deriva):
+       se un giorno cambiano i predefiniti, questa sezione diventa rossa finché
+       il testo della guida non viene aggiornato. */
+    var gd = w.document.getElementById('gd-panel');
+    T('la guida esiste', true, !!gd);
+    var derivati = { nSet: DS.N_SET, somma: DS.SOMMA_OK };
+    var citati = {};
+    Array.prototype.forEach.call(gd ? gd.querySelectorAll('[data-def]') : [], function(el){
+      var k = el.getAttribute('data-def');
+      var v = (k in derivati) ? derivati[k] : DS.DEFAULT_CFG[k];
+      citati[k] = 1;
+      T('la guida riporta «'+k+'» = '+v, String(v), el.textContent.trim());
+    });
+    T('la guida cita tutte le regole che contano',
+      ['legWin','maxLeg','maxSub','nDoppi','nSet','nSingoli','ptNetta','ptSconfNetta','ptSconfStretta','ptStretta','setWin','somma'],
+      Object.keys(citati).sort());
     /* pulizia: l'app resta come l'abbiamo trovata */
     w.initLegs();
   } catch(err) {

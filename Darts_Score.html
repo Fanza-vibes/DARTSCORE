@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="DartScore">
 <meta name="format-detection" content="telephone=no">
-<meta name="description" content="App referto gara per il Campionato Soft Dart 2026. Gestisci set, leg, sostituzioni e classifica direttamente dal browser, senza installazione.">
+<meta name="description" content="Segnapunti e referto gara digitale per il campionato di freccette Soft Dart FIGeST 2026: set, leg, sostituzioni e classifica. Gratis, dal browser, senza installazione.">
 <meta property="og:title" content="DartScore 2026">
 <meta property="og:description" content="Referto gara digitale per il Campionato Soft Dart 2026. Scaricabile per l'uso offline, zero installazioni.">
 <meta property="og:type" content="website">
@@ -24,7 +24,7 @@
      l'esecuzione di script da origini esterne (CDN, injected ads, ecc.). -->
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
-<title>DartScore 2026</title>
+<title>DartScore — Referto gara e segnapunti per freccette Soft Dart FIGeST 2026</title>
 <style>
 :root {
   color-scheme: light;
@@ -400,10 +400,10 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .prv-bar span { flex:1; }
 .prv-link { background:none; border:none; color:var(--az); font-size:11px; font-weight:700; text-decoration:underline; padding:0; white-space:nowrap; cursor:pointer; }
 .prv-link:active { opacity:.5; }
-#prv-ov { position:fixed; top:0;right:0;bottom:0;left:0; background:rgba(15,23,42,.55); z-index:30; opacity:0; pointer-events:none; transition:opacity .2s; cursor:pointer; }
-#prv-ov.on { opacity:1; pointer-events:auto; }
-#prv-panel { position:fixed; bottom:0; left:0; right:0; background:var(--sf); border-top:2px solid var(--br); border-radius:18px 18px 0 0; padding:20px 18px; padding-bottom:calc(20px + var(--sb)); z-index:31; transform:translateY(100%); transition:transform .26s cubic-bezier(.4,0,.2,1), visibility 0s .26s; max-height:85vh; max-height:85dvh; overflow-y:auto; box-shadow:0 -4px 30px rgba(37,99,235,.13); pointer-events:none; visibility:hidden; }
-#prv-panel.on { transform:translateY(0); pointer-events:auto; visibility:visible; transition:transform .26s cubic-bezier(.4,0,.2,1), visibility 0s 0s; }
+#prv-ov, #gd-ov { position:fixed; top:0;right:0;bottom:0;left:0; background:rgba(15,23,42,.55); z-index:30; opacity:0; pointer-events:none; transition:opacity .2s; cursor:pointer; }
+#prv-ov.on, #gd-ov.on { opacity:1; pointer-events:auto; }
+#prv-panel, #gd-panel { position:fixed; bottom:0; left:0; right:0; background:var(--sf); border-top:2px solid var(--br); border-radius:18px 18px 0 0; padding:20px 18px; padding-bottom:calc(20px + var(--sb)); z-index:31; transform:translateY(100%); transition:transform .26s cubic-bezier(.4,0,.2,1), visibility 0s .26s; max-height:85vh; max-height:85dvh; overflow-y:auto; box-shadow:0 -4px 30px rgba(37,99,235,.13); pointer-events:none; visibility:hidden; }
+#prv-panel.on, #gd-panel.on { transform:translateY(0); pointer-events:auto; visibility:visible; transition:transform .26s cubic-bezier(.4,0,.2,1), visibility 0s 0s; }
 .prv-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
 .prv-title { font-size:17px; font-weight:900; color:var(--tx); }
 .prv-body { font-size:13px; color:var(--td); line-height:1.65; }
@@ -412,6 +412,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .prv-body ul { padding-left:16px; margin-bottom:8px; }
 .prv-body li { margin-bottom:4px; }
 .prv-body .ok { color:var(--gn); font-weight:700; }
+.gd-note { background:var(--azd); border:1px solid rgba(37,99,235,.25); border-radius:10px; padding:10px 12px; margin-bottom:6px; color:var(--tx); }
+.prv-body b[data-def] { color:var(--tx); }
 .prv-footer { margin-top:18px; font-size:11px; color:var(--tm); text-align:center; }
 
 /* Modale di conferma: sostituisce il confirm() nativo, che blocca il thread
@@ -459,6 +461,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .dark .theme-toggle { background:var(--az); }
 .dark .theme-toggle::after { transform:translateX(20px); background:#fff; }
 .theme-wrap { display:flex; align-items:center; gap:6px; }
+.btn-info { width:34px; height:34px; padding:0; border-radius:50%; background:none; border:1.5px solid var(--br); color:var(--tm); font-size:18px; line-height:1; display:flex; align-items:center; justify-content:center; transition:all .12s; }
+.btn-info:active { background:var(--azd); color:var(--az); border-color:rgba(37,99,235,.3); transform:scale(.95); }
 .theme-icon { font-size:14px; line-height:1; }
 
 /* Banner stato partita nel setup */
@@ -517,7 +521,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   #app { height:auto!important; overflow:visible!important; position:static!important; }
 
   /* Nascondi tutto tranne riepilogo */
-  #setup, #referto, .ov, .sp, #prv-ov, #prv-panel,
+  #setup, #referto, .ov, .sp, #prv-ov, #prv-panel, #gd-ov, #gd-panel,
   #save-toast, #warn-toast, .bb, noscript { display:none!important; }
 
   /* Forza tema chiaro per la stampa */
@@ -567,7 +571,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 
 <!-- SETUP -->
 <div id="setup" class="scr on">
-  <div style="display:flex;justify-content:flex-end;padding:0 0 4px">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:0 0 4px">
+    <button class="btn-info" onclick="openGuida()" aria-label="Guida all'uso">&#9432;</button>
     <div class="theme-wrap">
       <span class="theme-icon">☀️</span>
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambia tema"></button>
@@ -578,7 +583,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   <div class="logo">
     <span class="logo-i">🎯</span>
     <div class="logo-n">DART<span>SCORE</span></div>
-    <div class="logo-s" id="app-version">v2.11.0 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
+    <div class="logo-s" id="app-version">v2.12.0 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
   </div>
   <div class="card">
     <div class="card-t">Squadre &amp; Categoria</div>
@@ -610,7 +615,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <div class="rg" id="roster-b"></div>
   </div>
   <button class="btn-go" onclick="startMatch()">&#9654;&nbsp; INIZIA PARTITA</button>
-  <div style="display:flex;justify-content:center;gap:8px;margin-top:10px">
+  <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:10px">
+    <button class="btn-cfg" onclick="openGuida()">&#9432; Guida</button>
     <button class="btn-cfg" onclick="openCfg()">&#9881; Impostazioni</button>
     <button class="btn-reset" onclick="resetApp()">&#8635; Reset completo</button>
   </div>
@@ -812,7 +818,50 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <p>Per qualsiasi domanda relativa alla privacy puoi contattare lo sviluppatore tramite la pagina GitHub del progetto.</p>
     <p style="margin-top:8px"><a href="https://github.com/Fanza-vibes/DARTSCORE" target="_blank" rel="noopener" style="color:var(--az);font-weight:700;text-decoration:none">github.com/Fanza-vibes/DARTSCORE</a></p>
   </div>
-  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.11.0 · © Fanza-vibes · Licenza MIT</div>
+  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.12.0 · © Fanza-vibes · Licenza MIT</div>
+</div>
+
+<!-- GUIDA ALL'USO -->
+<div id="gd-ov" onclick="closeGuida()"></div>
+<div id="gd-panel" tabindex="-1">
+  <div class="prv-hdr">
+    <div class="prv-title">&#9432; Come si usa</div>
+    <button class="spcls" onclick="closeGuida()" aria-label="Chiudi la guida">&#10005;</button>
+  </div>
+  <div class="prv-body">
+    <!-- I numeri marcati data-def descrivono la configurazione PREDEFINITA
+         (regolamento FIGeST 2026), non quella attiva: e' una scelta, la guida
+         lo dichiara in apertura. tests.html li confronta con DEFAULT_CFG, cosi'
+         se un giorno cambiano i predefiniti la verifica fallisce finche' questo
+         testo non viene aggiornato. -->
+    <p class="gd-note">Le regole descritte qui sono quelle <strong>predefinite</strong>, cioè del regolamento FIGeST 2026. Se hai modificato le <em>Impostazioni</em>, alcuni numeri possono essere diversi.</p>
+
+    <h3>1 · Prima della partita</h3>
+    <p>Scrivi i nomi delle due squadre e scegli la categoria. Ogni squadra ha 8 giocatori: <strong>C1–C4</strong> e <strong>O1–O4</strong> sono in campo, dal 5 all'8 sono le riserve. I nomi sono facoltativi: se lasci vuoto compare il codice (C1, O3…). Poi tocca <em>Inizia partita</em>.</p>
+
+    <h3>2 · Segnare i leg</h3>
+    <p>Ogni incontro ha <b data-def="maxLeg">3</b> caselle, una per leg. Tocca una casella per assegnarla: la prima volta diventa <strong>C</strong> (vince Casa), la seconda <strong>O</strong> (vince Ospite), la terza torna vuota. L'incontro va a chi vince <b data-def="legWin">2</b> leg: l'ultimo si sblocca solo se serve.</p>
+    <p>Gli incontri sono nell'ordine del Referto Gara ufficiale e vanno giocati in quell'ordine, altrimenti il set va rigiocato (ART.5.3).</p>
+
+    <h3>3 · Come si calcolano i punti</h3>
+    <p><strong>Punti individuali</strong> — vittoria 2-0: <b data-def="ptNetta">3</b> punti al vincitore, <b data-def="ptSconfNetta">0</b> allo sconfitto. Vittoria 2-1: <b data-def="ptStretta">2</b> e <b data-def="ptSconfStretta">1</b>. Nei doppi i punti vanno a entrambi i giocatori.</p>
+    <p><strong>Risultato della gara</strong> — gli incontri sono <b data-def="nSet">20</b> (<b data-def="nSingoli">16</b> singoli e <b data-def="nDoppi">4</b> doppi). Chi ne vince <b data-def="setWin">11</b> vince la gara <strong>3-0</strong>, e la partita è decisa anche se restano incontri da giocare. Se si finisce in parità conta chi ha vinto più leg: <strong>2-1</strong>. Parità anche nei leg: <strong>1-1</strong>.</p>
+
+    <h3>4 · Cambi</h3>
+    <p>Tocca <em>⇄ Cambio</em>, scegli la squadra, chi esce, la riserva che entra e da quale incontro vale il cambio. Massimo <b data-def="maxSub">4</b> per squadra; chi esce non può rientrare (ART.5.4). Una <strong>R</strong> accanto al codice indica una riserva entrata. L'ultimo cambio si può annullare.</p>
+
+    <h3>5 · Correggere i nomi</h3>
+    <p>Con <em>✎ Nomi</em> correggi un nome in qualsiasi momento, anche a partita iniziata. I risultati non cambiano.</p>
+
+    <h3>6 · Riepilogo e stampa</h3>
+    <p><em>Riepilogo</em> mostra il risultato della gara, la classifica dei giocatori (set, punti e media) e tutti gli incontri. A referto completo l'app controlla che la somma dei punti individuali sia <b data-def="somma">72</b>: se non torna, c'è un errore di trascrizione. Da lì puoi <em>stampare o salvare in PDF</em>.</p>
+
+    <h3>7 · Se chiudi per sbaglio</h3>
+    <p>La partita si salva da sola sul dispositivo a ogni tocco: riaprendo l'app la ritrovi com'era. Viene cancellata dopo 48 ore o quando inizi una nuova partita; <em>↻ Reset completo</em> la cancella subito. Usa l'app in una sola scheda del browser alla volta.</p>
+
+    <h3>8 · Impostazioni</h3>
+    <p>Servono per tornei con formati diversi. Nel pannello, <em>↻ Predefiniti</em> riporta in qualsiasi momento alle regole FIGeST 2026.</p>
+  </div>
 </div>
 
 </div>
@@ -830,7 +879,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="save-toast">⚠ Salvataggio non disponibile</div>
 <div id="warn-toast"></div>
 <script>
-/* DartScore v2.11.0 — light/dark theme
+/* DartScore v2.12.0 — light/dark theme
  *
  * Copyright (c) 2025-2026 Fanza-vibes
  * https://github.com/Fanza-vibes/DARTSCORE
@@ -853,24 +902,19 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * ─────────────────────────────────────────────────────────────────────────────
- * MODIFICHE v2.11.0 rispetto a v2.10.0 (interfaccia e verificabilita':
- * il calcolo del referto non cambia):
- *   - Accessibilita': i quattro pannelli a scomparsa sono ora veri dialoghi.
- *     role/aria-modal/aria-label, focus spostato dentro e restituito a chi ha
- *     aperto, Tab confinato dentro, chiusura con Esc. I modali sono impilati,
- *     cosi' una conferma aperta sopra le Impostazioni, chiudendosi, restituisce
- *     il focus al pannello e non alla pagina.
- *   - Niente piu' confirm() nativo: le dieci conferme usano un modale interno,
- *     coerente col tema, non bloccante e con etichette specifiche al posto del
- *     generico OK/Annulla. Le funzioni interessate sono diventate async.
- *   - Aggiunto tests.html: verifica il calendario contro il Referto Gara e le
- *     regole di punteggio contro il regolamento, senza dipendenze. Va aperto
- *     da un indirizzo web, non con doppio clic.
- *   - window.DS espone in sola lettura i valori derivati (CAL, N_SET,
- *     SOMMA_OK...), che essendo dichiarati con let non sarebbero leggibili da
- *     una pagina di test. Non usato dall'app.
- *   - Non si usa il tag <dialog> nativo: richiede Safari 15.4, mentre la
- *     compatibilita' dichiarata parte da Safari 14.
+ * MODIFICHE v2.12.0 rispetto a v2.11.0 (solo interfaccia: il calcolo del
+ * referto non cambia):
+ *   - Guida all'uso: nuovo tasto "Guida" nella schermata iniziale (in alto
+ *     accanto al tema e in basso accanto a Impostazioni), apre un
+ *     pannello con il funzionamento dell'app (squadre, leg, punti, cambi,
+ *     nomi, riepilogo, salvataggio, impostazioni). Riusa la macchina dei
+ *     modali: dialogo accessibile, Esc, focus restituito.
+ *   - La guida descrive le regole PREDEFINITE (FIGeST 2026) e lo dichiara in
+ *     apertura. I numeri citati sono marcati data-def e tests.html li
+ *     confronta con DEFAULT_CFG, cosi' non possono divergere in silenzio.
+ *   - <title> e meta description riscritti per i motori di ricerca. In stampa
+ *     printRiepilogo() rimette il titolo breve, che il browser usa come nome
+ *     del PDF, e lo ripristina all'evento afterprint.
  * ─────────────────────────────────────────────────────────────────────────────
  * Lo storico delle versioni precedenti è in CHANGELOG.md:
  *   https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md
@@ -945,7 +989,7 @@ const N_PL=8; /* 4 titolari + 4 riserve per squadra (ART.2.2 ammette fino a 12,
 
 /* Costanti di sistema */
 const TAB_HEARTBEAT_MS=5000,TAB_LOCK_TTL_MS=10000,VIBRATE_MS=15,MAX_AGE_MS=48*60*60*1000;
-const APP_VERSION='2.11.0';
+const APP_VERSION='2.12.0';
 const THEME_KEY='dartscore_theme'; /* chiave localStorage per preferenza tema */
 const CFG_KEY='dartscore_cfg';     /* chiave localStorage per configurazione */
 
@@ -1153,6 +1197,8 @@ function getSomma(){
  */
 function openPrivacy(){ modalOpen('prv-ov','prv-panel','Informativa privacy',closePrivacy); }
 function closePrivacy(){ modalClose(); }
+function openGuida(){ modalOpen('gd-ov','gd-panel','Guida all\u2019uso',closeGuida); }
+function closeGuida(){ modalClose(); }
 
 /* ═════════════════════════════════════════════════════════════════════════
  * PANNELLI MODALI — focus, tastiera, annuncio agli screen reader
@@ -1680,6 +1726,14 @@ function printRiepilogo(){
   if(ftr) ftr.textContent='DartScore 2026 \xb7 v'+APP_VERSION+' \u2014 Generato il '+oggi+' alle '+ora;
   /* renderizza classifica completa (entrambe le squadre) per la stampa */
   renderPrintClassifica();
+  /* Il <title> e' lungo per i motori di ricerca, ma il browser lo usa come
+     nome del PDF salvato e nell'intestazione di stampa: durante la stampa
+     torna il nome breve di sempre, e si ripristina a stampa chiusa. */
+  const titolo=document.title;
+  document.title='DartScore 2026';
+  window.addEventListener('afterprint',function ripristina(){
+    document.title=titolo; window.removeEventListener('afterprint',ripristina);
+  });
   /* apri dialogo stampa nativo */
   window.print();
 }
