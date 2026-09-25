@@ -42,6 +42,12 @@ verdi. Mai il contrario: prima il documento, poi il codice.
 > seguire l'ordine del referto, doppi compresi, e stabilisce che altrimenti il
 > leg o il set va rigiocato.
 
+**Se cambi i valori predefiniti** (`DEFAULT_CFG`), aggiorna anche la guida
+all'uso dentro l'app. Descrive le regole predefinite, e ogni numero che cita è
+marcato `data-def`: `tests.html` li confronta con i predefiniti e resta rosso
+finché non coincidono. Così il workflow non può pubblicare una guida che dice
+una cosa e un'app che ne fa un'altra.
+
 ---
 
 ## 2. Aggiorna la versione nei sei punti
@@ -94,10 +100,34 @@ dimentichi, il README documenterà una versione dell'app che non esiste più —
 
 ## 5. Merge e pubblicazione
 
-Dopo il merge su `main`, basta spingere il tag:
+Dopo il merge su `main` basta creare il tag `vX.Y.Z`. Ci sono due strade, e in
+entrambe il workflow parte da solo appena il tag esiste.
 
-    git tag v2.11.0
-    git push origin v2.11.0
+**Dall'interfaccia di GitHub**, la strada usata finora:
+*Releases → Draft a new release*, poi
+
+| campo | cosa scrivere |
+|---|---|
+| Choose a tag | `vX.Y.Z` → *Create new tag: vX.Y.Z on publish* |
+| Target | `main` |
+| Release title | `DartScore X.Y.Z` |
+| Descrizione | vuota: la scrive il workflow dal CHANGELOG |
+| Allegati | nessuno: lo allega il workflow |
+| Set as the latest release | spuntato |
+
+e *Publish release*. Dopo circa un minuto la release ha descrizione e allegato.
+
+> **Controlla subito *Actions*.** Con questa strada la release viene pubblicata
+> *prima* che il workflow faccia i controlli. Se il workflow diventa rosso resta
+> online una release vuota, senza allegato, e siccome è la più recente il link
+> di download del README smette di funzionare. In quel caso cancella la release
+> e il suo tag, correggi, e ripubblica.
+
+**Da terminale**, la strada più prudente, perché se un controllo fallisce la
+release non viene creata affatto:
+
+    git tag vX.Y.Z
+    git push origin vX.Y.Z
 
 Da qui fa tutto il workflow [`.github/workflows/release.yml`](.github/workflows/release.yml):
 
