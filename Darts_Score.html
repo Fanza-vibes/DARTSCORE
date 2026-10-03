@@ -48,6 +48,16 @@
   --cog: rgba(240,84,84,.25);
   --am:  #d97706;
   --amd: rgba(217,119,6,.12);
+  /* Colori delle squadre. Separati da --gn/--co, che restano i colori con un
+     significato (riuscito, errore, azione distruttiva). applyTeamColors() li
+     sovrascrive con la scelta dell'utente; questi sono i predefiniti, validi
+     anche prima che lo script giri. -tl/-td: testo su fondo chiaro/scuro,
+     -ink: testo sopra il colore pieno, -rgb: per le trasparenze. */
+  --ca: #2563eb; --ca-ink: #ffffff; --ca-tl: #1d4ed8; --ca-td: #60a5fa; --ca-rgb: 37,99,235;
+  --os: #facc15; --os-ink: #1c1917; --os-tl: #a16207; --os-td: #facc15; --os-rgb: 250,204,21;
+  --ca-tx: var(--ca-tl); --os-tx: var(--os-tl);
+  --ca-d: rgba(var(--ca-rgb),.12); --os-d: rgba(var(--os-rgb),.14);
+  --ca-g: rgba(var(--ca-rgb),.30); --os-g: rgba(var(--os-rgb),.35);
   --tx:  #0f172a;
   --ts:  #1e3a5f;
   --td:  #475569;
@@ -76,6 +86,9 @@
   --cod: rgba(240,84,84,.18);
   --cog: rgba(240,84,84,.30);
   --amd: rgba(217,119,6,.18);
+  --ca-tx: var(--ca-td); --os-tx: var(--os-td);
+  --ca-d: rgba(var(--ca-rgb),.18); --os-d: rgba(var(--os-rgb),.18);
+  --ca-g: rgba(var(--ca-rgb),.35); --os-g: rgba(var(--os-rgb),.35);
   --tx:  #e2e8f0;
   --ts:  #bfdbfe;
   --td:  #94a3b8;
@@ -119,7 +132,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   background:var(--bg);
   background-image:
     radial-gradient(ellipse 70% 40% at 50% -5%, rgba(37,99,235,.10) 0%, transparent 65%),
-    radial-gradient(ellipse 40% 20% at 90% 100%, rgba(22,163,74,.06) 0%, transparent 55%);
+    radial-gradient(ellipse 40% 20% at 90% 100%, rgba(var(--ca-rgb),.06) 0%, transparent 55%);
   overflow-y:auto;
   padding:20px 16px calc(24px + var(--sb));
   padding-top:calc(20px + var(--st));
@@ -134,6 +147,21 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .g2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .fg { display:flex; flex-direction:column; gap:4px; }
 .fl { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--td); }
+/* Colore di squadra: un pallino accanto al nome mostra la scelta; toccandolo
+   si apre la tavolozza sotto i nomi, e si richiude da sola dopo la scelta. */
+.fl-row { display:flex; align-items:center; justify-content:space-between; gap:6px; min-height:26px; }
+.cdot { width:26px; height:26px; flex-shrink:0; padding:0; border-radius:50%; border:2px solid var(--sf); box-shadow:0 0 0 1.5px var(--br); transition:transform .12s, box-shadow .15s; cursor:pointer; }
+.cdot-a { background:var(--ca); } .cdot-b { background:var(--os); }
+.cdot[aria-expanded="true"] { box-shadow:0 0 0 2px var(--tx); }
+.cdot:active { transform:scale(.88); }
+.pal { max-height:0; overflow:hidden; visibility:hidden; opacity:0; transition:max-height .25s ease, opacity .2s, visibility 0s .25s; }
+.pal.on { max-height:240px; visibility:visible; opacity:1; transition:max-height .25s ease, opacity .2s, visibility 0s 0s; }
+.pal-t { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 8px; }
+.pal-g { display:grid; grid-template-columns:repeat(5,1fr); gap:10px 6px; justify-items:center; padding:4px 2px 12px; }
+.csw { width:40px; height:40px; padding:0; border:none; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:900; cursor:pointer; transition:transform .12s, box-shadow .15s; }
+.csw[aria-pressed="true"] { box-shadow:0 0 0 3px var(--sf), 0 0 0 5px var(--tx); }
+.csw:disabled { opacity:.22; cursor:not-allowed; }
+.csw:not(:disabled):active { transform:scale(.88); }
 .fi { -webkit-appearance:none; appearance:none; background:var(--s2); border:1.5px solid var(--br); border-radius:9px; padding:10px 12px; font-size:15px; font-weight:700; color:var(--tx); outline:none; width:100%; transition:border-color .15s,box-shadow .15s; }
 .fi::placeholder { color:var(--tm); }
 .fi:focus { border-color:var(--az); box-shadow:0 0 0 3px var(--azd); }
@@ -141,8 +169,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .rg { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
 .rc { display:flex; flex-direction:column; gap:3px; }
 .rcl { font-size:10px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; text-align:center; }
-.rcl.ca { color:var(--gn); }
-.rcl.os { color:var(--co); }
+.rcl.ca { color:var(--ca-tx); }
+.rcl.os { color:var(--os-tx); }
 .rsep { grid-column:1/-1; height:1px; background:var(--br); margin:4px 0; }
 .rslb { grid-column:1/-1; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--tm); text-align:center; padding:2px 0; }
 .cg { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
@@ -169,39 +197,40 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .sbt.r { align-items:flex-end; }
 .sbn { font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--td); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:115px; }
 .sbs { font-family:var(--fm); font-size:36px; font-weight:700; line-height:1; color:var(--tx); transition:color .2s; }
-.sbs.wn { color:var(--gn); }
+#hdr-sa.wn { color:var(--ca-tx); }
+#hdr-sb.wn { color:var(--os-tx); }
 .sbl { font-family:var(--fm); font-size:12px; color:var(--td); }
 .sbc { display:flex; flex-direction:column; align-items:center; gap:1px; }
 .sbcl { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--tm); font-weight:700; }
 .sbcp { font-family:var(--fm); font-size:18px; font-weight:700; color:var(--am); }
 .pg { height:5px; background:var(--s2); border-radius:4px; overflow:hidden; display:flex; gap:2px; margin-top:10px; }
-.pga { background:var(--gn); transition:flex-grow .35s; border-radius:4px; }
-.pgb { background:var(--co); transition:flex-grow .35s; border-radius:4px; }
+.pga { background:var(--ca); transition:flex-grow .35s; border-radius:4px; }
+.pgb { background:var(--os); transition:flex-grow .35s; border-radius:4px; }
 .slist { flex:1; overflow-y:auto; padding:4px 10px; padding-bottom:calc(72px + var(--sb)); }
 .sr { display:grid; grid-template-columns:26px 1fr auto 36px; align-items:center; gap:5px; padding:7px 10px; border-radius:10px; border:1.5px solid var(--br); background:var(--sf); margin-bottom:4px; min-height:46px; transition:border-color .12s,background .12s,box-shadow .12s; box-shadow:0 1px 4px rgba(37,99,235,.05); }
-.sr.wa { border-color:rgba(22,163,74,.4); background:rgba(22,163,74,.06); box-shadow:0 2px 8px rgba(22,163,74,.12); }
-.sr.wb { border-color:rgba(240,84,84,.4); background:rgba(240,84,84,.06); box-shadow:0 2px 8px rgba(240,84,84,.12); }
+.sr.wa { border-color:rgba(var(--ca-rgb),.45); background:rgba(var(--ca-rgb),.06); box-shadow:0 2px 8px rgba(var(--ca-rgb),.12); }
+.sr.wb { border-color:rgba(var(--os-rgb),.55); background:rgba(var(--os-rgb),.07); box-shadow:0 2px 8px rgba(var(--os-rgb),.14); }
 .slb { font-family:var(--fm); font-size:10px; font-weight:700; color:var(--tm); text-align:center; line-height:1.2; }
 .sn { display:flex; flex-direction:column; gap:1px; min-width:0; overflow:hidden; }
 .snl { display:flex; align-items:center; gap:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pc { font-size:10px; font-weight:900; flex-shrink:0; }
-.pc.ca { color:var(--gn); }
-.pc.os { color:var(--co); }
+.pc.ca { color:var(--ca-tx); }
+.pc.os { color:var(--os-tx); }
 .pcr { font-size:8px; font-weight:800; padding:1px 4px; border-radius:4px; flex-shrink:0; text-transform:uppercase; line-height:1.4; }
-.pcr.ca { background:var(--gd); color:var(--gn); }
-.pcr.os { background:var(--cod); color:var(--co); }
+.pcr.ca { background:var(--ca-d); color:var(--ca-tx); }
+.pcr.os { background:var(--os-d); color:var(--os-tx); }
 .snn { font-size:13px; font-weight:700; color:var(--ts); overflow:hidden; text-overflow:ellipsis; }
 .sn-d .snn { font-size:12px; }
 .ssep { font-size:10px; color:var(--tm); flex-shrink:0; font-weight:600; }
 .lc { display:flex; gap:4px; flex-shrink:0; }
 .lb { width:40px; height:40px; border-radius:8px; border:2px solid var(--s3); background:var(--s2); color:var(--td); font-size:14px; font-weight:900; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .09s; user-select:none; -webkit-user-select:none; }
 .lb:not(.lk):active { transform:scale(.82); }
-.lb.la { border-color:var(--gn); background:var(--gn); color:#fff; font-size:14px; box-shadow:0 2px 10px var(--gg); }
-.lb.lb2 { border-color:var(--co); background:var(--co); color:#fff; font-size:14px; box-shadow:0 2px 10px var(--cog); }
+.lb.la { border-color:var(--ca); background:var(--ca); color:var(--ca-ink); font-size:14px; box-shadow:0 2px 10px var(--ca-g); }
+.lb.lb2 { border-color:var(--os); background:var(--os); color:var(--os-ink); font-size:14px; box-shadow:0 2px 10px var(--os-g); }
 .lb.lk { opacity:.25; cursor:default; }
 .rp { font-family:var(--fm); font-size:11px; font-weight:700; text-align:center; color:var(--tm); line-height:1.5; }
-.rpa { color:var(--gn); font-size:12px; font-weight:900; }
-.rpb { color:var(--co); font-size:12px; font-weight:900; }
+.rpa { color:var(--ca-tx); font-size:12px; font-weight:900; }
+.rpb { color:var(--os-tx); font-size:12px; font-weight:900; }
 .bb { position:fixed; bottom:0; left:0; right:0; background:var(--sf); border-top:2px solid var(--br); padding:8px 10px; padding-bottom:calc(8px + var(--sb)); display:flex; gap:6px; align-items:center; z-index:10; box-shadow:0 -2px 14px rgba(37,99,235,.08); }
 .btn-cambio { background:var(--azd); color:var(--az); border:1.5px solid rgba(37,99,235,.3); border-radius:9px; padding:12px 10px; font-size:13px; font-weight:900; letter-spacing:1px; text-transform:uppercase; flex:1; text-align:center; transition:all .12s; }
 .btn-cambio:active { background:var(--az); color:var(--tw); transform:scale(.95); }
@@ -231,16 +260,16 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .stt { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:14px; }
 .stb { background:var(--s2); border:2px solid var(--br); border-radius:9px; padding:10px; text-align:center; color:var(--td); font-size:15px; font-weight:800; transition:all .12s; }
 .stb:active { transform:scale(.96); }
-.stb.sa { border-color:var(--gn); background:var(--gd); color:var(--gn); }
-.stb.sb2 { border-color:var(--co); background:var(--cod); color:var(--co); }
+.stb.sa { border-color:var(--ca); background:var(--ca-d); color:var(--ca-tx); }
+.stb.sb2 { border-color:var(--os); background:var(--os-d); color:var(--os-tx); }
 .spg { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:14px; }
 .spb { background:var(--s2); border:2px solid var(--br); border-radius:9px; padding:9px 4px; text-align:center; transition:all .12s; }
 .spb:active { transform:scale(.94); }
 .spb.on { border-color:var(--am); background:var(--amd); box-shadow:0 0 0 2px var(--amd); }
 .spb.dis { opacity:.25; pointer-events:none; }
 .spbc { font-size:13px; font-weight:900; line-height:1; }
-.spbc.ca { color:var(--gn); }
-.spbc.os { color:var(--co); }
+.spbc.ca { color:var(--ca-tx); }
+.spbc.os { color:var(--os-tx); }
 .spbn { font-size:10px; color:var(--td); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .sfr { display:flex; align-items:center; gap:9px; margin-bottom:14px; }
 .sflb { font-size:13px; font-weight:700; color:var(--td); white-space:nowrap; }
@@ -276,9 +305,10 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .hct.r { align-items:flex-end; }
 .hcn { font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--td); max-width:115px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .hcp { font-family:var(--fm); font-size:58px; font-weight:700; line-height:1; transition:color .25s; }
-.hcp.win { color:var(--gn); }
+#res-pa.win { color:var(--ca-tx); }
+#res-pb.win { color:var(--os-tx); }
 .hcp.los { color:var(--tm); }
-.hcp.drw { color:var(--am); }
+.hcp.drw { color:var(--tx); }
 .hcp.pen { color:var(--td); }
 .hcc { font-family:var(--fm); font-size:12px; color:var(--td); }
 .hcsep { text-align:center; font-family:var(--fm); font-size:20px; color:var(--tm); }
@@ -286,22 +316,22 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .sb2 { background:var(--sf); border:1.5px solid var(--br); border-radius:9px; padding:10px 6px; text-align:center; box-shadow:0 1px 5px rgba(37,99,235,.05); }
 .sb2l { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--td); font-weight:700; }
 .sb2v { font-family:var(--fm); font-size:22px; font-weight:700; margin-top:3px; }
-.sb2v.g { color:var(--gn); }
-.sb2v.r { color:var(--co); }
+.sb2v.g { color:var(--ca-tx); }
+.sb2v.r { color:var(--os-tx); }
 .sw { padding:0 14px 10px; }
 .swl { font-size:10px; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:var(--td); margin-bottom:8px; }
 .tw { background:var(--sf); border:1.5px solid var(--br); border-radius:11px; overflow:hidden; box-shadow:0 2px 10px rgba(37,99,235,.06); }
 .th { display:grid; gap:4px; grid-template-columns:26px 1fr 44px 32px 36px; background:var(--s2); padding:7px 12px; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--td); font-weight:700; border-bottom:1.5px solid var(--br); }
 .tr { display:grid; gap:4px; grid-template-columns:26px 1fr 44px 32px 36px; align-items:center; padding:8px 12px; border-bottom:1px solid var(--br); }
 .tr:last-child { border-bottom:none; }
-.tr.ta { background:rgba(22,163,74,.04); }
-.tr.tb { background:rgba(240,84,84,.04); }
+.tr.ta { background:rgba(var(--ca-rgb),.05); }
+.tr.tb { background:rgba(var(--os-rgb),.06); }
 .trpos { font-family:var(--fm); font-size:11px; font-weight:700; color:var(--tm); }
 .trpos.gd { color:var(--am); font-size:13px; }
 .trpl { display:flex; flex-direction:column; min-width:0; }
 .trco { font-size:10px; font-weight:900; letter-spacing:1px; }
-.trco.ca { color:var(--gn); }
-.trco.os { color:var(--co); }
+.trco.ca { color:var(--ca-tx); }
+.trco.os { color:var(--os-tx); }
 .trnm { font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--tx); }
 .trsq { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--tm); text-align:center; }
 .trst { font-family:var(--fm); font-size:12px; color:var(--td); text-align:right; }
@@ -312,13 +342,13 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .dt { background:var(--sf); border:1.5px solid var(--br); border-radius:11px; overflow:hidden; box-shadow:0 2px 10px rgba(37,99,235,.06); }
 .dr { display:grid; grid-template-columns:28px 1fr 36px 30px 30px; align-items:center; padding:7px 12px; border-bottom:1px solid var(--br); gap:4px; }
 .dr:last-child { border-bottom:none; }
-.dr.wa { background:rgba(22,163,74,.05); }
-.dr.wb { background:rgba(240,84,84,.05); }
+.dr.wa { background:rgba(var(--ca-rgb),.06); }
+.dr.wb { background:rgba(var(--os-rgb),.07); }
 .drid { font-family:var(--fm); font-size:10px; font-weight:700; color:var(--tm); }
 .drvs { font-size:11px; color:var(--td); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .drri { font-family:var(--fm); font-size:13px; font-weight:700; color:var(--ts); text-align:center; }
-.drpa { font-family:var(--fm); font-size:13px; font-weight:700; color:var(--gn); text-align:right; }
-.drpb { font-family:var(--fm); font-size:13px; font-weight:700; color:var(--co); text-align:right; }
+.drpa { font-family:var(--fm); font-size:13px; font-weight:700; color:var(--ca-tx); text-align:right; }
+.drpb { font-family:var(--fm); font-size:13px; font-weight:700; color:var(--os-tx); text-align:right; }
 .drnd { font-family:var(--fm); font-size:12px; color:var(--tm); text-align:right; }
 .vb { margin:0 14px 10px; padding:12px 14px; border-radius:10px; display:flex; align-items:center; gap:10px; font-size:14px; font-weight:700; }
 .vb.ok { background:var(--gd); border:1.5px solid rgba(22,163,74,.3); color:var(--gn); }
@@ -334,12 +364,12 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .ep-tabs { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:14px; }
 .ep-tab { background:var(--s2); border:2px solid var(--br); border-radius:9px; padding:9px; text-align:center; font-size:14px; font-weight:800; color:var(--td); transition:all .12s; }
 .ep-tab:active { transform:scale(.96); }
-.ep-tab.ea { border-color:var(--gn); background:var(--gd); color:var(--gn); }
-.ep-tab.eb { border-color:var(--co); background:var(--cod); color:var(--co); }
+.ep-tab.ea { border-color:var(--ca); background:var(--ca-d); color:var(--ca-tx); }
+.ep-tab.eb { border-color:var(--os); background:var(--os-d); color:var(--os-tx); }
 .ep-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:10px; }
 .ep-cell { display:flex; flex-direction:column; gap:3px; }
 .ep-lbl { font-size:9px; font-weight:800; text-transform:uppercase; text-align:center; }
-.ep-lbl.ca { color:var(--gn); } .ep-lbl.os { color:var(--co); }
+.ep-lbl.ca { color:var(--ca-tx); } .ep-lbl.os { color:var(--os-tx); }
 .ep-sep { grid-column:1/-1; height:1px; background:var(--br); margin:2px 0; }
 .ep-sep-lbl { grid-column:1/-1; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--tm); text-align:center; padding:2px 0; }
 .btn-save { background:var(--az); color:var(--tw); border-radius:11px; padding:13px; font-size:16px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; width:100%; display:block; box-shadow:0 4px 18px var(--azg); transition:all .12s; }
@@ -347,8 +377,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .rank-toggle { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px; }
 .rt-btn { border:2px solid var(--br); border-radius:9px; padding:9px; background:var(--s2); color:var(--td); font-size:13px; font-weight:800; transition:all .12s; text-align:center; }
 .rt-btn:active { transform:scale(.96); }
-.rt-btn.ra { border-color:var(--gn); background:var(--gd); color:var(--gn); }
-.rt-btn.rb { border-color:var(--co); background:var(--cod); color:var(--co); }
+.rt-btn.ra { border-color:var(--ca); background:var(--ca-d); color:var(--ca-tx); }
+.rt-btn.rb { border-color:var(--os); background:var(--os-d); color:var(--os-tx); }
 /* ══════════════════════════════════════════════════════════════════════
    ADATTAMENTI PER DIMENSIONE SCHERMO
    ──────────────────────────────────────────────────────────────────────
@@ -488,8 +518,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 
 /* Label squadra nella classifica stampata */
 .print-team-lbl { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:8px 12px 4px; break-after:avoid; }
-.print-team-lbl.ca { color:#16a34a; }
-.print-team-lbl.os { color:#f05454; }
+.print-team-lbl.ca { color:var(--ca-tl); }
+.print-team-lbl.os { color:var(--os-tl); }
 
 /* Footer stampa */
 .print-ftr { text-align:center; font-size:9px; color:#94a3b8; margin-top:16px; padding-top:10px; border-top:1px solid #dde3f0; }
@@ -525,7 +555,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   #save-toast, #warn-toast, .bb, noscript { display:none!important; }
 
   /* Forza tema chiaro per la stampa */
-  .dark { --bg:#fff; --sf:#fff; --s2:#f0f4ff; --tx:#0f172a; --td:#475569; --tm:#94a3b8; }
+  .dark { --bg:#fff; --sf:#fff; --s2:#f0f4ff; --tx:#0f172a; --td:#475569; --tm:#94a3b8;
+          --ca-tx:var(--ca-tl); --os-tx:var(--os-tl); --ca-d:rgba(var(--ca-rgb),.12); --os-d:rgba(var(--os-rgb),.14); }
 
   /* Forza riepilogo visibile e in flusso normale */
   .scr { position:static!important; opacity:1!important; pointer-events:auto!important; }
@@ -547,10 +578,13 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   .tw, .dt { box-shadow:none!important; border:1.5px solid #c0c8d8!important; break-inside:avoid; }
   .vb { margin:0 0 10px!important; break-inside:avoid; }
   /* Contrasto stampa migliorato — colori più scuri per WCAG AA su bianco */
-  .drpa, .rpa, .sb2v.g, .trpt.hi { color:#0d7a35!important; font-weight:900!important; }
-  .drpb, .rpb, .sb2v.r { color:#c41e1e!important; font-weight:900!important; }
-  .dr.wa { border-left:3px solid #0d7a35!important; }
-  .dr.wb { border-left:3px solid #c41e1e!important; }
+  /* Valori di squadra nei colori scelti, nel tono scuro adatto alla carta;
+     i punti alti in classifica restano verdi, perche' sono un giudizio. */
+  .drpa, .rpa, .sb2v.g { color:var(--ca-tl)!important; font-weight:900!important; }
+  .drpb, .rpb, .sb2v.r { color:var(--os-tl)!important; font-weight:900!important; }
+  .trpt.hi { color:#0d7a35!important; font-weight:900!important; }
+  .dr.wa { border-left:3px solid var(--ca)!important; }
+  .dr.wb { border-left:3px solid var(--os)!important; }
 
   /* Margini pagina */
   @page { margin:12mm 10mm; size:A4; }
@@ -583,20 +617,22 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   <div class="logo">
     <span class="logo-i">🎯</span>
     <div class="logo-n">DART<span>SCORE</span></div>
-    <div class="logo-s" id="app-version">v2.12.0 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
+    <div class="logo-s" id="app-version">v2.13.0 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
   </div>
   <div class="card">
     <div class="card-t">Squadre &amp; Categoria</div>
     <div class="g2" style="margin-bottom:10px">
       <div class="fg">
-        <div class="fl">Squadra Casa</div>
+        <div class="fl-row"><div class="fl">Squadra Casa</div><button class="cdot cdot-a" id="cdot-A" onclick="togglePal('A')" aria-expanded="false" aria-controls="pal-A" aria-label="Colore Casa"></button></div>
         <input id="inp-a" class="fi" type="text" placeholder="Squadra Casa" maxlength="20" autocomplete="off" spellcheck="false">
       </div>
       <div class="fg">
-        <div class="fl">Squadra Ospite</div>
+        <div class="fl-row"><div class="fl">Squadra Ospite</div><button class="cdot cdot-b" id="cdot-B" onclick="togglePal('B')" aria-expanded="false" aria-controls="pal-B" aria-label="Colore Ospite"></button></div>
         <input id="inp-b" class="fi" type="text" placeholder="Squadra Ospite" maxlength="20" autocomplete="off" spellcheck="false">
       </div>
     </div>
+    <div class="pal" id="pal-A"></div>
+    <div class="pal" id="pal-B"></div>
     <div class="fg">
       <div class="fl">Categoria</div>
       <div class="cg">
@@ -802,7 +838,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <h3>Dove vengono salvati</h3>
     <p>I dati della partita in corso vengono salvati nella memoria locale del browser (<em>localStorage</em>) per permettere il ripristino in caso di chiusura accidentale. I dati vengono <strong>eliminati automaticamente</strong> dopo 48 ore oppure all'avvio di una nuova partita.</p>
     <p>Un identificatore anonimo temporaneo viene salvato nel <em>localStorage</em> per evitare l'apertura simultanea in più schede. Non contiene alcun dato personale e viene rimosso alla chiusura della scheda.</p>
-    <p>La preferenza del tema (chiaro/scuro) e le impostazioni di gara (numero incontri, sistema punti) vengono salvate nel <em>localStorage</em> per essere ripristinate alla visita successiva. Non contengono alcun dato personale.</p>
+    <p>La preferenza del tema (chiaro/scuro), i colori scelti per le squadre e le impostazioni di gara (numero incontri, sistema punti) vengono salvati nel <em>localStorage</em> per essere ripristinate alla visita successiva. Non contengono alcun dato personale.</p>
 
     <h3>Font e risorse esterne</h3>
     <p><span class="ok">✓</span> Questa versione dell'app utilizza esclusivamente font di sistema. Nessuna richiesta viene inviata a Google o ad altri servizi di terze parti.</p>
@@ -818,7 +854,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <p>Per qualsiasi domanda relativa alla privacy puoi contattare lo sviluppatore tramite la pagina GitHub del progetto.</p>
     <p style="margin-top:8px"><a href="https://github.com/Fanza-vibes/DARTSCORE" target="_blank" rel="noopener" style="color:var(--az);font-weight:700;text-decoration:none">github.com/Fanza-vibes/DARTSCORE</a></p>
   </div>
-  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.12.0 · © Fanza-vibes · Licenza MIT</div>
+  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.13.0 · © Fanza-vibes · Licenza MIT</div>
 </div>
 
 <!-- GUIDA ALL'USO -->
@@ -837,7 +873,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <p class="gd-note">Le regole descritte qui sono quelle <strong>predefinite</strong>, cioè del regolamento FIGeST 2026. Se hai modificato le <em>Impostazioni</em>, alcuni numeri possono essere diversi.</p>
 
     <h3>1 · Prima della partita</h3>
-    <p>Scrivi i nomi delle due squadre e scegli la categoria. Ogni squadra ha 8 giocatori: <strong>C1–C4</strong> e <strong>O1–O4</strong> sono in campo, dal 5 all'8 sono le riserve. I nomi sono facoltativi: se lasci vuoto compare il codice (C1, O3…). Poi tocca <em>Inizia partita</em>.</p>
+    <p>Scrivi i nomi delle due squadre e scegli la categoria. Il pallino accanto a ogni nome mostra il colore della squadra: toccalo per sceglierne un altro. Ogni squadra ha 8 giocatori: <strong>C1–C4</strong> e <strong>O1–O4</strong> sono in campo, dal 5 all'8 sono le riserve. I nomi sono facoltativi: se lasci vuoto compare il codice (C1, O3…). Poi tocca <em>Inizia partita</em>.</p>
 
     <h3>2 · Segnare i leg</h3>
     <p>Ogni incontro ha <b data-def="maxLeg">3</b> caselle, una per leg. Tocca una casella per assegnarla: la prima volta diventa <strong>C</strong> (vince Casa), la seconda <strong>O</strong> (vince Ospite), la terza torna vuota. L'incontro va a chi vince <b data-def="legWin">2</b> leg: l'ultimo si sblocca solo se serve.</p>
@@ -879,7 +915,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="save-toast">⚠ Salvataggio non disponibile</div>
 <div id="warn-toast"></div>
 <script>
-/* DartScore v2.12.0 — light/dark theme
+/* DartScore v2.13.0 — light/dark theme
  *
  * Copyright (c) 2025-2026 Fanza-vibes
  * https://github.com/Fanza-vibes/DARTSCORE
@@ -902,19 +938,20 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * ─────────────────────────────────────────────────────────────────────────────
- * MODIFICHE v2.12.0 rispetto a v2.11.0 (solo interfaccia: il calcolo del
- * referto non cambia):
- *   - Guida all'uso: nuovo tasto "Guida" nella schermata iniziale (in alto
- *     accanto al tema e in basso accanto a Impostazioni), apre un
- *     pannello con il funzionamento dell'app (squadre, leg, punti, cambi,
- *     nomi, riepilogo, salvataggio, impostazioni). Riusa la macchina dei
- *     modali: dialogo accessibile, Esc, focus restituito.
- *   - La guida descrive le regole PREDEFINITE (FIGeST 2026) e lo dichiara in
- *     apertura. I numeri citati sono marcati data-def e tests.html li
- *     confronta con DEFAULT_CFG, cosi' non possono divergere in silenzio.
- *   - <title> e meta description riscritti per i motori di ricerca. In stampa
- *     printRiepilogo() rimette il titolo breve, che il browser usa come nome
- *     del PDF, e lo ripristina all'evento afterprint.
+ * MODIFICHE v2.13.0 rispetto a v2.12.0 (solo grafica: il calcolo del referto
+ * non cambia):
+ *   - Colori delle squadre scelti dall'utente: un pallino accanto a ogni nome
+ *     mostra il colore, toccandolo si apre una tavolozza di dieci colori che si
+ *     richiude da sola dopo la scelta. Le due squadre non possono avere lo
+ *     stesso colore. La scelta resta sul dispositivo, come il tema.
+ *   - Predefiniti: blu per la Casa e giallo per l'Ospite (prima verde e
+ *     rosso, la coppia meno distinguibile per chi non vede bene rosso e verde).
+ *   - I colori di squadra hanno variabili proprie (--ca*, --os*), separate da
+ *     --gn/--co, che restano per cio' che ha un significato: errore, reset,
+ *     referto validato. Il punteggio in vantaggio prende il colore della
+ *     squadra, non piu' sempre il verde; il pareggio 1-1 e' neutro.
+ *   - Il testo sopra il colore pieno e' bianco o scuro a seconda del contrasto:
+ *     tutte le combinazioni superano 4.5:1, verificato da tests.html.
  * ─────────────────────────────────────────────────────────────────────────────
  * Lo storico delle versioni precedenti è in CHANGELOG.md:
  *   https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md
@@ -926,7 +963,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  *
  *   <head>    meta, CSP, e l'intero foglio di stile diviso in sezioni
  *   <body>    tre schermate sovrapposte (#setup, #referto, #riepilogo) piu'
- *             quattro pannelli a scomparsa (impostazioni, cambi, nomi, privacy)
+ *             cinque pannelli a scomparsa (impostazioni, cambi, nomi, privacy,
+ *             guida) e il modale di conferma
  *   <script>  in ordine: configurazione → stato e logica di gioco → navigazione
  *             → setup → assegnazione leg → sostituzioni → costruzione referto
  *             → rendering → modifica nomi → classifica → stampa → validazione
@@ -989,7 +1027,7 @@ const N_PL=8; /* 4 titolari + 4 riserve per squadra (ART.2.2 ammette fino a 12,
 
 /* Costanti di sistema */
 const TAB_HEARTBEAT_MS=5000,TAB_LOCK_TTL_MS=10000,VIBRATE_MS=15,MAX_AGE_MS=48*60*60*1000;
-const APP_VERSION='2.12.0';
+const APP_VERSION='2.13.0';
 const THEME_KEY='dartscore_theme'; /* chiave localStorage per preferenza tema */
 const CFG_KEY='dartscore_cfg';     /* chiave localStorage per configurazione */
 
@@ -1921,6 +1959,103 @@ function resetMatchState(){
   initLegs();
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+ * COLORI DELLE SQUADRE
+ * ────────────────────────────────────────────────────────────────────────
+ * Solo grafica: non toccano calcolo, calendario o punteggi. Per ogni colore
+ * c = riempimento (caselle dei leg, barra), l = testo su fondo chiaro,
+ * d = testo su fondo scuro, ink = testo sopra il riempimento. tests.html
+ * verifica che ogni combinazione superi il contrasto 4.5:1 (WCAG AA).
+ * La scelta e' una preferenza del dispositivo, come il tema: resta da una
+ * partita all'altra e non viene cancellata dal Reset completo.
+ * ════════════════════════════════════════════════════════════════════════ */
+const TEAM_COLORS=[
+  {id:'blu',       nome:'Blu',         c:'#2563eb', l:'#1d4ed8', d:'#60a5fa', ink:'#ffffff'},
+  {id:'azzurro',   nome:'Azzurro',     c:'#0ea5e9', l:'#0369a1', d:'#38bdf8', ink:'#1c1917'},
+  {id:'acqua',     nome:'Verde acqua', c:'#0d9488', l:'#0f766e', d:'#2dd4bf', ink:'#1c1917'},
+  {id:'verde',     nome:'Verde',       c:'#16a34a', l:'#15803d', d:'#4ade80', ink:'#1c1917'},
+  {id:'giallo',    nome:'Giallo',      c:'#facc15', l:'#a16207', d:'#facc15', ink:'#1c1917'},
+  {id:'arancione', nome:'Arancione',   c:'#f97316', l:'#c2410c', d:'#fb923c', ink:'#1c1917'},
+  {id:'rosso',     nome:'Rosso',       c:'#dc2626', l:'#b91c1c', d:'#f87171', ink:'#ffffff'},
+  {id:'rosa',      nome:'Rosa',        c:'#db2777', l:'#be185d', d:'#f472b6', ink:'#ffffff'},
+  {id:'viola',     nome:'Viola',       c:'#7c3aed', l:'#6d28d9', d:'#a78bfa', ink:'#ffffff'},
+  {id:'grigio',    nome:'Grigio',      c:'#64748b', l:'#475569', d:'#94a3b8', ink:'#ffffff'},
+];
+const DEFAULT_COLORS={A:'blu',B:'giallo'};
+const COLORS_KEY='dartscore_colors';
+let TEAM_COL={...DEFAULT_COLORS};
+let _palAperta=null;
+
+function teamColor(id){ return TEAM_COLORS.find(function(c){ return c.id===id; })||null; }
+function hexRgb(h){ return [1,3,5].map(function(i){ return parseInt(h.slice(i,i+2),16); }).join(','); }
+function loadTeamColors(){
+  try{
+    const d=JSON.parse(localStorage.getItem(COLORS_KEY)||'null');
+    /* Una scelta salvata incoerente (colore sconosciuto o uguale per le due
+       squadre) viene ignorata: si torna ai predefiniti. */
+    if(d && teamColor(d.A) && teamColor(d.B) && d.A!==d.B) TEAM_COL={A:d.A,B:d.B};
+  }catch(e){}
+}
+function applyTeamColors(){
+  const st=document.documentElement.style;
+  [['A','ca','Casa'],['B','os','Ospite']].forEach(function(x){
+    const c=teamColor(TEAM_COL[x[0]]), pr='--'+x[1];
+    st.setProperty(pr,c.c); st.setProperty(pr+'-ink',c.ink);
+    st.setProperty(pr+'-tl',c.l); st.setProperty(pr+'-td',c.d); st.setProperty(pr+'-rgb',hexRgb(c.c));
+    const dot=g('cdot-'+x[0]);
+    if(dot){ dot.setAttribute('aria-label','Colore '+x[2]+': '+c.nome+'. Tocca per cambiarlo'); dot.title='Colore '+x[2]+': '+c.nome; }
+  });
+  buildPalettes();
+}
+function buildPalettes(){
+  ['A','B'].forEach(function(t){
+    const box=g('pal-'+t); if(!box) return;
+    const altro=TEAM_COL[t==='A'?'B':'A'];
+    box.innerHTML='<div class="pal-t" style="color:var(--'+(t==='A'?'ca':'os')+'-tx)">Colore '+(t==='A'?'Casa':'Ospite')+'</div><div class="pal-g">'+
+      TEAM_COLORS.map(function(c){
+        const sel=c.id===TEAM_COL[t], usato=c.id===altro;
+        return '<button class="csw" style="background:'+c.c+';color:'+c.ink+'" title="'+c.nome+(usato?' (gi\u00e0 usato)':'')+'"'+
+          ' aria-label="'+c.nome+(usato?', gi\u00e0 usato dall\u2019altra squadra':'')+'" aria-pressed="'+sel+'"'+
+          (usato?' disabled':'')+' onclick="pickColor(\''+t+'\',\''+c.id+'\')">'+(sel?'&#10003;':'')+'</button>';
+      }).join('')+'</div>';
+  });
+}
+function togglePal(t){
+  const apri=_palAperta!==t;
+  closePal();
+  if(!apri) return;
+  _palAperta=t;
+  g('pal-'+t).classList.add('on'); g('cdot-'+t).setAttribute('aria-expanded','true');
+  /* Il focus va sul colore scelto: da tastiera si prosegue con Tab. Dopo un
+     tocco non compare l'anello di focus, che segue :focus-visible. */
+  setTimeout(function(){ const s=g('pal-'+t).querySelector('.csw[aria-pressed="true"]'); if(s) s.focus(); },60);
+}
+function closePal(){
+  ['A','B'].forEach(function(t){
+    const p=g('pal-'+t); if(p) p.classList.remove('on');
+    const d=g('cdot-'+t); if(d) d.setAttribute('aria-expanded','false');
+  });
+  _palAperta=null;
+}
+function pickColor(t,id){
+  if(!teamColor(id) || id===TEAM_COL[t==='A'?'B':'A']) return;
+  TEAM_COL[t]=id;
+  try{ localStorage.setItem(COLORS_KEY,JSON.stringify(TEAM_COL)); }catch(e){}
+  applyTeamColors();
+  if(navigator.vibrate) navigator.vibrate(VIBRATE_MS);
+  /* Si richiude da sola: il ritardo lascia vedere la spunta sul colore scelto. */
+  setTimeout(function(){ closePal(); const d=g('cdot-'+t); if(d) d.focus(); },220);
+}
+/* Esc o un tocco fuori chiudono la tavolozza aperta. */
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape' && _palAperta && !_modali.length){ const t=_palAperta; closePal(); const d=g('cdot-'+t); if(d) d.focus(); }
+});
+document.addEventListener('click',function(e){
+  if(!_palAperta) return;
+  if(e.target.closest && (e.target.closest('.pal') || e.target.closest('.cdot'))) return;
+  closePal();
+});
+
 /* ── Tema chiaro/scuro ── */
 function toggleTheme(){
   const isDark=document.documentElement.classList.toggle('dark');
@@ -2086,6 +2221,7 @@ function releaseTabLock(){
 window.DS={
   get CAL(){return CAL;}, get N_SET(){return N_SET;}, get SOMMA_OK(){return SOMMA_OK;},
   get CFG(){return CFG;}, get DEFAULT_CFG(){return DEFAULT_CFG;}, get S(){return S;},
+  get TEAM_COLORS(){return TEAM_COLORS;}, get DEFAULT_COLORS(){return DEFAULT_COLORS;}, get TEAM_COL(){return TEAM_COL;},
 };
 
 (function init(){
@@ -2095,6 +2231,9 @@ window.DS={
 
   /* Tema: ripristina preferenza salvata */
   restoreTheme();
+
+  /* Colori delle squadre: preferenza del dispositivo, come il tema */
+  loadTeamColors(); applyTeamColors();
 
   /* Sincronizza versione da costante JS → HTML */
   setText('app-version','v'+APP_VERSION+' \xb7 Campionato Soft Dart 2026');
