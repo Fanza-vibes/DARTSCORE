@@ -6,6 +6,18 @@ Il file dell'app è [`Darts_Score.html`](Darts_Score.html): il nome resta stabil
 
 ---
 
+## v2.13.1
+
+Ritocco ai colori delle squadre, su segnalazione dell'autore. **Il calcolo del referto non cambia.**
+
+- **Lettere bianche sulle caselle dei leg** per tutti i colori, come nelle versioni precedenti. Nella 2.13.0 diventavano scure su azzurro, verde acqua, verde e arancione
+- **Unica eccezione, il giallo**: lì il bianco si leggerebbe a 1,5:1, cioè sparirebbe, e il giallo è il colore predefinito dell'Ospite. Resta la lettera scura
+- **Il verde torna identico a quello delle versioni precedenti**, anche nelle scritte (sigle e punteggi), in entrambi i temi
+- **Azzurro e arancione sono di un tono più scuri**: con la lettera bianca restavano sotto 3:1, peggio del verde di prima. Restano chiaramente azzurro e arancione
+- [`tests.html`](https://fanza-vibes.github.io/DARTSCORE/tests.html) controlla le nuove regole: lettere sulle caselle almeno 3:1, scritte almeno 4,5:1. Il verde è escluso dalla seconda regola, come scelta dichiarata
+
+---
+
 ## v2.13.0
 
 I colori delle squadre si scelgono, e i nuovi predefiniti sono **blu per la Casa e giallo per l'Ospite**. **Il calcolo del referto non cambia**: calendario, punteggi, classifica e somma di controllo sono identici, verificati byte per byte con i predefiniti FIGeST.

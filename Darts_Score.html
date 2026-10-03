@@ -622,7 +622,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   <div class="logo">
     <span class="logo-i">🎯</span>
     <div class="logo-n">DART<span>SCORE</span></div>
-    <div class="logo-s" id="app-version">v2.13.0 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
+    <div class="logo-s" id="app-version">v2.13.1 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
   </div>
   <div class="card">
     <div class="card-t">Squadre &amp; Categoria</div>
@@ -861,7 +861,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <p>Per qualsiasi domanda relativa alla privacy puoi contattare lo sviluppatore tramite la pagina GitHub del progetto.</p>
     <p style="margin-top:8px"><a href="https://github.com/Fanza-vibes/DARTSCORE" target="_blank" rel="noopener" style="color:var(--az);font-weight:700;text-decoration:none">github.com/Fanza-vibes/DARTSCORE</a></p>
   </div>
-  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.13.0 · © Fanza-vibes · Licenza MIT</div>
+  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.13.1 · © Fanza-vibes · Licenza MIT</div>
 </div>
 
 <!-- GUIDA ALL'USO -->
@@ -922,7 +922,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="save-toast">⚠ Salvataggio non disponibile</div>
 <div id="warn-toast"></div>
 <script>
-/* DartScore v2.13.0 — light/dark theme
+/* DartScore v2.13.1 — light/dark theme
  *
  * Copyright (c) 2025-2026 Fanza-vibes
  * https://github.com/Fanza-vibes/DARTSCORE
@@ -945,6 +945,11 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * ─────────────────────────────────────────────────────────────────────────────
+ * MODIFICHE v2.13.1 rispetto a v2.13.0 (solo grafica):
+ *   - Lettere bianche sulle caselle dei leg per tutti i colori tranne il giallo.
+ *     Azzurro e arancione un tono piu' scuri per reggere il bianco.
+ *   - Verde identico a quello delle versioni precedenti, anche nelle scritte.
+ *
  * MODIFICHE v2.13.0 rispetto a v2.12.0 (solo grafica: il calcolo del referto
  * non cambia):
  *   - Colori delle squadre scelti dall'utente: un pallino accanto a ogni nome,
@@ -957,8 +962,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  *     --gn/--co, che restano per cio' che ha un significato: errore, reset,
  *     referto validato. Il punteggio in vantaggio prende il colore della
  *     squadra, non piu' sempre il verde; il pareggio 1-1 e' neutro.
- *   - Il testo sopra il colore pieno e' bianco o scuro a seconda del contrasto:
- *     tutte le combinazioni superano 4.5:1, verificato da tests.html.
+ *   - Il testo sopra il colore pieno era bianco o scuro a seconda del contrasto
+ *     (rivisto nella 2.13.1).
  * ─────────────────────────────────────────────────────────────────────────────
  * Lo storico delle versioni precedenti è in CHANGELOG.md:
  *   https://github.com/Fanza-vibes/DARTSCORE/blob/main/CHANGELOG.md
@@ -1034,7 +1039,7 @@ const N_PL=8; /* 4 titolari + 4 riserve per squadra (ART.2.2 ammette fino a 12,
 
 /* Costanti di sistema */
 const TAB_HEARTBEAT_MS=5000,TAB_LOCK_TTL_MS=10000,VIBRATE_MS=15,MAX_AGE_MS=48*60*60*1000;
-const APP_VERSION='2.13.0';
+const APP_VERSION='2.13.1';
 const THEME_KEY='dartscore_theme'; /* chiave localStorage per preferenza tema */
 const CFG_KEY='dartscore_cfg';     /* chiave localStorage per configurazione */
 
@@ -1971,18 +1976,23 @@ function resetMatchState(){
  * ────────────────────────────────────────────────────────────────────────
  * Solo grafica: non toccano calcolo, calendario o punteggi. Per ogni colore
  * c = riempimento (caselle dei leg, barra), l = testo su fondo chiaro,
- * d = testo su fondo scuro, ink = testo sopra il riempimento. tests.html
- * verifica che ogni combinazione superi il contrasto 4.5:1 (WCAG AA).
+ * d = testo su fondo scuro, ink = testo sopra il riempimento.
+ * Le lettere sulle caselle sono bianche, come nelle versioni precedenti,
+ * tranne sul giallo, dove il bianco sparirebbe (1.5:1). Azzurro e arancione
+ * sono di un tono piu' scuri del necessario proprio per reggere il bianco.
+ * Il verde e' identico a quello delle versioni precedenti anche nelle scritte,
+ * per scelta dell'autore. tests.html verifica le soglie: lettere sulle
+ * caselle almeno 3:1, scritte almeno 4.5:1 (verde escluso, vedi sopra).
  * La scelta e' una preferenza del dispositivo, come il tema: resta da una
  * partita all'altra e non viene cancellata dal Reset completo.
  * ════════════════════════════════════════════════════════════════════════ */
 const TEAM_COLORS=[
   {id:'blu',       nome:'Blu',         c:'#2563eb', l:'#1d4ed8', d:'#60a5fa', ink:'#ffffff'},
-  {id:'azzurro',   nome:'Azzurro',     c:'#0ea5e9', l:'#0369a1', d:'#38bdf8', ink:'#1c1917'},
-  {id:'acqua',     nome:'Verde acqua', c:'#0d9488', l:'#0f766e', d:'#2dd4bf', ink:'#1c1917'},
-  {id:'verde',     nome:'Verde',       c:'#16a34a', l:'#15803d', d:'#4ade80', ink:'#1c1917'},
+  {id:'azzurro',   nome:'Azzurro',     c:'#0284c7', l:'#0369a1', d:'#38bdf8', ink:'#ffffff'},
+  {id:'acqua',     nome:'Verde acqua', c:'#0d9488', l:'#0f766e', d:'#2dd4bf', ink:'#ffffff'},
+  {id:'verde',     nome:'Verde',       c:'#16a34a', l:'#16a34a', d:'#16a34a', ink:'#ffffff'},
   {id:'giallo',    nome:'Giallo',      c:'#facc15', l:'#a16207', d:'#facc15', ink:'#1c1917'},
-  {id:'arancione', nome:'Arancione',   c:'#f97316', l:'#c2410c', d:'#fb923c', ink:'#1c1917'},
+  {id:'arancione', nome:'Arancione',   c:'#ea580c', l:'#c2410c', d:'#fb923c', ink:'#ffffff'},
   {id:'rosso',     nome:'Rosso',       c:'#dc2626', l:'#b91c1c', d:'#f87171', ink:'#ffffff'},
   {id:'rosa',      nome:'Rosa',        c:'#db2777', l:'#be185d', d:'#f472b6', ink:'#ffffff'},
   {id:'viola',     nome:'Viola',       c:'#7c3aed', l:'#6d28d9', d:'#a78bfa', ink:'#ffffff'},

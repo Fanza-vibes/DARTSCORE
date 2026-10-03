@@ -145,9 +145,15 @@ document.getElementById('app').onload = function(){
 
     /* ── Colori ── */
     S('Colori delle squadre — predefiniti e leggibilità');
-    /* I colori sono solo grafica, ma devono restare leggibili: ogni colore
-       della tavolozza deve raggiungere il contrasto 4.5:1 (WCAG AA) per il
-       testo sopra il colore pieno e per le scritte su fondo chiaro e scuro. */
+    /* I colori sono solo grafica, ma devono restare leggibili.
+       - Lettera sopra la casella: almeno 3:1. Le lettere sono bianche come
+         nelle versioni precedenti, e il verde di allora sta a 3,3:1.
+       - Scritte su fondo chiaro e scuro (sigle, punteggi): almeno 4.5:1,
+         la soglia WCAG AA per il testo normale.
+       Il verde e' escluso dalla seconda regola per scelta dell'autore: e'
+       identico a quello delle versioni precedenti anche nelle scritte.
+       Un colore nuovo aggiunto in futuro deve rispettarle entrambe. */
+    var SCELTE_AUTORE = { verde: 'identico alle versioni precedenti' };
     function lum(h){ return [1,3,5].map(function(i){ var x=parseInt(h.slice(i,i+2),16)/255;
         return x<=0.03928 ? x/12.92 : Math.pow((x+0.055)/1.055,2.4); })
       .reduce(function(s,x,i){ return s+x*[0.2126,0.7152,0.0722][i]; },0); }
@@ -158,9 +164,15 @@ document.getElementById('app').onload = function(){
     T('Casa predefinita: blu',      'blu',    DS.DEFAULT_COLORS.A);
     T('Ospite predefinito: giallo', 'giallo', DS.DEFAULT_COLORS.B);
     TC.forEach(function(c){
-      var ok = contrasto(c.ink,c.c)>=4.5 && contrasto(c.l,'#ffffff')>=4.5 && contrasto(c.d,'#1e293b')>=4.5;
-      T(c.nome+': leggibile sul colore pieno e sui due temi', true, ok);
+      T(c.nome+': lettera sulla casella leggibile (almeno 3:1)', true, contrasto(c.ink,c.c)>=3);
+      if(c.id in SCELTE_AUTORE) return;
+      T(c.nome+': scritte leggibili sui due temi (almeno 4.5:1)', true,
+        contrasto(c.l,'#ffffff')>=4.5 && contrasto(c.d,'#1e293b')>=4.5);
     });
+    T('lettere bianche su tutti i colori tranne il giallo', ['giallo'],
+      TC.filter(function(c){ return c.ink.toLowerCase()!=='#ffffff'; }).map(function(c){ return c.id; }));
+    T('verde identico alle versioni precedenti', ['#16a34a','#16a34a','#16a34a','#ffffff'],
+      (function(v){ return [v.c,v.l,v.d,v.ink]; })(TC.filter(function(c){ return c.id==='verde'; })[0]));
 
     /* ── Guida ── */
     S('Guida all’uso — numeri delle regole predefinite');
