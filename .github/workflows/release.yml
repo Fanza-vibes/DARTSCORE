@@ -67,7 +67,8 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Preleva il codice a quel tag
-        uses: actions/checkout@v4
+        # v7 gira su Node.js 24 (la v4 usava Node 20, in dismissione su GitHub).
+        uses: actions/checkout@v7
         with:
           ref: ${{ steps.t.outputs.tag }}
 
