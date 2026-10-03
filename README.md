@@ -30,6 +30,7 @@ DartScore è un'applicazione single-page pensata per calcolare in modo rapido e 
 - **Esportazione PDF** del referto gara tramite stampa nativa (zero dipendenze)
 - **Impostazioni gara configurabili**: numero di incontri singoli e doppi, leg per set,
   best of N, soglia di vittoria, sostituzioni massime e sistema punti
+- **Colori delle squadre a scelta** fra dieci, con un tocco; predefiniti blu e giallo
 - **Guida all'uso integrata**, con le regole predefinite FIGeST spiegate passo per passo
 - **Tema chiaro e scuro** con switch rapido e rispetto della preferenza di sistema
 - Interfaccia mobile-first, ottimizzata per l'uso a bordo campo
@@ -38,6 +39,8 @@ DartScore è un'applicazione single-page pensata per calcolare in modo rapido e 
 - Nessun account, nessuna registrazione, nessun dato inviato a server
 
 ### Novità
+
+**v2.13.0** — **Colori delle squadre a scelta**: tocca il pallino accanto al nome e scegli fra dieci colori. I nuovi predefiniti sono **blu per la Casa e giallo per l'Ospite**, più leggibili anche per chi non distingue bene rosso e verde.
 
 **v2.12.0** — Nuovo tasto **ⓘ Guida** nella schermata iniziale: spiega in otto punti come si usa l'app, dai leg ai punti, dai cambi al riepilogo.
 
@@ -116,7 +119,7 @@ Ottimizzazioni specifiche per iOS Safari: gestione touch event, `pagehide` per s
 
 ## Privacy e dati
 
-I dati inseriti nell'app (nomi squadre, nomi giocatori, risultati) vengono gestiti **esclusivamente in locale** nel browser tramite `localStorage` e non vengono mai trasmessi allo sviluppatore. I dati vengono eliminati automaticamente dopo 48 ore oppure all'avvio di una nuova partita. La preferenza del tema (chiaro/scuro) e le impostazioni di gara (numero incontri, sistema punti) vengono salvate separatamente e non contengono dati personali.
+I dati inseriti nell'app (nomi squadre, nomi giocatori, risultati) vengono gestiti **esclusivamente in locale** nel browser tramite `localStorage` e non vengono mai trasmessi allo sviluppatore. I dati vengono eliminati automaticamente dopo 48 ore oppure all'avvio di una nuova partita. La preferenza del tema (chiaro/scuro), i colori delle squadre e le impostazioni di gara (numero incontri, sistema punti) vengono salvati separatamente e non contengono dati personali.
 
 La versione web è ospitata tramite **GitHub Pages** (Microsoft/GitHub). Ogni accesso alla pagina genera automaticamente sui server di GitHub un log tecnico standard (indirizzo IP, browser, timestamp). Questi dati sono trattati da GitHub come responsabile del trattamento ai sensi del GDPR — lo sviluppatore non vi ha accesso. Per dettagli, consulta la [GitHub Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 
