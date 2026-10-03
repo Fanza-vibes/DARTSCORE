@@ -19,9 +19,10 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<!-- FIX v2.2: Content Security Policy — blocca risorse esterne e script inline non autorizzati.
-     'unsafe-inline' è obbligatorio per app monolitica senza build step, ma impedisce
-     l'esecuzione di script da origini esterne (CDN, injected ads, ecc.). -->
+<!-- Content Security Policy: default-src 'none' vieta qualunque risorsa esterna
+     (script, stili, font, immagini, connessioni di rete). 'unsafe-inline' permette
+     gli script e gli stili scritti dentro questo file, ed e' necessario per un'app
+     in un solo file senza passaggio di compilazione: non apre a codice esterno. -->
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
 <title>DartScore — Referto gara e segnapunti per freccette Soft Dart FIGeST 2026</title>
@@ -62,7 +63,8 @@
   --tx:  #0f172a;
   --ts:  #1e3a5f;
   --td:  #475569;
-  --tm:  #94a3b8;
+  --tm:  #56657a;  /* testi secondari: 5,1:1 o piu' su ogni fondo chiaro */
+  --ph:  #94a3b8;  /* segnaposto dei campi vuoti: chiaro apposta */
   --tw:  #ffffff;
   --fu: 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
   --fm: 'SF Mono', 'Menlo', 'Consolas', 'Courier New', monospace;
@@ -93,7 +95,8 @@
   --tx:  #e2e8f0;
   --ts:  #bfdbfe;
   --td:  #94a3b8;
-  --tm:  #64748b;
+  --tm:  #8794a8;  /* testi secondari: 4,5:1 o piu' sulle card scure */
+  --ph:  #64748b;
   --tw:  #ffffff;
 }
 
@@ -109,8 +112,16 @@ body { height:100%; overflow:hidden; background:var(--bg); font-family:var(--fu)
 button { -webkit-appearance:none; appearance:none; cursor:pointer; font-family:inherit; border:none; touch-action:manipulation; -webkit-user-select:none; user-select:none; }
 input,select { font-family:inherit; font-size:16px!important; touch-action:manipulation; }
 #app { position:relative; height:100vh; height:100dvh; overflow:hidden; }
-.scr { position:absolute; top:0;right:0;bottom:0;left:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity .2s; }
-.scr.on { opacity:1; pointer-events:auto; }
+.scr { position:absolute; top:0;right:0;bottom:0;left:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; visibility:hidden; transition:opacity .2s, visibility 0s .2s; }
+.scr.on { opacity:1; pointer-events:auto; visibility:visible; transition:opacity .2s, visibility 0s 0s; }
+/* Le schermate non attive sono anche visibility:hidden: con la sola opacita'
+   restavano raggiungibili col Tab e lette dallo screen reader. Il ritardo su
+   visibility lascia finire la dissolvenza. */
+/* Testo solo per lo screen reader: invisibile, ma letto. */
+.sr-only { position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+/* Titoli semantici (h1, h2) che mantengono l'aspetto dei div che sostituiscono:
+   l'aspetto lo decide la classe, non il tag. */
+h1, h2 { font:inherit; }
 /* ══════════════════════════════════════════════════════════════════════
    ELEMENTI CONDIVISI
    ──────────────────────────────────────────────────────────────────────
@@ -169,7 +180,9 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .csw:disabled { opacity:.22; cursor:not-allowed; }
 .csw:not(:disabled):active { transform:scale(.88); }
 .fi { -webkit-appearance:none; appearance:none; background:var(--s2); border:1.5px solid var(--br); border-radius:9px; padding:10px 12px; font-size:15px; font-weight:700; color:var(--tx); outline:none; width:100%; transition:border-color .15s,box-shadow .15s; }
-.fi::placeholder { color:var(--tm); }
+.fi::placeholder { color:var(--ph); }
+/* Il segnaposto resta piu' chiaro del testo secondario: un campo vuoto non
+   deve sembrare compilato. Ogni campo ha comunque un'etichetta propria. */
 .fi:focus { border-color:var(--az); box-shadow:0 0 0 3px var(--azd); }
 .fi.sm { padding:7px 9px; font-size:13px; }
 .rg { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
@@ -183,6 +196,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .cb { background:var(--s2); border:2px solid var(--br); border-radius:10px; padding:10px 4px; text-align:center; color:var(--td); transition:all .12s; }
 .cb:active { transform:scale(.93); }
 .cb.on { border-color:var(--az); background:var(--azd); color:var(--az); box-shadow:0 0 0 3px var(--azd); }
+.cbn, .cbd { display:block; }
 .cbn { font-size:24px; font-weight:900; line-height:1; }
 .cbd { font-size:10px; font-weight:700; text-transform:uppercase; margin-top:2px; color:var(--td); }
 .cb.on .cbd { color:var(--az); }
@@ -460,7 +474,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 #ask-panel { z-index:31; }
 .ask-msg { font-size:15px; color:var(--tx); line-height:1.5; white-space:pre-line; margin-bottom:16px; padding:12px 14px; background:var(--s2); border-radius:10px; }
 
-/* Toast salvataggio non disponibile — FIX v2.1 */
+/* Avviso: il browser non permette di salvare (es. navigazione privata) */
 #save-toast {
   position:fixed; bottom:calc(80px + var(--sb)); left:50%; transform:translateX(-50%) translateY(12px);
   background:var(--co); color:#fff;
@@ -561,11 +575,11 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   #save-toast, #warn-toast, .bb, noscript { display:none!important; }
 
   /* Forza tema chiaro per la stampa */
-  .dark { --bg:#fff; --sf:#fff; --s2:#f0f4ff; --tx:#0f172a; --td:#475569; --tm:#94a3b8;
+  .dark { --bg:#fff; --sf:#fff; --s2:#f0f4ff; --tx:#0f172a; --td:#475569; --tm:#56657a; --ph:#94a3b8;
           --ca-tx:var(--ca-tl); --os-tx:var(--os-tl); --ca-d:rgba(var(--ca-rgb),.12); --os-d:rgba(var(--os-rgb),.14); }
 
   /* Forza riepilogo visibile e in flusso normale */
-  .scr { position:static!important; opacity:1!important; pointer-events:auto!important; }
+  .scr { position:static!important; opacity:1!important; pointer-events:auto!important; visibility:visible!important; transition:none!important; }
   .scr:not(#riepilogo) { display:none!important; }
   #riepilogo { overflow:visible!important; padding:0!important; }
 
@@ -607,7 +621,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     </div>
   </div>
 </noscript>
-<div id="app">
+<main id="app">
 
 <!-- SETUP -->
 <div id="setup" class="scr on">
@@ -622,38 +636,38 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   <div id="status-banner"></div>
   <div class="logo">
     <span class="logo-i">🎯</span>
-    <div class="logo-n">DART<span>SCORE</span></div>
-    <div class="logo-s" id="app-version">v2.13.1 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
+    <h1 class="logo-n" aria-label="DartScore">DART<span>SCORE</span></h1>
+    <div class="logo-s" id="app-version">v2.14.0 &nbsp;·&nbsp; Campionato Soft Dart 2026</div>
   </div>
   <div class="card">
-    <div class="card-t">Squadre &amp; Categoria</div>
+    <h2 class="card-t">Squadre &amp; Categoria</h2>
     <div class="g2" style="margin-bottom:10px">
       <div class="fg">
-        <div class="fl-row"><div class="fl">Squadra Casa</div><button class="cdot cdot-a" id="cdot-A" onclick="togglePal('A','pal-A',this)" aria-expanded="false" aria-controls="pal-A" aria-label="Colore Casa"></button></div>
+        <div class="fl-row"><label class="fl" for="inp-a">Squadra Casa</label><button class="cdot cdot-a" id="cdot-A" onclick="togglePal('A','pal-A',this)" aria-expanded="false" aria-controls="pal-A" aria-label="Colore Casa"></button></div>
         <input id="inp-a" class="fi" type="text" placeholder="Squadra Casa" maxlength="20" autocomplete="off" spellcheck="false">
       </div>
       <div class="fg">
-        <div class="fl-row"><div class="fl">Squadra Ospite</div><button class="cdot cdot-b" id="cdot-B" onclick="togglePal('B','pal-B',this)" aria-expanded="false" aria-controls="pal-B" aria-label="Colore Ospite"></button></div>
+        <div class="fl-row"><label class="fl" for="inp-b">Squadra Ospite</label><button class="cdot cdot-b" id="cdot-B" onclick="togglePal('B','pal-B',this)" aria-expanded="false" aria-controls="pal-B" aria-label="Colore Ospite"></button></div>
         <input id="inp-b" class="fi" type="text" placeholder="Squadra Ospite" maxlength="20" autocomplete="off" spellcheck="false">
       </div>
     </div>
     <div class="pal" id="pal-A" data-team="A"></div>
     <div class="pal" id="pal-B" data-team="B"></div>
     <div class="fg">
-      <div class="fl">Categoria</div>
-      <div class="cg">
-        <button class="cb on" id="cat-A" onclick="selCat('A')"><div class="cbn">A</div><div class="cbd">501 D.O.</div></button>
-        <button class="cb"    id="cat-B" onclick="selCat('B')"><div class="cbn">B</div><div class="cbd">501 M.O.</div></button>
-        <button class="cb"    id="cat-C" onclick="selCat('C')"><div class="cbn">C</div><div class="cbd">501 S.O.</div></button>
+      <div class="fl" id="lbl-cat">Categoria</div>
+      <div class="cg" role="group" aria-labelledby="lbl-cat">
+        <button class="cb on" id="cat-A" onclick="selCat('A')" aria-pressed="true"><span class="cbn">A</span><span class="cbd">501 D.O.</span></button>
+        <button class="cb"    id="cat-B" onclick="selCat('B')" aria-pressed="false"><span class="cbn">B</span><span class="cbd">501 M.O.</span></button>
+        <button class="cb"    id="cat-C" onclick="selCat('C')" aria-pressed="false"><span class="cbn">C</span><span class="cbd">501 S.O.</span></button>
       </div>
     </div>
   </div>
   <div class="card">
-    <div class="card-t">Giocatori Casa — C1&#8230;C8</div>
+    <h2 class="card-t">Giocatori Casa — C1&#8230;C8</h2>
     <div class="rg" id="roster-a"></div>
   </div>
   <div class="card">
-    <div class="card-t">Giocatori Ospite — O1&#8230;O8</div>
+    <h2 class="card-t">Giocatori Ospite — O1&#8230;O8</h2>
     <div class="rg" id="roster-b"></div>
   </div>
   <button class="btn-go" onclick="startMatch()">&#9654;&nbsp; INIZIA PARTITA</button>
@@ -670,6 +684,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 
 <!-- REFERTO -->
 <div id="referto" class="scr">
+  <h1 class="sr-only">Referto di gara</h1>
   <div class="ref-hdr">
     <div class="ht">
       <button class="bk" onclick="goSetup()">&#8592; Indietro</button>
@@ -714,7 +729,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="sub-ov" class="ov" onclick="closeSub()"></div>
 <div id="sub-panel" class="sp" tabindex="-1">
   <div class="sph">
-    <div class="sptitle">Cambio Giocatore</div>
+    <h2 class="sptitle">Cambio Giocatore</h2>
     <button class="spcls" onclick="closeSub()" aria-label="Chiudi il pannello sostituzioni">&#10005;</button>
   </div>
   <div class="spsl">Squadra</div>
@@ -740,7 +755,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="cfg-ov" class="ov" onclick="closeCfg()"></div>
 <div id="cfg-panel" class="sp" tabindex="-1">
   <div class="sph">
-    <div class="sptitle">&#9881; Impostazioni Gara</div>
+    <h2 class="sptitle">&#9881; Impostazioni Gara</h2>
     <button class="spcls" onclick="closeCfg()" aria-label="Chiudi le impostazioni gara">&#10005;</button>
   </div>
   <div class="spinfo" style="margin-bottom:10px">I valori predefiniti seguono il regolamento FIGeST 2026. Modificarli azzera la partita in corso.</div>
@@ -755,7 +770,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="edit-ov" class="ov" onclick="closeEdit()"></div>
 <div id="edit-panel" class="sp" tabindex="-1">
   <div class="sph">
-    <div class="sptitle">Modifica Nomi</div>
+    <h2 class="sptitle">Modifica Nomi</h2>
     <button class="spcls" onclick="closeEdit()" aria-label="Chiudi la modifica nomi">&#10005;</button>
   </div>
   <div class="spsl">Squadra da modificare</div>
@@ -764,7 +779,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <button class="ep-tab"    id="ep-tb" onclick="editTeam('B')">&#9992; <span id="ep-nb">Ospite</span></button>
   </div>
   <div class="spsl">Nome squadra</div>
-  <input class="fi" id="ep-team-name" type="text" placeholder="Nome squadra" maxlength="20" autocomplete="off" spellcheck="false" style="margin-bottom:12px">
+  <input class="fi" id="ep-team-name" type="text" placeholder="Nome squadra" aria-label="Nome della squadra" maxlength="20" autocomplete="off" spellcheck="false" style="margin-bottom:12px">
   <div class="spsl">Nomi giocatori</div>
   <div class="ep-grid" id="ep-grid"></div>
   <div class="spinfo" style="margin-bottom:12px">Le modifiche aggiornano i nomi ovunque nella partita corrente.</div>
@@ -773,6 +788,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 
 <!-- RIEPILOGO -->
 <div id="riepilogo" class="scr">
+  <h1 class="sr-only">Riepilogo della partita</h1>
   <div class="rtop">
     <button class="bk" onclick="goReferto()">&#8592; Torna al Referto</button>
   </div>
@@ -803,16 +819,16 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <div class="sb2"><div class="sb2l">Leg Ospite</div><div class="sb2v r" id="res-lb">0</div></div>
   </div>
   <div class="sw">
-    <div class="swl">Classifica Singoli</div>
+    <h2 class="swl">Classifica Singoli</h2>
     <div class="rank-toggle">
-      <button class="rt-btn ra" id="rt-a" onclick="setRankTeam('A')">&#127968; <span id="rt-na">Casa</span></button>
-      <button class="rt-btn"    id="rt-b" onclick="setRankTeam('B')">&#9992; <span id="rt-nb">Ospite</span></button>
+      <button class="rt-btn ra" id="rt-a" onclick="setRankTeam('A')" aria-pressed="true">&#127968; <span id="rt-na">Casa</span></button>
+      <button class="rt-btn"    id="rt-b" onclick="setRankTeam('B')" aria-pressed="false">&#9992; <span id="rt-nb">Ospite</span></button>
     </div>
     <div id="ranking-wrap"></div>
     <div class="print-only" id="print-classifica"></div>
   </div>
   <div class="sw">
-    <div class="swl">Dettaglio Incontri</div>
+    <h2 class="swl">Dettaglio Incontri</h2>
     <div class="dt" id="detail-wrap"></div>
   </div>
   <div id="valid-wrap"></div>
@@ -825,11 +841,10 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 <div id="prv-ov" onclick="closePrivacy()"></div>
 <div id="prv-panel" tabindex="-1">
   <div class="prv-hdr">
-    <div class="prv-title">🔒 Informativa Privacy</div>
+    <h2 class="prv-title">🔒 Informativa Privacy</h2>
     <button class="spcls" onclick="closePrivacy()" aria-label="Chiudi l'informativa privacy">&#10005;</button>
   </div>
   <div class="prv-body">
-    <!-- FIX v2.1: rimossa frase contraddittoria con sezione Hosting -->
     <p>DartScore è un'applicazione web che funziona interamente nel tuo browser. Non raccoglie né trasmette dati dell'utente a terzi. La pagina è distribuita tramite GitHub Pages — vedi la sezione <em>Hosting</em> per i dettagli.</p>
 
     <h3>Dati trattati</h3>
@@ -862,14 +877,14 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <p>Per qualsiasi domanda relativa alla privacy puoi contattare lo sviluppatore tramite la pagina GitHub del progetto.</p>
     <p style="margin-top:8px"><a href="https://github.com/Fanza-vibes/DARTSCORE" target="_blank" rel="noopener" style="color:var(--az);font-weight:700;text-decoration:none">github.com/Fanza-vibes/DARTSCORE</a></p>
   </div>
-  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.13.1 · © Fanza-vibes · Licenza MIT</div>
+  <div class="prv-footer" id="prv-ver">DartScore 2026 · Versione 2.14.0 · © Fanza-vibes · Licenza MIT</div>
 </div>
 
 <!-- GUIDA ALL'USO -->
 <div id="gd-ov" onclick="closeGuida()"></div>
 <div id="gd-panel" tabindex="-1">
   <div class="prv-hdr">
-    <div class="prv-title">&#9432; Come si usa</div>
+    <h2 class="prv-title">&#9432; Come si usa</h2>
     <button class="spcls" onclick="closeGuida()" aria-label="Chiudi la guida">&#10005;</button>
   </div>
   <div class="prv-body">
@@ -908,11 +923,11 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   </div>
 </div>
 
-</div>
+</main>
 <!-- MODALE DI CONFERMA — sostituisce il confirm() nativo del browser -->
 <div id="ask-ov" class="ov" onclick="askRispondi(false)"></div>
 <div id="ask-panel" class="sp" tabindex="-1">
-  <div class="sph"><div class="sptitle" id="ask-title">Conferma</div></div>
+  <div class="sph"><h2 class="sptitle" id="ask-title">Conferma</h2></div>
   <div class="ask-msg" id="ask-msg"></div>
   <div class="cfg-actions">
     <button class="btn-cfg-reset" id="ask-no" onclick="askRispondi(false)">Annulla</button>
@@ -920,10 +935,11 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
   </div>
 </div>
 
+<div id="sr-annuncio" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 <div id="save-toast">⚠ Salvataggio non disponibile</div>
 <div id="warn-toast"></div>
 <script>
-/* DartScore v2.13.1 — light/dark theme
+/* DartScore v2.14.0 — light/dark theme
  *
  * Copyright (c) 2025-2026 Fanza-vibes
  * https://github.com/Fanza-vibes/DARTSCORE
@@ -946,6 +962,22 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * ─────────────────────────────────────────────────────────────────────────────
+ * MODIFICHE v2.14.0 rispetto a v2.13.1 (accessibilita' e verificabilita':
+ * il calcolo del referto non cambia):
+ *   - Caselle dei leg con un nome completo per lo screen reader ("S1, leg 2:
+ *     vinto dall'Ospite"); da tastiera il focus resta sulla casella toccata.
+ *   - Annunci vocali (area aria-live invisibile) per leg, incontri chiusi,
+ *     set e partita decisa, e per gli avvisi a comparsa.
+ *   - Schermate non attive anche visibility:hidden: col solo opacity restavano
+ *     raggiungibili col Tab e lette dallo screen reader.
+ *   - Etichette collegate a tutti i campi, stato selezionato su categoria e
+ *     classifica, titoli h1/h2 e contenitore <main>. L'aspetto non cambia:
+ *     verificato confrontando le schermate pixel per pixel.
+ *   - Grigio dei testi secondari leggibile (4,5:1 o piu'); i segnaposto dei
+ *     campi vuoti restano chiari. In stampa lo stesso grigio da entrambi i temi.
+ *   - Commenti "FIX vX.Y" riscritti spiegando il perche'. window.DS espone
+ *     anche LEG_WIN, MAX_LEG, SET_WIN, MAX_SUB, N_PL per l'impronta in tests.html.
+ *
  * MODIFICHE v2.13.1 rispetto a v2.13.0 (solo grafica):
  *   - Lettere bianche sulle caselle dei leg per tutti i colori, giallo compreso
  *     (con un'ombra scura che le stacca dal fondo). Azzurro e arancione un tono
@@ -1043,7 +1075,7 @@ const N_PL=8; /* 4 titolari + 4 riserve per squadra (ART.2.2 ammette fino a 12,
 
 /* Costanti di sistema */
 const TAB_HEARTBEAT_MS=5000,TAB_LOCK_TTL_MS=10000,VIBRATE_MS=15,MAX_AGE_MS=48*60*60*1000;
-const APP_VERSION='2.13.1';
+const APP_VERSION='2.14.0';
 const THEME_KEY='dartscore_theme'; /* chiave localStorage per preferenza tema */
 const CFG_KEY='dartscore_cfg';     /* chiave localStorage per configurazione */
 
@@ -1354,13 +1386,14 @@ async function showRiep(){
  */
 function buildRosters(){ buildRosterSide('roster-a','ra','C',S.gA,'ca'); buildRosterSide('roster-b','rb','O',S.gB,'os'); }
 function buildRosterSide(cid,pfx,letter,nomi,cls){
+  const squadra=letter==='C'?'Casa':'Ospite';
   let h='';
-  for(let i=0;i<4;i++){const c=letter+(i+1);h+=`<div class="rc"><div class="rcl ${cls}">${c}</div><input class="fi sm" id="${pfx}-${i}" type="text" placeholder="${c}" maxlength="20" autocomplete="off" spellcheck="false" value="${esc(nomi[i]===c?'':nomi[i])}"></div>`;}
+  for(let i=0;i<4;i++){const c=letter+(i+1);h+=`<div class="rc"><div class="rcl ${cls}">${c}</div><input class="fi sm" id="${pfx}-${i}" type="text" placeholder="${c}" aria-label="Giocatore ${c}, ${squadra}" maxlength="20" autocomplete="off" spellcheck="false" value="${esc(nomi[i]===c?'':nomi[i])}"></div>`;}
   h+='<div class="rsep"></div><div class="rslb">Riserve</div>';
-  for(let i=4;i<8;i++){const c=letter+(i+1);h+=`<div class="rc"><div class="rcl ${cls}" style="opacity:.5">${c}</div><input class="fi sm" id="${pfx}-${i}" type="text" placeholder="${c}" maxlength="20" autocomplete="off" spellcheck="false" value="${esc(nomi[i]===c?'':nomi[i])}"></div>`;}
+  for(let i=4;i<8;i++){const c=letter+(i+1);h+=`<div class="rc"><div class="rcl ${cls}" style="opacity:.5">${c}</div><input class="fi sm" id="${pfx}-${i}" type="text" placeholder="${c}" aria-label="Riserva ${c}, ${squadra}" maxlength="20" autocomplete="off" spellcheck="false" value="${esc(nomi[i]===c?'':nomi[i])}"></div>`;}
   g(cid).innerHTML=h;
 }
-function selCat(c){ S.cat=c; ['A','B','C'].forEach(x=>g('cat-'+x).classList.toggle('on',x===c)); }
+function selCat(c){ S.cat=c; ['A','B','C'].forEach(x=>{ const b=g('cat-'+x); b.classList.toggle('on',x===c); b.setAttribute('aria-pressed',x===c?'true':'false'); }); }
 /* Legge i nomi dai campi del setup; i campi vuoti tornano al codice (C1, O2...). */
 function readRoster(){
   for(let i=0;i<N_PL;i++){
@@ -1428,9 +1461,39 @@ function toggleLeg(si,li){
      NON usare refreshUI() qui: buildSetsDOM() ricostruisce tutto il DOM
      e il bottone che l'utente sta toccando viene distrutto, impedendo
      il secondo tap (null→A→B) per assegnare il leg all'ospite. */
+  /* Le caselle della riga vengono ricostruite: chi usa la tastiera ritrova
+     il focus sulla stessa casella invece di ripartire dall'inizio pagina. */
+  const conFocus=!!(document.activeElement && document.activeElement.closest && document.activeElement.closest('#lc-'+si));
   updateRow(si); renderHdr(); renderSubLog(); saveState();
+  if(conFocus){ const b=g('lc-'+si).querySelectorAll('.lb')[li]; if(b) b.focus(); }
+  annunciaLeg(si,li,currentWinner,newWinner);
   /* Scroll automatico al prossimo incontro non completato */
   if(newWinner && !currentWinner) scrollToNext(si);
+}
+
+/* ── Annunci per lo screen reader ─────────────────────────────────────────
+   Chi vede nota da solo il punteggio che cambia; chi usa lo screen reader no.
+   Il testo va in un'area invisibile (aria-live) che il programma legge da
+   solo. Svuotarla prima permette di ripetere lo stesso annuncio. */
+let _annuncioTimer=null;
+function annuncia(msg){
+  const a=g('sr-annuncio'); if(!a) return;
+  a.textContent=''; clearTimeout(_annuncioTimer);
+  _annuncioTimer=setTimeout(function(){ a.textContent=msg; },60);
+}
+function annunciaLeg(si,li,primaVinto,oraVinto){
+  const v=S.legs[si][li], inc=incLabel(si);
+  let m=inc+', leg '+(li+1)+': '+(v==='A'?'Casa':v==='B'?'Ospite':'annullato')+'.';
+  if(oraVinto && oraVinto!==primaVinto){
+    const legs=S.legs[si], la=legs.filter(x=>x==='A').length, lb=legs.filter(x=>x==='B').length;
+    m+=' Incontro '+inc+' '+(oraVinto==='A'?'alla Casa':'all\u2019Ospite')+', '+Math.max(la,lb)+' a '+Math.min(la,lb)+'.';
+  } else if(primaVinto && !oraVinto){
+    m+=' Incontro '+inc+' riaperto.';
+  }
+  const tot=getTotals(); m+=' Set: Casa '+tot.sA+', Ospite '+tot.sB+'.';
+  const ga=getGara(tot.sA,tot.sB,tot.lA,tot.lB);
+  if(ga && oraVinto && !primaVinto) m+=' Partita decisa: '+(ga.a>ga.b?S.nA:ga.b>ga.a?S.nB:'pareggio')+', '+ga.lbl.replace('\u2014','a')+'.';
+  annuncia(m);
 }
 function scrollToNext(afterIdx){
   for(let i=afterIdx+1;i<N_SET;i++){
@@ -1484,8 +1547,8 @@ function populateFrom(){
     h+=`<option value="${i}" ${i===first?'selected':''} ${i<first?'disabled':''}>${lbl} \u2014 ${esc(CAL[i].round)}</option>`;
   }
   if(first>=N_SET) h=`<option value="${N_SET}">Tutti gli incontri completati</option>`;
-  // BUG FIX v2.2: era parseInt(...)||first — se parseInt restituisce 0 (indice valido)
-  // l'operatore || lo sostituirebbe con first. Usare isNaN() per il controllo.
+  // isNaN e non ||: l'indice 0 e' valido, e "parseInt(...)||first" lo
+  // sostituirebbe con first.
   sel.innerHTML=h; sel.onchange=()=>{ const v=parseInt(sel.value,10); UI.from=isNaN(v)?first:v; }; UI.from=first;
 }
 function updateSubInfo(){
@@ -1609,15 +1672,24 @@ function doublesNm(cP,oP,inc){
    e inerte (classe .lk). */
 function legsHTML(si,legs){
   let h='';
+  const inc=incLabel(si);
   for(let l=0;l<MAX_LEG;l++){
     const v=legs[l],ok=legPlayable(legs,l);
-    let cls='lb',txt='&#183;';
-    if(v==='A'){ cls+=' la'; txt='C'; }
-    else if(v==='B'){ cls+=' lb2'; txt='O'; }
-    else if(!ok){ cls+=' lk'; }
-    h+=`<button class="${cls}" onclick="toggleLeg(${si},${l})">${txt}</button>`;
+    let cls='lb',txt='&#183;',stato='da assegnare',extra='';
+    if(v==='A'){ cls+=' la'; txt='C'; stato='vinto dalla Casa'; }
+    else if(v==='B'){ cls+=' lb2'; txt='O'; stato='vinto dall\u2019Ospite'; }
+    else if(!ok){ cls+=' lk'; stato='non ancora giocabile'; extra=' aria-disabled="true"'; }
+    /* Per chi vede bastano posizione, lettera e colore; lo screen reader
+       riceverebbe solo "C", "O" o "punto". Il nome dice incontro, leg e stato. */
+    h+=`<button class="${cls}" onclick="toggleLeg(${si},${l})" aria-label="${inc}, leg ${l+1}: ${stato}"${extra}>${txt}</button>`;
   }
   return h;
+}
+/* Sigla dell'incontro (S1...S16, D1...D4) dalla sua posizione nel calendario. */
+function incLabel(i){
+  let s=0,d=0;
+  for(let k=0;k<=i&&k<CAL.length;k++) CAL[k].t==='s'?s++:d++;
+  return CAL[i].t==='s'?'S'+s:'D'+d;
 }
 /* Aggiorna in place solo i bottoni, i punti e il bordo di una riga.
    Piu' leggero di buildSetsDOM e non ricrea i nodi che l'utente sta toccando. */
@@ -1698,9 +1770,9 @@ function editTeam(t){
   }
   const letter=t==='A'?'C':'O', nomi=t==='A'?S.gA:S.gB, cls=t==='A'?'ca':'os';
   let h='';
-  for(let i=0;i<4;i++){ const c=letter+(i+1),val=nomi[i]===c?'':nomi[i]; h+=`<div class="ep-cell"><div class="ep-lbl ${cls}">${c}</div><input class="fi sm" id="ep-${i}" type="text" placeholder="${c}" maxlength="20" autocomplete="off" spellcheck="false" value="${esc(val)}"></div>`; }
+  for(let i=0;i<4;i++){ const c=letter+(i+1),val=nomi[i]===c?'':nomi[i]; h+=`<div class="ep-cell"><div class="ep-lbl ${cls}">${c}</div><input class="fi sm" id="ep-${i}" type="text" placeholder="${c}" aria-label="Giocatore ${c}, ${letter==='C'?'Casa':'Ospite'}" maxlength="20" autocomplete="off" spellcheck="false" value="${esc(val)}"></div>`; }
   h+='<div class="ep-sep"></div><div class="ep-sep-lbl">Riserve</div>';
-  for(let i=4;i<8;i++){ const c=letter+(i+1),val=nomi[i]===c?'':nomi[i]; h+=`<div class="ep-cell"><div class="ep-lbl ${cls}" style="opacity:.5">${c}</div><input class="fi sm" id="ep-${i}" type="text" placeholder="${c}" maxlength="20" autocomplete="off" spellcheck="false" value="${esc(val)}"></div>`; }
+  for(let i=4;i<8;i++){ const c=letter+(i+1),val=nomi[i]===c?'':nomi[i]; h+=`<div class="ep-cell"><div class="ep-lbl ${cls}" style="opacity:.5">${c}</div><input class="fi sm" id="ep-${i}" type="text" placeholder="${c}" aria-label="Riserva ${c}, ${letter==='C'?'Casa':'Ospite'}" maxlength="20" autocomplete="off" spellcheck="false" value="${esc(val)}"></div>`; }
   g('ep-grid').innerHTML=h;
 }
 function saveEdit(){
@@ -1717,7 +1789,8 @@ function saveEdit(){
 }
 
 let rankTeam='A';
-function setRankTeam(t){ rankTeam=t; g('rt-a').className='rt-btn'+(t==='A'?' ra':''); g('rt-b').className='rt-btn'+(t==='B'?' rb':''); renderClassifica(); }
+function setRankTeam(t){ rankTeam=t; g('rt-a').className='rt-btn'+(t==='A'?' ra':''); g('rt-b').className='rt-btn'+(t==='B'?' rb':'');
+  g('rt-a').setAttribute('aria-pressed',t==='A'?'true':'false'); g('rt-b').setAttribute('aria-pressed',t==='B'?'true':'false'); renderClassifica(); }
 /* ════════════════════════════════════════════════════════════════════════
  * CLASSIFICA INDIVIDUALE
  * ────────────────────────────────────────────────────────────────────────
@@ -1907,7 +1980,7 @@ function renderCfgPanel(){
   let h='';
   for(const [key,label,help] of CFG_FIELDS){
     const [min,max]=CFG_LIMITS[key];
-    h+=`<div class="cfg-row"><div class="cfg-lbl"><span class="cfg-name">${label}</span><span class="cfg-help">${help}</span></div><input class="cfg-inp" id="cfg-${key}" type="number" inputmode="numeric" min="${min}" max="${max}" value="${CFG[key]}"></div>`;
+    h+=`<div class="cfg-row"><div class="cfg-lbl"><span class="cfg-name" id="cfgn-${key}">${label}</span><span class="cfg-help" id="cfgh-${key}">${help}</span></div><input class="cfg-inp" id="cfg-${key}" aria-labelledby="cfgn-${key}" aria-describedby="cfgh-${key}" type="number" inputmode="numeric" min="${min}" max="${max}" value="${CFG[key]}"></div>`;
   }
   g('cfg-grid').innerHTML=h;
   /* Clamp al blur: il campo mostra sempre un valore realmente applicabile,
@@ -2150,19 +2223,19 @@ function showSaveToast(persistent){
   if(persistent){
     clearTimeout(_saveToastTimer);
     t.textContent='\u26a0 Salvataggio non disponibile \u2014 i dati non verranno conservati alla chiusura';
-    t.classList.add('on'); return;
+    t.classList.add('on'); annuncia(t.textContent); return;
   }
   if(_saveToastShown)return;
-  _saveToastShown=true; t.classList.add('on');
+  _saveToastShown=true; t.classList.add('on'); annuncia(t.textContent);
   clearTimeout(_saveToastTimer);
   _saveToastTimer=setTimeout(()=>t.classList.remove('on'),3500);
 }
 
 let _warnToastTimer=null;
 function showWarnToast(msg){
-  // FIX v2.2: sostituisce alert() — non bloccante, non interrompe il thread UI su mobile
+  // Avviso a comparsa invece di alert(): non blocca l'interfaccia.
   const t=document.getElementById('warn-toast'); if(!t)return;
-  t.textContent=msg; t.classList.add('on');
+  t.textContent=msg; t.classList.add('on'); annuncia(msg);
   clearTimeout(_warnToastTimer);
   _warnToastTimer=setTimeout(()=>t.classList.remove('on'),6000);
 }
@@ -2196,7 +2269,7 @@ function restoreState(){
     const validSlot=v=>Number.isInteger(v)&&v>=0&&v<N_PL;
     if(d.slotA.some(v=>!validSlot(v))) return false;
     if(d.slotB.some(v=>!validSlot(v))) return false;
-    // FIX v2.7: validazione struttura sostituzioni (difesa da localStorage corrotto)
+    // Sostituzioni: struttura e indici validi, contro dati salvati danneggiati.
     const validSub=s=>s&&Number.isInteger(s.slot)&&s.slot>=0&&s.slot<4
       &&Number.isInteger(s.oldP)&&s.oldP>=0&&s.oldP<N_PL
       &&Number.isInteger(s.newP)&&s.newP>=0&&s.newP<N_PL
@@ -2255,6 +2328,7 @@ function releaseTabLock(){
 window.DS={
   get CAL(){return CAL;}, get N_SET(){return N_SET;}, get SOMMA_OK(){return SOMMA_OK;},
   get CFG(){return CFG;}, get DEFAULT_CFG(){return DEFAULT_CFG;}, get S(){return S;},
+  get LEG_WIN(){return LEG_WIN;}, get MAX_LEG(){return MAX_LEG;}, get SET_WIN(){return SET_WIN;}, get MAX_SUB(){return MAX_SUB;}, get N_PL(){return N_PL;},
   get TEAM_COLORS(){return TEAM_COLORS;}, get DEFAULT_COLORS(){return DEFAULT_COLORS;}, get TEAM_COL(){return TEAM_COL;},
 };
 

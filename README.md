@@ -34,11 +34,14 @@ DartScore è un'applicazione single-page pensata per calcolare in modo rapido e 
 - **Guida all'uso integrata**, con le regole predefinite FIGeST spiegate passo per passo
 - **Tema chiaro e scuro** con switch rapido e rispetto della preferenza di sistema
 - Interfaccia mobile-first, ottimizzata per l'uso a bordo campo
+- **Accessibile**: utilizzabile da tastiera e con lo screen reader, testi leggibili secondo le linee guida WCAG
 - **Funziona offline** con il file scaricato in locale; sulla versione web dipende
   dalla cache del browser e non è garantito
 - Nessun account, nessuna registrazione, nessun dato inviato a server
 
 ### Novità
+
+**v2.14.0** — **Accessibilità**: l'app si usa anche con lo screen reader e da tastiera, e i testi grigi sono più leggibili. La pagina di verifica ora controlla anche l'**impronta del comportamento FIGeST**.
 
 **v2.13.1** — Lettere di nuovo **bianche** sulle caselle dei leg, giallo compreso, e **verde identico** a quello delle versioni precedenti. Una partita salvata danneggiata non blocca più l'avvio.
 
@@ -109,7 +112,7 @@ Tutte le versioni, comprese le precedenti, sono nella [pagina delle Release](htt
 |---------|----------------|
 | Chrome  | 88+            |
 | Firefox | 78+            |
-| Safari  | 14+            |
+| Safari  | 14.1+          |
 | Edge    | 88+            |
 | Opera   | 74+            |
 

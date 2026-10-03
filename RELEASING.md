@@ -33,6 +33,23 @@ un indirizzo web, non con doppio clic:
 Devono essere tutte verdi. Se hai toccato il calendario o le regole di
 punteggio, questo è il controllo che conta.
 
+**L'impronta FIGeST** è la verifica più ampia della pagina. Con le regole
+predefinite registra il risultato di migliaia di situazioni (tutti gli stati di
+un set, il punteggio gara per ogni combinazione, cinque partite complete con
+classifica e somma, due casi con cambi) e lo riduce a un codice,
+`IMPRONTA_FIGEST` in `tests.html`. Se una modifica cambia anche un solo
+risultato, il codice cambia e la verifica diventa rossa.
+
+- Se il cambiamento **non era voluto**, è un errore: si corregge il codice.
+- Se **era voluto** (per esempio un nuovo regolamento), si sostituisce il valore
+  di `IMPRONTA_FIGEST` con quello ottenuto e lo si scrive nel CHANGELOG. È la
+  prova che il cambiamento è stato visto, non subìto.
+
+L'impronta controlla solo le situazioni che contiene. Una regola mai messa alla
+prova da quei casi può cambiare senza che se ne accorga: se aggiungi una regola,
+aggiungi anche un caso che la eserciti, e prova ad alterarla per vedere la
+verifica diventare rossa.
+
 **Se cambia il Referto Gara FIGeST**, la fonte da aggiornare è la costante
 `REFERTO` in testa a `tests.html`, trascritta dal documento ufficiale. Poi si
 adeguano `ROT_SINGOLI` e `ROT_DOPPI` nell'app finché le verifiche tornano
