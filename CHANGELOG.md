@@ -8,14 +8,15 @@ Il file dell'app è [`Darts_Score.html`](Darts_Score.html): il nome resta stabil
 
 ## v2.13.1
 
-Ritocco ai colori delle squadre, su segnalazione dell'autore. **Il calcolo del referto non cambia.**
+Ritocchi ai colori su segnalazione dell'autore, una partita salvata danneggiata che non blocca più l'avvio, e il workflow di pubblicazione più robusto. **Il calcolo del referto non cambia**: impronta del comportamento con i predefiniti FIGeST identica byte per byte.
 
-- **Lettere bianche sulle caselle dei leg** per tutti i colori, come nelle versioni precedenti. Nella 2.13.0 diventavano scure su azzurro, verde acqua, verde e arancione
-- **Unica eccezione, il giallo**: lì il bianco si leggerebbe a 1,5:1, cioè sparirebbe, e il giallo è il colore predefinito dell'Ospite. Resta la lettera scura
+- **Lettere bianche sulle caselle dei leg** per tutti i colori, come prima della 2.13.0, che le rendeva scure sui colori chiari
+- **Anche sul giallo la lettera è bianca**, per scelta dell'autore. Da solo, lì il bianco si leggerebbe a 1,5:1: per questo ha una leggera ombra scura che lo stacca dal fondo
 - **Il verde torna identico a quello delle versioni precedenti**, anche nelle scritte (sigle e punteggi), in entrambi i temi
 - **Azzurro e arancione sono di un tono più scuri**: con la lettera bianca restavano sotto 3:1, peggio del verde di prima. Restano chiaramente azzurro e arancione
-- [`tests.html`](https://fanza-vibes.github.io/DARTSCORE/tests.html) controlla le nuove regole: lettere sulle caselle almeno 3:1, scritte almeno 4,5:1. Il verde è escluso dalla seconda regola, come scelta dichiarata
-
+- **Partita salvata danneggiata**: se un nome salvato non era testo, l'app andava in errore all'avvio e non mostrava la partita. Ora un nome squadra non valido torna quello predefinito, e un nome giocatore non valido o una data di salvataggio mancante fanno scartare la partita. Senza la data non si potrebbe applicare la cancellazione dopo 48 ore promessa dall'informativa. Non succede usando l'app normalmente: serve un salvataggio alterato
+- **Workflow di pubblicazione**: il tag scritto a mano non finisce più direttamente in un comando di shell ed è controllato nella forma (`v2.13.1`), come raccomandano le linee guida di sicurezza di GitHub. Lo strumento che esegue i test ha una **versione fissata** (playwright-core 1.63.0), quindi un aggiornamento esterno non può cambiare da solo l'esito di una release
+- [`tests.html`](https://fanza-vibes.github.io/DARTSCORE/tests.html), ora con 98 verifiche, controlla le nuove regole dei colori (lettere almeno 3:1 e scritte almeno 4,5:1, con le due eccezioni dichiarate) e quattro casi di partita salvata danneggiata. La partita eventualmente presente sul dispositivo viene messa da parte durante il controllo e rimessa al suo posto
 ---
 
 ## v2.13.0

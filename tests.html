@@ -150,10 +150,13 @@ document.getElementById('app').onload = function(){
          nelle versioni precedenti, e il verde di allora sta a 3,3:1.
        - Scritte su fondo chiaro e scuro (sigle, punteggi): almeno 4.5:1,
          la soglia WCAG AA per il testo normale.
-       Il verde e' escluso dalla seconda regola per scelta dell'autore: e'
-       identico a quello delle versioni precedenti anche nelle scritte.
-       Un colore nuovo aggiunto in futuro deve rispettarle entrambe. */
-    var SCELTE_AUTORE = { verde: 'identico alle versioni precedenti' };
+       Due eccezioni dichiarate, per scelta dell'autore: il verde e' identico
+       alle versioni precedenti anche nelle scritte (esce dalla seconda regola);
+       sul giallo la lettera e' bianca (esce dalla prima), compensata da
+       un'ombra scura che deve esserci. Un colore nuovo aggiunto in futuro deve
+       rispettare entrambe le regole. */
+    var SCRITTE_ESENTI = { verde: 'identico alle versioni precedenti' };
+    var LETTERA_ESENTE = { giallo: 'bianca per scelta, con ombra' };
     function lum(h){ return [1,3,5].map(function(i){ var x=parseInt(h.slice(i,i+2),16)/255;
         return x<=0.03928 ? x/12.92 : Math.pow((x+0.055)/1.055,2.4); })
       .reduce(function(s,x,i){ return s+x*[0.2126,0.7152,0.0722][i]; },0); }
@@ -164,15 +167,41 @@ document.getElementById('app').onload = function(){
     T('Casa predefinita: blu',      'blu',    DS.DEFAULT_COLORS.A);
     T('Ospite predefinito: giallo', 'giallo', DS.DEFAULT_COLORS.B);
     TC.forEach(function(c){
-      T(c.nome+': lettera sulla casella leggibile (almeno 3:1)', true, contrasto(c.ink,c.c)>=3);
-      if(c.id in SCELTE_AUTORE) return;
+      if(c.id in LETTERA_ESENTE) T(c.nome+': lettera bianca con ombra che la stacca dal fondo', true, !!c.sh);
+      else T(c.nome+': lettera sulla casella leggibile (almeno 3:1)', true, contrasto(c.ink,c.c)>=3);
+      if(c.id in SCRITTE_ESENTI) return;
       T(c.nome+': scritte leggibili sui due temi (almeno 4.5:1)', true,
         contrasto(c.l,'#ffffff')>=4.5 && contrasto(c.d,'#1e293b')>=4.5);
     });
-    T('lettere bianche su tutti i colori tranne il giallo', ['giallo'],
+    T('lettere bianche su tutti i colori', [],
       TC.filter(function(c){ return c.ink.toLowerCase()!=='#ffffff'; }).map(function(c){ return c.id; }));
     T('verde identico alle versioni precedenti', ['#16a34a','#16a34a','#16a34a','#ffffff'],
       (function(v){ return [v.c,v.l,v.d,v.ink]; })(TC.filter(function(c){ return c.id==='verde'; })[0]));
+
+    /* ── Partita salvata ── */
+    S('Partita salvata — dati danneggiati');
+    /* restoreState() deve scartare una partita salvata con dati di tipo
+       sbagliato, invece di bloccare l'avvio. La partita eventualmente
+       presente sul dispositivo viene messa da parte e rimessa al suo posto. */
+    var CHIAVE='dartscore_state', originale=w.localStorage.getItem(CHIAVE);
+    function salvata(mod){
+      var g8=[]; for(var i=0;i<8;i++) g8.push('P'+i);
+      var legs=[]; for(var j=0;j<DS.N_SET;j++) legs.push([null,null,null]);
+      var d={nA:'Casa',nB:'Ospite',cat:'A',gA:g8,gB:g8.slice(),slotA:[0,1,2,3],slotB:[0,1,2,3],subA:[],subB:[],legs:legs,savedAt:Date.now()};
+      for(var k in mod) d[k]=mod[k];
+      if(mod.savedAt===undefined && 'savedAt' in mod) delete d.savedAt;
+      w.localStorage.setItem(CHIAVE, JSON.stringify(d));
+      try { return w.restoreState(); } catch(e){ return 'eccezione: '+e.message; }
+    }
+    try {
+      T('una partita salvata corretta viene ripresa', true, salvata({}));
+      T('nome squadra non testuale: si riprende con il nome predefinito', [true,'Squadra Casa'], [salvata({nA:12345}), DS.S.nA]);
+      var g8n=[]; for(var q=0;q<8;q++) g8n.push(q===3?42:'P'+q);
+      T('nome giocatore non testuale: la partita viene scartata', false, salvata({gA:g8n}));
+      T('senza data di salvataggio: la partita viene scartata', false, salvata({savedAt:undefined}));
+    } finally {
+      if(originale===null) w.localStorage.removeItem(CHIAVE); else w.localStorage.setItem(CHIAVE, originale);
+    }
 
     /* ── Guida ── */
     S('Guida all’uso — numeri delle regole predefinite');

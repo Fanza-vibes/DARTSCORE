@@ -54,7 +54,8 @@
      anche prima che lo script giri. -tl/-td: testo su fondo chiaro/scuro,
      -ink: testo sopra il colore pieno, -rgb: per le trasparenze. */
   --ca: #2563eb; --ca-ink: #ffffff; --ca-tl: #1d4ed8; --ca-td: #60a5fa; --ca-rgb: 37,99,235;
-  --os: #facc15; --os-ink: #1c1917; --os-tl: #a16207; --os-td: #facc15; --os-rgb: 250,204,21;
+  --os: #facc15; --os-ink: #ffffff; --os-tl: #a16207; --os-td: #facc15; --os-rgb: 250,204,21;
+  --ca-sh: none; --os-sh: 0 1px 2px rgba(0,0,0,.45),0 0 1px rgba(0,0,0,.5);
   --ca-tx: var(--ca-tl); --os-tx: var(--os-tl);
   --ca-d: rgba(var(--ca-rgb),.12); --os-d: rgba(var(--os-rgb),.14);
   --ca-g: rgba(var(--ca-rgb),.30); --os-g: rgba(var(--os-rgb),.35);
@@ -230,8 +231,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .lc { display:flex; gap:4px; flex-shrink:0; }
 .lb { width:40px; height:40px; border-radius:8px; border:2px solid var(--s3); background:var(--s2); color:var(--td); font-size:14px; font-weight:900; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .09s; user-select:none; -webkit-user-select:none; }
 .lb:not(.lk):active { transform:scale(.82); }
-.lb.la { border-color:var(--ca); background:var(--ca); color:var(--ca-ink); font-size:14px; box-shadow:0 2px 10px var(--ca-g); }
-.lb.lb2 { border-color:var(--os); background:var(--os); color:var(--os-ink); font-size:14px; box-shadow:0 2px 10px var(--os-g); }
+.lb.la { border-color:var(--ca); background:var(--ca); color:var(--ca-ink); text-shadow:var(--ca-sh); font-size:14px; box-shadow:0 2px 10px var(--ca-g); }
+.lb.lb2 { border-color:var(--os); background:var(--os); color:var(--os-ink); text-shadow:var(--os-sh); font-size:14px; box-shadow:0 2px 10px var(--os-g); }
 .lb.lk { opacity:.25; cursor:default; }
 .rp { font-family:var(--fm); font-size:11px; font-weight:700; text-align:center; color:var(--tm); line-height:1.5; }
 .rpa { color:var(--ca-tx); font-size:12px; font-weight:900; }
@@ -946,8 +947,11 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  * SOFTWARE.
  * ─────────────────────────────────────────────────────────────────────────────
  * MODIFICHE v2.13.1 rispetto a v2.13.0 (solo grafica):
- *   - Lettere bianche sulle caselle dei leg per tutti i colori tranne il giallo.
- *     Azzurro e arancione un tono piu' scuri per reggere il bianco.
+ *   - Lettere bianche sulle caselle dei leg per tutti i colori, giallo compreso
+ *     (con un'ombra scura che le stacca dal fondo). Azzurro e arancione un tono
+ *     piu' scuri per reggere il bianco.
+ *   - Partita salvata: i nomi devono essere testo e la data di salvataggio deve
+ *     esserci, altrimenti la partita si scarta invece di bloccare l'avvio.
  *   - Verde identico a quello delle versioni precedenti, anche nelle scritte.
  *
  * MODIFICHE v2.13.0 rispetto a v2.12.0 (solo grafica: il calcolo del referto
@@ -1978,11 +1982,13 @@ function resetMatchState(){
  * c = riempimento (caselle dei leg, barra), l = testo su fondo chiaro,
  * d = testo su fondo scuro, ink = testo sopra il riempimento.
  * Le lettere sulle caselle sono bianche, come nelle versioni precedenti,
- * tranne sul giallo, dove il bianco sparirebbe (1.5:1). Azzurro e arancione
- * sono di un tono piu' scuri del necessario proprio per reggere il bianco.
+ * per scelta dell'autore anche sul giallo. Li' il bianco da solo si legge a
+ * 1.5:1, quindi la lettera ha un'ombra scura (sh) che la stacca dal fondo.
+ * Azzurro e arancione sono un tono piu' scuri proprio per reggere il bianco.
  * Il verde e' identico a quello delle versioni precedenti anche nelle scritte,
  * per scelta dell'autore. tests.html verifica le soglie: lettere sulle
- * caselle almeno 3:1, scritte almeno 4.5:1 (verde escluso, vedi sopra).
+ * caselle almeno 3:1 (giallo escluso, compensato dall'ombra), scritte almeno
+ * 4.5:1 (verde escluso, vedi sopra).
  * La scelta e' una preferenza del dispositivo, come il tema: resta da una
  * partita all'altra e non viene cancellata dal Reset completo.
  * ════════════════════════════════════════════════════════════════════════ */
@@ -1991,7 +1997,7 @@ const TEAM_COLORS=[
   {id:'azzurro',   nome:'Azzurro',     c:'#0284c7', l:'#0369a1', d:'#38bdf8', ink:'#ffffff'},
   {id:'acqua',     nome:'Verde acqua', c:'#0d9488', l:'#0f766e', d:'#2dd4bf', ink:'#ffffff'},
   {id:'verde',     nome:'Verde',       c:'#16a34a', l:'#16a34a', d:'#16a34a', ink:'#ffffff'},
-  {id:'giallo',    nome:'Giallo',      c:'#facc15', l:'#a16207', d:'#facc15', ink:'#1c1917'},
+  {id:'giallo',    nome:'Giallo',      c:'#facc15', l:'#a16207', d:'#facc15', ink:'#ffffff', sh:'0 1px 2px rgba(0,0,0,.45),0 0 1px rgba(0,0,0,.5)'},
   {id:'arancione', nome:'Arancione',   c:'#ea580c', l:'#c2410c', d:'#fb923c', ink:'#ffffff'},
   {id:'rosso',     nome:'Rosso',       c:'#dc2626', l:'#b91c1c', d:'#f87171', ink:'#ffffff'},
   {id:'rosa',      nome:'Rosa',        c:'#db2777', l:'#be185d', d:'#f472b6', ink:'#ffffff'},
@@ -2019,6 +2025,7 @@ function applyTeamColors(){
     const c=teamColor(TEAM_COL[x[0]]), pr='--'+x[1];
     st.setProperty(pr,c.c); st.setProperty(pr+'-ink',c.ink);
     st.setProperty(pr+'-tl',c.l); st.setProperty(pr+'-td',c.d); st.setProperty(pr+'-rgb',hexRgb(c.c));
+    st.setProperty(pr+'-sh',c.sh||'none');
     /* I pallini sono due per squadra: nella schermata iniziale e in alto
        durante la partita. Stesso comportamento, stessa etichetta. */
     document.querySelectorAll('.cdot-'+x[0].toLowerCase()).forEach(function(dot){
@@ -2033,7 +2040,7 @@ function buildPalettes(){
     box.innerHTML='<div class="pal-t" style="color:var(--'+(t==='A'?'ca':'os')+'-tx)">Colore '+(t==='A'?'Casa':'Ospite')+'</div><div class="pal-g">'+
       TEAM_COLORS.map(function(c){
         const sel=c.id===TEAM_COL[t], usato=c.id===altro;
-        return '<button class="csw" style="background:'+c.c+';color:'+c.ink+'" title="'+c.nome+(usato?' (gi\u00e0 usato)':'')+'"'+
+        return '<button class="csw" style="background:'+c.c+';color:'+c.ink+(c.sh?';text-shadow:'+c.sh:'')+'" title="'+c.nome+(usato?' (gi\u00e0 usato)':'')+'"'+
           ' aria-label="'+c.nome+(usato?', gi\u00e0 usato dall\u2019altra squadra':'')+'" aria-pressed="'+sel+'"'+
           (usato?' disabled':'')+' onclick="pickColor(\''+t+'\',\''+c.id+'\')">'+(sel?'&#10003;':'')+'</button>';
       }).join('')+'</div>';
@@ -2172,10 +2179,16 @@ function restoreState(){
   try {
     const raw=localStorage.getItem(SS_KEY); if(!raw) return false;
     const d=JSON.parse(raw);
-    if(d.savedAt && (Date.now()-d.savedAt)>MAX_AGE_MS){ localStorage.removeItem(SS_KEY); return false; }
+    /* Senza data di salvataggio non si puo' applicare la scadenza di 48 ore
+       promessa dall'informativa: la partita si scarta. */
+    if(typeof d.savedAt!=='number' || (Date.now()-d.savedAt)>MAX_AGE_MS){ localStorage.removeItem(SS_KEY); return false; }
     if(!d.legs || !Array.isArray(d.legs) || d.legs.length!==N_SET) return false;
     if(!Array.isArray(d.gA) || d.gA.length!==N_PL) return false;
     if(!Array.isArray(d.gB) || d.gB.length!==N_PL) return false;
+    /* I nomi devono essere testo: l'interfaccia li tratta come stringhe
+       (toUpperCase, esc) e un valore di altro tipo bloccherebbe l'avvio. */
+    const testo=v=>typeof v==='string';
+    if(!d.gA.every(testo) || !d.gB.every(testo)) return false;
     if(!Array.isArray(d.slotA) || d.slotA.length!==4) return false;
     if(!Array.isArray(d.slotB) || d.slotB.length!==4) return false;
     const VALID_LEG_VAL=new Set([null,'A','B']);
@@ -2191,7 +2204,7 @@ function restoreState(){
     const subA=Array.isArray(d.subA)?d.subA:[], subB=Array.isArray(d.subB)?d.subB:[];
     if(subA.some(s=>!validSub(s))) return false;
     if(subB.some(s=>!validSub(s))) return false;
-    S.nA=d.nA||'Squadra Casa'; S.nB=d.nB||'Squadra Ospite';
+    S.nA=testo(d.nA)&&d.nA?d.nA:'Squadra Casa'; S.nB=testo(d.nB)&&d.nB?d.nB:'Squadra Ospite';
     S.cat=(['A','B','C'].includes(d.cat))?d.cat:'A';
     S.gA=d.gA; S.gB=d.gB; S.slotA=d.slotA; S.slotB=d.slotB;
     S.subA=subA; S.subB=subB;

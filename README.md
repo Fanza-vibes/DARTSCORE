@@ -40,7 +40,7 @@ DartScore è un'applicazione single-page pensata per calcolare in modo rapido e 
 
 ### Novità
 
-**v2.13.1** — Lettere di nuovo **bianche** sulle caselle dei leg (tranne sul giallo, dove sparirebbero) e **verde identico** a quello delle versioni precedenti.
+**v2.13.1** — Lettere di nuovo **bianche** sulle caselle dei leg, giallo compreso, e **verde identico** a quello delle versioni precedenti. Una partita salvata danneggiata non blocca più l'avvio.
 
 **v2.13.0** — **Colori delle squadre a scelta**: tocca il pallino accanto al nome e scegli fra dieci colori. I nuovi predefiniti sono **blu per la Casa e giallo per l'Ospite**, più leggibili anche per chi non distingue bene rosso e verde.
 
