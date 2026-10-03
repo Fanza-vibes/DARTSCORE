@@ -154,6 +154,11 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
 .cdot-a { background:var(--ca); } .cdot-b { background:var(--os); }
 .cdot[aria-expanded="true"] { box-shadow:0 0 0 2px var(--tx); }
 .cdot:active { transform:scale(.88); }
+.sbn-row { display:flex; align-items:center; gap:6px; min-width:0; }
+.sbt.r .sbn-row { flex-direction:row-reverse; }
+.cdot.sm { width:18px; height:18px; position:relative; }
+.cdot.sm::after { content:''; position:absolute; top:-7px; right:-7px; bottom:-7px; left:-7px; }
+.pal-hdr.on { padding-top:10px; }
 .pal { max-height:0; overflow:hidden; visibility:hidden; opacity:0; transition:max-height .25s ease, opacity .2s, visibility 0s .25s; }
 .pal.on { max-height:240px; visibility:visible; opacity:1; transition:max-height .25s ease, opacity .2s, visibility 0s 0s; }
 .pal-t { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 8px; }
@@ -623,16 +628,16 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <div class="card-t">Squadre &amp; Categoria</div>
     <div class="g2" style="margin-bottom:10px">
       <div class="fg">
-        <div class="fl-row"><div class="fl">Squadra Casa</div><button class="cdot cdot-a" id="cdot-A" onclick="togglePal('A')" aria-expanded="false" aria-controls="pal-A" aria-label="Colore Casa"></button></div>
+        <div class="fl-row"><div class="fl">Squadra Casa</div><button class="cdot cdot-a" id="cdot-A" onclick="togglePal('A','pal-A',this)" aria-expanded="false" aria-controls="pal-A" aria-label="Colore Casa"></button></div>
         <input id="inp-a" class="fi" type="text" placeholder="Squadra Casa" maxlength="20" autocomplete="off" spellcheck="false">
       </div>
       <div class="fg">
-        <div class="fl-row"><div class="fl">Squadra Ospite</div><button class="cdot cdot-b" id="cdot-B" onclick="togglePal('B')" aria-expanded="false" aria-controls="pal-B" aria-label="Colore Ospite"></button></div>
+        <div class="fl-row"><div class="fl">Squadra Ospite</div><button class="cdot cdot-b" id="cdot-B" onclick="togglePal('B','pal-B',this)" aria-expanded="false" aria-controls="pal-B" aria-label="Colore Ospite"></button></div>
         <input id="inp-b" class="fi" type="text" placeholder="Squadra Ospite" maxlength="20" autocomplete="off" spellcheck="false">
       </div>
     </div>
-    <div class="pal" id="pal-A"></div>
-    <div class="pal" id="pal-B"></div>
+    <div class="pal" id="pal-A" data-team="A"></div>
+    <div class="pal" id="pal-B" data-team="B"></div>
     <div class="fg">
       <div class="fl">Categoria</div>
       <div class="cg">
@@ -674,7 +679,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     </div>
     <div class="sb">
       <div class="sbt">
-        <div class="sbn" id="hdr-na">CASA</div>
+        <div class="sbn-row"><button class="cdot cdot-a sm" id="cdot-rA" onclick="togglePal('A','pal-rA',this)" aria-expanded="false" aria-controls="pal-rA" aria-label="Colore Casa"></button><div class="sbn" id="hdr-na">CASA</div></div>
         <div class="sbs" id="hdr-sa">0</div>
         <div class="sbl" id="hdr-la">0 leg</div>
       </div>
@@ -684,7 +689,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
         <div class="sbcl">gara</div>
       </div>
       <div class="sbt r">
-        <div class="sbn" id="hdr-nb">OSPITE</div>
+        <div class="sbn-row"><button class="cdot cdot-b sm" id="cdot-rB" onclick="togglePal('B','pal-rB',this)" aria-expanded="false" aria-controls="pal-rB" aria-label="Colore Ospite"></button><div class="sbn" id="hdr-nb">OSPITE</div></div>
         <div class="sbs" id="hdr-sb">0</div>
         <div class="sbl" id="hdr-lb">0 leg</div>
       </div>
@@ -693,6 +698,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
       <div class="pga" id="prog-a" style="flex-grow:0"></div>
       <div class="pgb" id="prog-b" style="flex-grow:0"></div>
     </div>
+    <div class="pal pal-hdr" id="pal-rA" data-team="A"></div>
+    <div class="pal pal-hdr" id="pal-rB" data-team="B"></div>
   </div>
   <div class="slist" id="slist"></div>
   <div class="bb">
@@ -873,7 +880,7 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
     <p class="gd-note">Le regole descritte qui sono quelle <strong>predefinite</strong>, cioè del regolamento FIGeST 2026. Se hai modificato le <em>Impostazioni</em>, alcuni numeri possono essere diversi.</p>
 
     <h3>1 · Prima della partita</h3>
-    <p>Scrivi i nomi delle due squadre e scegli la categoria. Il pallino accanto a ogni nome mostra il colore della squadra: toccalo per sceglierne un altro. Ogni squadra ha 8 giocatori: <strong>C1–C4</strong> e <strong>O1–O4</strong> sono in campo, dal 5 all'8 sono le riserve. I nomi sono facoltativi: se lasci vuoto compare il codice (C1, O3…). Poi tocca <em>Inizia partita</em>.</p>
+    <p>Scrivi i nomi delle due squadre e scegli la categoria. Il pallino accanto al nome di ogni squadra, qui e in alto durante la partita, mostra il suo colore: toccalo per sceglierne un altro. Ogni squadra ha 8 giocatori: <strong>C1–C4</strong> e <strong>O1–O4</strong> sono in campo, dal 5 all'8 sono le riserve. I nomi sono facoltativi: se lasci vuoto compare il codice (C1, O3…). Poi tocca <em>Inizia partita</em>.</p>
 
     <h3>2 · Segnare i leg</h3>
     <p>Ogni incontro ha <b data-def="maxLeg">3</b> caselle, una per leg. Tocca una casella per assegnarla: la prima volta diventa <strong>C</strong> (vince Casa), la seconda <strong>O</strong> (vince Ospite), la terza torna vuota. L'incontro va a chi vince <b data-def="legWin">2</b> leg: l'ultimo si sblocca solo se serve.</p>
@@ -940,8 +947,8 @@ input,select { font-family:inherit; font-size:16px!important; touch-action:manip
  * ─────────────────────────────────────────────────────────────────────────────
  * MODIFICHE v2.13.0 rispetto a v2.12.0 (solo grafica: il calcolo del referto
  * non cambia):
- *   - Colori delle squadre scelti dall'utente: un pallino accanto a ogni nome
- *     mostra il colore, toccandolo si apre una tavolozza di dieci colori che si
+ *   - Colori delle squadre scelti dall'utente: un pallino accanto a ogni nome,
+ *     nella schermata iniziale e in alto nel referto, mostra il colore; toccandolo si apre una tavolozza di dieci colori che si
  *     richiude da sola dopo la scelta. Le due squadre non possono avere lo
  *     stesso colore. La scelta resta sul dispositivo, come il tema.
  *   - Predefiniti: blu per la Casa e giallo per l'Ospite (prima verde e
@@ -1313,7 +1320,7 @@ function askRispondi(v){
   r(v);
 }
 
-function showScr(id){ document.querySelectorAll('.scr').forEach(el=>el.classList.remove('on')); g(id).classList.add('on'); }
+function showScr(id){ closePal(); document.querySelectorAll('.scr').forEach(el=>el.classList.remove('on')); g(id).classList.add('on'); }
 async function goSetup(){
   const{done}=getTotals();
   if(done>0 && !(await askConfirm('Tornare al setup farà perdere i dati della partita.\nContinuare?','Tornare al setup?')))return;
@@ -2002,15 +2009,17 @@ function applyTeamColors(){
     const c=teamColor(TEAM_COL[x[0]]), pr='--'+x[1];
     st.setProperty(pr,c.c); st.setProperty(pr+'-ink',c.ink);
     st.setProperty(pr+'-tl',c.l); st.setProperty(pr+'-td',c.d); st.setProperty(pr+'-rgb',hexRgb(c.c));
-    const dot=g('cdot-'+x[0]);
-    if(dot){ dot.setAttribute('aria-label','Colore '+x[2]+': '+c.nome+'. Tocca per cambiarlo'); dot.title='Colore '+x[2]+': '+c.nome; }
+    /* I pallini sono due per squadra: nella schermata iniziale e in alto
+       durante la partita. Stesso comportamento, stessa etichetta. */
+    document.querySelectorAll('.cdot-'+x[0].toLowerCase()).forEach(function(dot){
+      dot.setAttribute('aria-label','Colore '+x[2]+': '+c.nome+'. Tocca per cambiarlo'); dot.title='Colore '+x[2]+': '+c.nome;
+    });
   });
   buildPalettes();
 }
 function buildPalettes(){
-  ['A','B'].forEach(function(t){
-    const box=g('pal-'+t); if(!box) return;
-    const altro=TEAM_COL[t==='A'?'B':'A'];
+  document.querySelectorAll('.pal[data-team]').forEach(function(box){
+    const t=box.getAttribute('data-team'), altro=TEAM_COL[t==='A'?'B':'A'];
     box.innerHTML='<div class="pal-t" style="color:var(--'+(t==='A'?'ca':'os')+'-tx)">Colore '+(t==='A'?'Casa':'Ospite')+'</div><div class="pal-g">'+
       TEAM_COLORS.map(function(c){
         const sel=c.id===TEAM_COL[t], usato=c.id===altro;
@@ -2020,21 +2029,22 @@ function buildPalettes(){
       }).join('')+'</div>';
   });
 }
-function togglePal(t){
-  const apri=_palAperta!==t;
+/* Apre la tavolozza palId accanto al pallino toccato; un secondo tocco sullo
+   stesso pallino la richiude. Ne resta aperta al massimo una. */
+function togglePal(t,palId,dot){
+  const gia=_palAperta && _palAperta.pal===palId;
   closePal();
-  if(!apri) return;
-  _palAperta=t;
-  g('pal-'+t).classList.add('on'); g('cdot-'+t).setAttribute('aria-expanded','true');
+  if(gia) return;
+  const box=g(palId); if(!box) return;
+  _palAperta={pal:palId,dot:dot||null};
+  box.classList.add('on'); if(dot) dot.setAttribute('aria-expanded','true');
   /* Il focus va sul colore scelto: da tastiera si prosegue con Tab. Dopo un
      tocco non compare l'anello di focus, che segue :focus-visible. */
-  setTimeout(function(){ const s=g('pal-'+t).querySelector('.csw[aria-pressed="true"]'); if(s) s.focus(); },60);
+  setTimeout(function(){ const s=box.querySelector('.csw[aria-pressed="true"]'); if(s) s.focus(); },60);
 }
 function closePal(){
-  ['A','B'].forEach(function(t){
-    const p=g('pal-'+t); if(p) p.classList.remove('on');
-    const d=g('cdot-'+t); if(d) d.setAttribute('aria-expanded','false');
-  });
+  document.querySelectorAll('.pal.on').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.cdot[aria-expanded="true"]').forEach(function(d){ d.setAttribute('aria-expanded','false'); });
   _palAperta=null;
 }
 function pickColor(t,id){
@@ -2044,11 +2054,12 @@ function pickColor(t,id){
   applyTeamColors();
   if(navigator.vibrate) navigator.vibrate(VIBRATE_MS);
   /* Si richiude da sola: il ritardo lascia vedere la spunta sul colore scelto. */
-  setTimeout(function(){ closePal(); const d=g('cdot-'+t); if(d) d.focus(); },220);
+  const dot=_palAperta && _palAperta.dot;
+  setTimeout(function(){ closePal(); if(dot) dot.focus(); },220);
 }
 /* Esc o un tocco fuori chiudono la tavolozza aperta. */
 document.addEventListener('keydown',function(e){
-  if(e.key==='Escape' && _palAperta && !_modali.length){ const t=_palAperta; closePal(); const d=g('cdot-'+t); if(d) d.focus(); }
+  if(e.key==='Escape' && _palAperta && !_modali.length){ const d=_palAperta.dot; closePal(); if(d) d.focus(); }
 });
 document.addEventListener('click',function(e){
   if(!_palAperta) return;

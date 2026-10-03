@@ -10,7 +10,7 @@ Il file dell'app è [`Darts_Score.html`](Darts_Score.html): il nome resta stabil
 
 I colori delle squadre si scelgono, e i nuovi predefiniti sono **blu per la Casa e giallo per l'Ospite**. **Il calcolo del referto non cambia**: calendario, punteggi, classifica e somma di controllo sono identici, verificati byte per byte con i predefiniti FIGeST.
 
-- **Un pallino accanto al nome di ogni squadra** mostra il suo colore. Toccandolo si apre una tavolozza di dieci colori — blu, azzurro, verde acqua, verde, giallo, arancione, rosso, rosa, viola, grigio — che si richiude da sola dopo la scelta. Il colore cambia subito ovunque: sigle dei giocatori, caselle dei leg, punteggio, barra di avanzamento, riepilogo, classifica e stampa
+- **Un pallino accanto al nome di ogni squadra**, nella schermata iniziale e in alto durante la partita, mostra il suo colore. Toccandolo si apre una tavolozza di dieci colori — blu, azzurro, verde acqua, verde, giallo, arancione, rosso, rosa, viola, grigio — che si richiude da sola dopo la scelta. Il colore cambia subito ovunque: sigle dei giocatori, caselle dei leg, punteggio, barra di avanzamento, riepilogo, classifica e stampa
 - **Le due squadre non possono avere lo stesso colore**: quello già scelto dall'altra appare sbiadito e non si può toccare
 - La scelta **resta sul dispositivo**, come il tema chiaro o scuro: la partita dopo la ritrovi. Il Reset completo non la cancella, perché è una preferenza e non un dato della partita
 - **Perché blu e giallo.** Circa un uomo su dodici distingue male il rosso dal verde, e la vecchia coppia verde/rosso era proprio la meno leggibile per loro. Chi preferisce il vecchio aspetto lo ritrova scegliendo Verde e Rosso
