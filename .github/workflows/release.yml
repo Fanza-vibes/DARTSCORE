@@ -49,12 +49,22 @@ jobs:
     steps:
       - name: Determina il tag
         id: t
+        env:
+          TAG_MANUALE: ${{ inputs.tag }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          # Il tag scritto a mano arriva come variabile d'ambiente e non dentro
+          # il testo del comando: cosi' la shell non puo' interpretarlo come
+          # codice, qualunque cosa contenga. Poi se ne controlla la forma.
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            TAG="$TAG_MANUALE"
           else
-            echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+            TAG="$GITHUB_REF_NAME"
           fi
+          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
+            echo "::error::Tag non valido: '$TAG'. Forma attesa: v2.13.1"
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Preleva il codice a quel tag
         uses: actions/checkout@v4
@@ -80,7 +90,7 @@ jobs:
             "$(grep -o "APP_VERSION='[^']*'" Darts_Score.html | head -1 | sed "s/.*'\(.*\)'/\1/")"
           controlla "intestazione del sorgente" \
             "$(grep -o '/\* DartScore v[0-9.]*' Darts_Score.html | head -1 | sed 's/.*v//')"
-          if [ "${{ github.event_name }}" = "push" ]; then
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
             echo "Controlli aggiuntivi (solo nuovi rilasci):"
             controlla "header della schermata iniziale" \
               "$(grep -o 'id="app-version">v[0-9.]*' Darts_Score.html | head -1 | sed 's/.*v//')"
@@ -99,7 +109,9 @@ jobs:
       - name: Esegui le verifiche di tests.html
         if: hashFiles('tests.html') != ''
         run: |
-          npm install --silent --no-audit --no-fund playwright-core
+          # Versione fissata: un aggiornamento esterno non puo' cambiare da solo
+          # lo strumento che decide se una release esce. Si aggiorna a mano.
+          npm install --silent --no-audit --no-fund playwright-core@1.63.0
           python3 -m http.server 8099 --bind 127.0.0.1 >/dev/null 2>&1 &
           for i in $(seq 1 20); do curl -sf http://127.0.0.1:8099/tests.html >/dev/null && break; sleep 1; done
           node - <<'JS'

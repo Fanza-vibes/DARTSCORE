@@ -6,6 +6,45 @@ Il file dell'app è [`Darts_Score.html`](Darts_Score.html): il nome resta stabil
 
 ---
 
+## v2.14.0
+
+Accessibilità e una verifica in più. **Il calcolo del referto non cambia**: l'impronta del comportamento con le regole FIGeST è identica a quella verificata. Questa versione comprende anche le correzioni della 2.13.1, che non ha avuto una release propria.
+
+**Per chi usa lo screen reader** (il programma che legge ad alta voce lo schermo a chi non vede):
+
+- **Le caselle dei leg hanno un nome completo**: prima lo screen reader diceva solo "C", "O" o "punto"; ora dice per esempio *"S1, leg 2: vinto dall'Ospite"* oppure *"S1, leg 3: non ancora giocabile"*
+- **Annunci vocali** quando si segna un leg, quando un incontro si chiude, con il conteggio dei set, e quando la partita è decisa. Vengono letti anche gli avvisi a comparsa
+- **Le schermate non attive sono nascoste davvero.** Prima erano solo trasparenti: premendo Tab nella schermata iniziale si finiva 13 volte su pulsanti invisibili del referto e del riepilogo, e lo screen reader leggeva anche quelle schermate
+- **Da tastiera il focus resta sulla casella appena segnata**, invece di ripartire dall'inizio della pagina
+- Etichette collegate a tutti i campi (*"Giocatore C1, Casa"*, *"Riserva C5, Ospite"*), stato "selezionato" sui tasti di categoria e sulla scelta della classifica, titoli veri per orientarsi
+
+**Per chi non usa lo screen reader non cambia niente**, a parte il punto qui sotto: è verificato confrontando pixel per pixel 26 schermate, prima e dopo.
+
+- **Testi grigi più leggibili.** Il grigio dei testi secondari (tasti *Guida*, *Impostazioni*, *Reset completo*, spiegazioni delle impostazioni, etichette del referto) aveva un contrasto di 2,6:1. Ora raggiunge almeno 4,5:1 in entrambi i temi. I testi segnaposto dei campi vuoti restano chiari, così un campo vuoto non sembra compilato
+- **In stampa il grigio è lo stesso da entrambi i temi**: prima chi stampava dal tema scuro otteneva il grigio chiaro di prima, poco leggibile sulla carta
+
+**Verifiche e manutenzione:**
+
+- **L'impronta FIGeST entra in [`tests.html`](https://fanza-vibes.github.io/DARTSCORE/tests.html)**: il controllo più ampio, che finora girava solo fuori dal progetto, ora fa parte del progetto e gira a ogni release. Registra il risultato di migliaia di situazioni con le regole predefinite e lo confronta con quello verificato. Durante il lavoro è stata anche **rinforzata**: una prova di alterazione di una regola di spareggio della classifica passava inosservata, perché nessuna situazione registrata la metteva alla prova. Ora c'è il caso apposta, e la stessa alterazione blocca la release
+- I tasti di categoria non contengono più elementi che l'HTML non ammette dentro un pulsante
+- Compatibilità dichiarata corretta in **Safari 14.1+**: alcune spaziature usano una funzione arrivata con la 14.1
+- I commenti storici "FIX vX.Y" nel codice sono riscritti per spiegare il perché: la storia sta in questo file
+
+---
+
+## v2.13.1
+
+Ritocchi ai colori su segnalazione dell'autore, una partita salvata danneggiata che non blocca più l'avvio, e il workflow di pubblicazione più robusto. **Il calcolo del referto non cambia**: impronta del comportamento con i predefiniti FIGeST identica byte per byte.
+
+- **Lettere bianche sulle caselle dei leg** per tutti i colori, come prima della 2.13.0, che le rendeva scure sui colori chiari
+- **Anche sul giallo la lettera è bianca**, per scelta dell'autore. Da solo, lì il bianco si leggerebbe a 1,5:1: per questo ha una leggera ombra scura che lo stacca dal fondo
+- **Il verde torna identico a quello delle versioni precedenti**, anche nelle scritte (sigle e punteggi), in entrambi i temi
+- **Azzurro e arancione sono di un tono più scuri**: con la lettera bianca restavano sotto 3:1, peggio del verde di prima. Restano chiaramente azzurro e arancione
+- **Partita salvata danneggiata**: se un nome salvato non era testo, l'app andava in errore all'avvio e non mostrava la partita. Ora un nome squadra non valido torna quello predefinito, e un nome giocatore non valido o una data di salvataggio mancante fanno scartare la partita. Senza la data non si potrebbe applicare la cancellazione dopo 48 ore promessa dall'informativa. Non succede usando l'app normalmente: serve un salvataggio alterato
+- **Workflow di pubblicazione**: il tag scritto a mano non finisce più direttamente in un comando di shell ed è controllato nella forma (`v2.13.1`), come raccomandano le linee guida di sicurezza di GitHub. Lo strumento che esegue i test ha una **versione fissata** (playwright-core 1.63.0), quindi un aggiornamento esterno non può cambiare da solo l'esito di una release
+- [`tests.html`](https://fanza-vibes.github.io/DARTSCORE/tests.html), ora con 98 verifiche, controlla le nuove regole dei colori (lettere almeno 3:1 e scritte almeno 4,5:1, con le due eccezioni dichiarate) e quattro casi di partita salvata danneggiata. La partita eventualmente presente sul dispositivo viene messa da parte durante il controllo e rimessa al suo posto
+---
+
 ## v2.13.0
 
 I colori delle squadre si scelgono, e i nuovi predefiniti sono **blu per la Casa e giallo per l'Ospite**. **Il calcolo del referto non cambia**: calendario, punteggi, classifica e somma di controllo sono identici, verificati byte per byte con i predefiniti FIGeST.

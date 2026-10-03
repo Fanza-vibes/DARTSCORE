@@ -30,7 +30,7 @@ iframe { position:absolute; width:400px; height:800px; left:-9999px; }
 <h1>DartScore — Verifiche</h1>
 <p class="sub">
 Questa pagina carica l'app reale e ne verifica il calendario contro il <strong>Referto Gara FIGeST</strong>
-e le regole di punteggio contro il regolamento. Non ha dipendenze e non modifica nulla.<br>
+e le regole di punteggio contro il regolamento, e confronta l'<strong>impronta del comportamento</strong> con le regole predefinite con quella già verificata. Non ha dipendenze e non modifica nulla.<br>
 Va aperta da un indirizzo web (non con doppio clic sul file): il browser impedisce a una pagina locale
 di leggere il contenuto di un'altra pagina locale.<br>
 <em>L'app viene avviata in una cornice nascosta: se hai una partita aperta in un'altra scheda
@@ -143,11 +143,79 @@ document.getElementById('app').onload = function(){
     T('ritorno a capo trattato da separatore', 'Mario Rossi', w.norm('Mario\nRossi'));
     T('solo spazi dà stringa vuota', '', w.norm('   '));
 
+    /* ── Impronta FIGeST ── */
+    S('Impronta del comportamento FIGeST');
+    /* Il controllo più ampio: con le regole predefinite registra il risultato
+       di migliaia di situazioni (tutti gli stati di un set, 676 combinazioni
+       del punteggio gara, cinque partite complete con classifica e somma, un
+       caso con due cambi) e ne calcola un'impronta. Qualunque cambiamento nel
+       comportamento, anche uno solo dei risultati, cambia l'impronta.
+       Se la modifica alle regole è VOLUTA (per esempio un nuovo regolamento),
+       si aggiorna IMPRONTA_FIGEST con il valore ottenuto e lo si scrive nel
+       CHANGELOG: è la prova che il cambiamento è stato visto, non subìto. */
+    var IMPRONTA_FIGEST = 'c2b264f7da229';  /* comportamento verificato: v2.12.0 e successive */
+    function cyrb53(str){ var h1=0xdeadbeef, h2=0x41c6ce57, i, ch;
+      for(i=0;i<str.length;i++){ ch=str.charCodeAt(i); h1=Math.imul(h1^ch,2654435761); h2=Math.imul(h2^ch,1597334677); }
+      h1=Math.imul(h1^(h1>>>16),2246822507); h1^=Math.imul(h2^(h2>>>13),3266489909);
+      h2=Math.imul(h2^(h2>>>16),2246822507); h2^=Math.imul(h1^(h1>>>13),3266489909);
+      return (4294967296*(2097151&h2)+(h1>>>0)).toString(16); }
+    function impronta(){
+      Object.assign(DS.CFG, DS.DEFAULT_CFG); w.applyCfg();
+      var V=['A','B',null], combo=[], a, b2, c;
+      for(a=0;a<3;a++) for(b2=0;b2<3;b2++) for(c=0;c<3;c++) combo.push([V[a],V[b2],V[c]]);
+      var s={};
+      s.derivati={N_SET:DS.N_SET, SOMMA_OK:DS.SOMMA_OK, LEG_WIN:DS.LEG_WIN, MAX_LEG:DS.MAX_LEG, SET_WIN:DS.SET_WIN, MAX_SUB:DS.MAX_SUB, N_PL:DS.N_PL};
+      s.cfg_predefinita_valida=w.cfgErrors(Object.assign({},DS.DEFAULT_CFG)).length;
+      s.calendario=DS.CAL;
+      s.getWinner=combo.map(function(x){ return w.getWinner(x); });
+      s.legPlayable=combo.map(function(x){ return [0,1,2].map(function(i){ return w.legPlayable(x,i); }); });
+      s.getPts=combo.map(function(x){ return w.getPts(x); });
+      s.getGara=[];
+      for(var sA=0;sA<=12;sA++) for(var sB=0;sB<=12;sB++)
+        [[0,0],[20,20],[25,20],[20,25]].forEach(function(l){ s.getGara.push([sA,sB,l[0],l[1],w.getGara(sA,sB,l[0],l[1])]); });
+      s.norm=['mARIO rossi','  anna   verdi ','De Luca','O\u2019BRIEN','JEAN-luc','','Giuseppe Di Maria','rossi','ROSSI','Ro\u200Bssi'].map(function(n){ return w.norm(n); });
+      function riempi(f){ w.initLegs(); for(var i=0;i<DS.N_SET;i++){ var v=f(i);
+        DS.S.legs[i]=(i%2===0)?[v,v,null]:[v,(v==='A'?'B':'A'),v]; } }
+      function classifica(full){ return w.getClassifica().map(function(r){
+        return full?{code:r.code,set:r.set,setW:r.setW,pts:r.pts,avg:+r.avg.toFixed(4)}:{code:r.code,set:r.set,pts:r.pts}; }); }
+      s.partite=[];
+      [['tutta casa',function(){return 'A';}],['tutta ospite',function(){return 'B';}],['alternata',function(i){return i%2?'A':'B';}],
+       ['misto 3',function(i){return i%3?'A':'B';}],['misto 5',function(i){return i%5?'B':'A';}]].forEach(function(x){
+        DS.S.gA=['T1','T2','T3','T4','R1','R2','R3','R4']; DS.S.gB=['O1','O2','O3','O4','P1','P2','P3','P4'];
+        DS.S.slotA=[0,1,2,3]; DS.S.slotB=[0,1,2,3]; DS.S.subA=[]; DS.S.subB=[];
+        riempi(x[1]); var tt=w.getTotals();
+        s.partite.push({nome:x[0], totali:tt, gara:w.getGara(tt.sA,tt.sB,tt.lA,tt.lB), somma:w.getSomma(), classifica:classifica(true)});
+      });
+      DS.S.subA=[]; DS.S.slotA=[0,1,2,3]; w.doSub('A',0,4,10); w.doSub('A',1,5,15);
+      riempi(function(i){ return i%3?'A':'B'; });
+      var venti=[]; for(var k=0;k<20;k++) venti.push(k);
+      s.con_cambi={ totali:w.getTotals(), somma:w.getSomma(), classifica:classifica(false),
+        slot0:venti.map(function(i){ return w.getPlayerAt('A',0,i); }), slot1:venti.map(function(i){ return w.getPlayerAt('A',1,i); }) };
+      /* Cambi e Casa che perde tutti gli incontri 2-0: i suoi giocatori restano
+         a zero punti ma con un numero diverso di set, e l'ordine in classifica
+         lo decide lo spareggio per set giocati (ART.11.2). */
+      DS.S.subA=[]; DS.S.slotA=[0,1,2,3]; w.doSub('A',0,4,10); w.doSub('A',1,5,15);
+      w.initLegs(); for(var z=0;z<DS.N_SET;z++) DS.S.legs[z]=['B','B',null];
+      s.cambi_a_zero={ classifica:classifica(false) };
+      return JSON.stringify(s);
+    }
+    var ottenuta=cyrb53(impronta());
+    T('il comportamento con le regole FIGeST è identico a quello verificato', IMPRONTA_FIGEST, ottenuta);
+
     /* ── Colori ── */
     S('Colori delle squadre — predefiniti e leggibilità');
-    /* I colori sono solo grafica, ma devono restare leggibili: ogni colore
-       della tavolozza deve raggiungere il contrasto 4.5:1 (WCAG AA) per il
-       testo sopra il colore pieno e per le scritte su fondo chiaro e scuro. */
+    /* I colori sono solo grafica, ma devono restare leggibili.
+       - Lettera sopra la casella: almeno 3:1. Le lettere sono bianche come
+         nelle versioni precedenti, e il verde di allora sta a 3,3:1.
+       - Scritte su fondo chiaro e scuro (sigle, punteggi): almeno 4.5:1,
+         la soglia WCAG AA per il testo normale.
+       Due eccezioni dichiarate, per scelta dell'autore: il verde e' identico
+       alle versioni precedenti anche nelle scritte (esce dalla seconda regola);
+       sul giallo la lettera e' bianca (esce dalla prima), compensata da
+       un'ombra scura che deve esserci. Un colore nuovo aggiunto in futuro deve
+       rispettare entrambe le regole. */
+    var SCRITTE_ESENTI = { verde: 'identico alle versioni precedenti' };
+    var LETTERA_ESENTE = { giallo: 'bianca per scelta, con ombra' };
     function lum(h){ return [1,3,5].map(function(i){ var x=parseInt(h.slice(i,i+2),16)/255;
         return x<=0.03928 ? x/12.92 : Math.pow((x+0.055)/1.055,2.4); })
       .reduce(function(s,x,i){ return s+x*[0.2126,0.7152,0.0722][i]; },0); }
@@ -158,9 +226,41 @@ document.getElementById('app').onload = function(){
     T('Casa predefinita: blu',      'blu',    DS.DEFAULT_COLORS.A);
     T('Ospite predefinito: giallo', 'giallo', DS.DEFAULT_COLORS.B);
     TC.forEach(function(c){
-      var ok = contrasto(c.ink,c.c)>=4.5 && contrasto(c.l,'#ffffff')>=4.5 && contrasto(c.d,'#1e293b')>=4.5;
-      T(c.nome+': leggibile sul colore pieno e sui due temi', true, ok);
+      if(c.id in LETTERA_ESENTE) T(c.nome+': lettera bianca con ombra che la stacca dal fondo', true, !!c.sh);
+      else T(c.nome+': lettera sulla casella leggibile (almeno 3:1)', true, contrasto(c.ink,c.c)>=3);
+      if(c.id in SCRITTE_ESENTI) return;
+      T(c.nome+': scritte leggibili sui due temi (almeno 4.5:1)', true,
+        contrasto(c.l,'#ffffff')>=4.5 && contrasto(c.d,'#1e293b')>=4.5);
     });
+    T('lettere bianche su tutti i colori', [],
+      TC.filter(function(c){ return c.ink.toLowerCase()!=='#ffffff'; }).map(function(c){ return c.id; }));
+    T('verde identico alle versioni precedenti', ['#16a34a','#16a34a','#16a34a','#ffffff'],
+      (function(v){ return [v.c,v.l,v.d,v.ink]; })(TC.filter(function(c){ return c.id==='verde'; })[0]));
+
+    /* ── Partita salvata ── */
+    S('Partita salvata — dati danneggiati');
+    /* restoreState() deve scartare una partita salvata con dati di tipo
+       sbagliato, invece di bloccare l'avvio. La partita eventualmente
+       presente sul dispositivo viene messa da parte e rimessa al suo posto. */
+    var CHIAVE='dartscore_state', originale=w.localStorage.getItem(CHIAVE);
+    function salvata(mod){
+      var g8=[]; for(var i=0;i<8;i++) g8.push('P'+i);
+      var legs=[]; for(var j=0;j<DS.N_SET;j++) legs.push([null,null,null]);
+      var d={nA:'Casa',nB:'Ospite',cat:'A',gA:g8,gB:g8.slice(),slotA:[0,1,2,3],slotB:[0,1,2,3],subA:[],subB:[],legs:legs,savedAt:Date.now()};
+      for(var k in mod) d[k]=mod[k];
+      if(mod.savedAt===undefined && 'savedAt' in mod) delete d.savedAt;
+      w.localStorage.setItem(CHIAVE, JSON.stringify(d));
+      try { return w.restoreState(); } catch(e){ return 'eccezione: '+e.message; }
+    }
+    try {
+      T('una partita salvata corretta viene ripresa', true, salvata({}));
+      T('nome squadra non testuale: si riprende con il nome predefinito', [true,'Squadra Casa'], [salvata({nA:12345}), DS.S.nA]);
+      var g8n=[]; for(var q=0;q<8;q++) g8n.push(q===3?42:'P'+q);
+      T('nome giocatore non testuale: la partita viene scartata', false, salvata({gA:g8n}));
+      T('senza data di salvataggio: la partita viene scartata', false, salvata({savedAt:undefined}));
+    } finally {
+      if(originale===null) w.localStorage.removeItem(CHIAVE); else w.localStorage.setItem(CHIAVE, originale);
+    }
 
     /* ── Guida ── */
     S('Guida all’uso — numeri delle regole predefinite');
